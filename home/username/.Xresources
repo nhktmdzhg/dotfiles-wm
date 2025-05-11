@@ -1,0 +1,7 @@
+! X resource database.
+
+! DPI scaling.
+Xft.dpi:                          120
+Xcursor.theme:                    March-7th
+Xcursor.size:                     30
+

@@ -1,0 +1,24 @@
+#!/usr/bin/dash
+
+exec >/dev/null 2>&1
+ksuperkey -e 'Super_L=Alt_L|F1'
+ksuperkey -e 'Super_R=Alt_L|F1'
+picom -b
+lxqt-policykit-agent &
+xss-lock -q -l ~/.config/awesome/xss-lock-tsl.sh &
+
+# Turn off screen idle
+xset s off
+xset -dpms
+
+# Autostart applications
+dunst &
+thunderbird &
+mcontrolcenter &
+discord &
+bash /home/iamnanoka/.local/share/Zalo/start.sh &
+fcitx5 &
+nm-applet &
+powerprofilesctl set performance &
+bluetoothctl power off &
+exec awesome
