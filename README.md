@@ -3,7 +3,7 @@ This is my personal AwesomeWM configuration. It is a work in progress and will b
 Before you use this configuration, please make sure you installed the packages in `pkgs.txt`.  
 You should use my neovim configuration for the best experience.  
 You can find it [here](https://github.com/nhktmdzhg/nvim).  
-In my config, I also use the Kurinto font in many places. This is a very good font, covering many languages and has a lot of glyphs. You can download it [here](https://www.kurinto.com/download.htm). I don't include it in this repo because it is not open source and It's very large (>1GB). If you don't use it, you can change in ~/.config/tint2/tint2rc to any Mono font you like.  
+In my config, I also use the Kurinto font in many places. This is a very good font, covering many languages and has a lot of glyphs. You can download it [here](https://www.kurinto.com/download.htm). I don't include it in this repo because it is not open source and It's very large (>1GB). If you don't use it, you can change in ~/.config/awesome/rc.lua to any Mono font you like.  
 Maybe in this repo I forgot to add some neccessary files, so if you find any missing files, please put it on the issues tab, I will push the new commit as soon as possible.
 ## My Screenshots
 ![Screenshot 1](meo/screenshot.png)
