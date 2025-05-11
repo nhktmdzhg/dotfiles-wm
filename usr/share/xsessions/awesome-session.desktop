@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=My AwesomeWM
+Comment=Highly configurable framework window manager
+TryExec=awesome
+Exec=/usr/share/awesome/autostart
+Type=Application
