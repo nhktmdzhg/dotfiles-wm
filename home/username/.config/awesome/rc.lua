@@ -715,7 +715,6 @@ local globalkeys = gears.table.join(
     end),
     -- Awesome --
     awful.key({ super, ctrl }, "r", awesome.restart),
-    awful.key({ super, ctrl }, "q", awesome.quit),
     awful.key({ super }, "d", toggle_show_desktop)
 )
 
@@ -723,45 +722,16 @@ root.keys(globalkeys)
 
 local clientkeys = gears.table.join(
     awful.key({ super, shift }, "Up", function(c)
-        if c and c.floating then
             c:relative_move(0, -10, 0, 0)
-        end
     end),
     awful.key({ super, shift }, "Down", function(c)
-        if c and c.floating then
             c:relative_move(0, 10, 0, 0)
-        end
     end),
     awful.key({ super, shift }, "Left", function(c)
-        if c and c.floating then
             c:relative_move(-10, 0, 0, 0)
-        end
     end),
     awful.key({ super, shift }, "Right", function(c)
-        if c and c.floating then
             c:relative_move(10, 0, 0, 0)
-        end
-    end),
-
-    awful.key({ super, ctrl }, "Up", function(c)
-        if c and c.floating then
-            c:relative_move(0, 0, 0, -10)
-        end
-    end),
-    awful.key({ super, ctrl }, "Down", function(c)
-        if c and c.floating then
-            c:relative_move(0, 0, 0, 10)
-        end
-    end),
-    awful.key({ super, ctrl }, "Left", function(c)
-        if c and c.floating then
-            c:relative_move(0, 0, -10, 0)
-        end
-    end),
-    awful.key({ super, ctrl }, "Right", function(c)
-        if c and c.floating then
-            c:relative_move(0, 0, 10, 0)
-        end
     end),
     -- Window controls --
     awful.key({ alt }, "F4", function(c)

@@ -52,7 +52,7 @@ white = "0xECEFF4"
 size = 12
 
 [font.normal]
-family = "monospace"
+family = "MesloLGS Nerd Font Mono"
 style = "Regular"
 
 [font.bold]
