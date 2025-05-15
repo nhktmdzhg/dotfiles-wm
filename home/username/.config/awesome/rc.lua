@@ -15,6 +15,8 @@ local margin_top    = 10
 local margin_bottom = 10
 local margin_left   = 10
 local margin_right  = 10
+local wibox_height  = 30
+local wibox_margin  = 5
 
 if awesome.startup_errors then
     awesome.spawn("dunstify -u critical -t 'Oops, there were errors during startup!' -a 'AwesomeWM' -i 'arch-error' '" ..
@@ -97,13 +99,13 @@ awful.screen.connect_for_each_screen(function(s)
     awful.tag({ "1" }, s, awful.layout.layouts[1])
 
     -- Create the wibox
-    s.mywibox = awful.wibar({
+    s.mywibox = wibox({
         position = "top",
         screen = s,
         width = s.geometry.width - 10,
-        height = 30,
-        x = 5,
-        y = 5,
+        height = wibox_height,
+        x = wibox_margin,
+        y = wibox_margin,
         bg = "#00000000",
         fg = "#ffffff",
         ontop = true,
@@ -723,16 +725,16 @@ root.keys(globalkeys)
 
 local clientkeys = gears.table.join(
     awful.key({ super, shift }, "Up", function(c)
-            c:relative_move(0, -10, 0, 0)
+        c:relative_move(0, -10, 0, 0)
     end),
     awful.key({ super, shift }, "Down", function(c)
-            c:relative_move(0, 10, 0, 0)
+        c:relative_move(0, 10, 0, 0)
     end),
     awful.key({ super, shift }, "Left", function(c)
-            c:relative_move(-10, 0, 0, 0)
+        c:relative_move(-10, 0, 0, 0)
     end),
     awful.key({ super, shift }, "Right", function(c)
-            c:relative_move(10, 0, 0, 0)
+        c:relative_move(10, 0, 0, 0)
     end),
     -- Window controls --
     awful.key({ alt }, "F4", function(c)
@@ -841,7 +843,8 @@ awful.rules.rules = {
     {
         rule_any = {
             class = {
-                "neovide"
+                "neovide",
+                "Code"
             }
         },
         properties = {
@@ -890,9 +893,9 @@ client.connect_signal("manage", function(c)
     if not c.fullscreen then
         c:geometry {
             x      = wa.x + margin_left,
-            y      = wa.y + margin_top,
+            y      = wa.y + margin_top + wibox_height + wibox_margin,
             width  = math.min(wa.width - margin_left - margin_right, c.width),
-            height = math.min(wa.height - margin_top - margin_bottom, c.height)
+            height = math.min(wa.height - margin_top - margin_bottom - wibox_height - wibox_margin, c.height)
         }
         awful.spawn("dunstctl set-paused false")
     else
@@ -968,9 +971,9 @@ client.connect_signal("request::geometry", function(c)
     elseif c.maximized then
         c:geometry {
             x      = wa.x + margin_left,
-            y      = wa.y + margin_top,
+            y      = wa.y + margin_top + wibox_height + wibox_margin,
             width  = wa.width - margin_left - margin_right,
-            height = wa.height - margin_top - margin_bottom
+            height = wa.height - margin_top - margin_bottom - wibox_height - wibox_margin
         }
         c.shape = function(cr, w, h)
             gears.shape.rounded_rect(cr, w, h, 10)
@@ -978,9 +981,9 @@ client.connect_signal("request::geometry", function(c)
     else
         c:geometry {
             x      = wa.x + margin_left,
-            y      = wa.y + margin_top,
+            y      = wa.y + margin_top + wibox_height + wibox_margin,
             width  = math.min(wa.width - margin_left - margin_right, c.width),
-            height = math.min(wa.height - margin_top - margin_bottom, c.height)
+            height = math.min(wa.height - margin_top - margin_bottom - wibox_height - wibox_margin, c.height)
         }
         c.shape = function(cr, w, h)
             gears.shape.rounded_rect(cr, w, h, 10)
