@@ -18,7 +18,7 @@ neovide
 nm-applet
 nvim
 pavucontrol
-picom
+picom-ftlabs-git
 playerctl
 power-profiles-daemon
 rofi

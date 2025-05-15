@@ -106,7 +106,8 @@ awful.screen.connect_for_each_screen(function(s)
         y = 5,
         bg = "#00000000",
         fg = "#ffffff",
-        ontop = true
+        ontop = true,
+        visible = true
     })
 
     s.mytasklist = awful.widget.tasklist {
@@ -827,7 +828,7 @@ awful.rules.rules = {
     {
         rule = {},
         properties = {
-            border_width = beautiful.border_width,
+            border_width = 0,
             border_color = beautiful.border_normal,
             focus = awful.client.focus.filter,
             raise = true,
@@ -846,7 +847,33 @@ awful.rules.rules = {
         properties = {
             maximized = true,
         }
-    }
+    },
+    {
+        rule_any = {
+            type = {
+                "splash",
+                "dialog"
+            }
+        },
+        properties = {
+            skip_taskbar = true,
+            placement = awful.placement.centered
+        }
+    },
+    {
+        rule_any = {
+            type = {
+                "menu",
+                "popup_menu",
+                "dropdown_menu",
+                "combo"
+            }
+        },
+        properties = {
+            skip_taskbar = true,
+            placement = awful.placement.next_to_mouse
+        }
+    },
 }
 -- }}}
 
@@ -872,7 +899,7 @@ client.connect_signal("manage", function(c)
         awful.spawn("dunstctl set-paused true")
     end
     c.shape = function(cr, w, h)
-        gears.shape.rounded_rect(cr, w, h, 6)
+        gears.shape.rounded_rect(cr, w, h, 11)
     end
 end)
 
@@ -922,16 +949,14 @@ client.connect_signal("focus", function(c)
     c.border_color = beautiful.border_focus
     local screen = c.screen
     if c.fullscreen then
-        screen.mywibox.ontop = false
+        screen.mywibox.visible = false
         awful.spawn("dunstctl set-paused true")
     else
-        screen.mywibox.ontop = true
+        screen.mywibox.visible = true
         awful.spawn("dunstctl set-paused false")
     end
 end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
-
-awful.spawn("wmname 'iamnanokaWM'")
 
 client.connect_signal("request::geometry", function(c)
     local screen = c.screen
@@ -941,7 +966,6 @@ client.connect_signal("request::geometry", function(c)
         c.shape = gears.shape.rectangle
         return
     elseif c.maximized then
-        -- Maximized nhưng vẫn có margin
         c:geometry {
             x      = wa.x + margin_left,
             y      = wa.y + margin_top,
@@ -952,7 +976,6 @@ client.connect_signal("request::geometry", function(c)
             gears.shape.rounded_rect(cr, w, h, 10)
         end
     else
-        -- Cửa sổ bình thường
         c:geometry {
             x      = wa.x + margin_left,
             y      = wa.y + margin_top,
@@ -970,10 +993,12 @@ client.connect_signal("property::fullscreen", function(c)
     if c == screen.selected_tag then return end
 
     if c.fullscreen then
-        screen.mywibox.ontop = false
+        screen.mywibox.visible = false
         awful.spawn("dunstctl set-paused true")
     else
-        screen.mywibox.ontop = true
+        screen.mywibox.visible = true
         awful.spawn("dunstctl set-paused false")
     end
 end)
+
+awful.spawn("pactl set-source-volume @DEFAULT_SOURCE@ 150%")
