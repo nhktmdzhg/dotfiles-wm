@@ -718,7 +718,10 @@ local globalkeys = gears.table.join(
     end),
     -- Awesome --
     awful.key({ super, ctrl }, "r", awesome.restart),
-    awful.key({ super }, "d", toggle_show_desktop)
+    awful.key({ super }, "d", toggle_show_desktop),
+    awful.key({ super }, "b", function()
+        awful.spawn("librewolf")
+    end)
 )
 
 root.keys(globalkeys)
@@ -735,6 +738,48 @@ local clientkeys = gears.table.join(
     end),
     awful.key({ super, shift }, "Right", function(c)
         c:relative_move(10, 0, 0, 0)
+    end),
+    awful.key({ super }, "Up", function(c)
+        local screen = c.screen
+        local wa = screen.workarea
+        c:geometry {
+            x      = wa.x + margin_left,
+            y      = wa.y + margin_top + wibox_height + wibox_margin,
+            width  = wa.width - margin_left - margin_right,
+            height = (wa.height - margin_top - margin_bottom - wibox_height - wibox_margin) / 2
+        }
+    end),
+    awful.key({ super }, "Down", function(c)
+        local screen = c.screen
+        local wa = screen.workarea
+        local height = (wa.height - margin_top - margin_bottom - wibox_height - wibox_margin) / 2
+        c:geometry {
+            x      = wa.x + margin_left,
+            y      = wa.y + margin_top + wibox_height + wibox_margin + height,
+            width  = wa.width - margin_left - margin_right,
+            height = height
+        }
+    end),
+    awful.key({ super }, "Left", function(c)
+        local screen = c.screen
+        local wa = screen.workarea
+        c:geometry {
+            x      = wa.x + margin_left,
+            y      = wa.y + margin_top + wibox_height + wibox_margin,
+            width  = (wa.width - margin_left - margin_right) / 2,
+            height = wa.height - margin_top - margin_bottom - wibox_height - wibox_margin
+        }
+    end),
+    awful.key({ super }, "Right", function(c)
+        local screen = c.screen
+        local wa = screen.workarea
+        local width = (wa.width - margin_left - margin_right) / 2
+        c:geometry {
+            x      = wa.x + margin_left + width,
+            y      = wa.y + margin_top + wibox_height + wibox_margin,
+            width  = width,
+            height = wa.height - margin_top - margin_bottom - wibox_height - wibox_margin
+        }
     end),
     -- Window controls --
     awful.key({ alt }, "F4", function(c)
