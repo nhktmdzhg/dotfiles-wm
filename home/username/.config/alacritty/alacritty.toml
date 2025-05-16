@@ -10,7 +10,7 @@ opacity = 0.9
 decorations_theme_variant = "Dark"
 
 [window.dimensions]
-columns = 130
+columns = 115
 lines = 35
 
 [window.class]

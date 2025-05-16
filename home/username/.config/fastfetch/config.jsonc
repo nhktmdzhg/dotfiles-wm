@@ -3,6 +3,10 @@
   "display": {
     "separator": "  "
   },
+  "logo": {
+    "type": "file",
+    "source": "~/.config/fastfetch/logo.txt"
+  },
   "modules": [
     {
       "type": "custom",
