@@ -874,9 +874,9 @@ awful.rules.rules = {
         },
         properties = {
             skip_taskbar = true,
-            placement = awful.placement.next_to_mouse
+            placement = awful.placement.resize_to_mouse
         }
-    },
+    }
 }
 -- }}}
 
@@ -900,9 +900,6 @@ client.connect_signal("manage", function(c)
         awful.spawn("dunstctl set-paused false")
     else
         awful.spawn("dunstctl set-paused true")
-    end
-    c.shape = function(cr, w, h)
-        gears.shape.rounded_rect(cr, w, h, 11)
     end
 end)
 
@@ -966,7 +963,6 @@ client.connect_signal("request::geometry", function(c)
     local wa = screen.workarea
 
     if c.fullscreen then
-        c.shape = gears.shape.rectangle
         return
     elseif c.maximized then
         c:geometry {
@@ -975,9 +971,6 @@ client.connect_signal("request::geometry", function(c)
             width  = wa.width - margin_left - margin_right,
             height = wa.height - margin_top - margin_bottom - wibox_height - wibox_margin
         }
-        c.shape = function(cr, w, h)
-            gears.shape.rounded_rect(cr, w, h, 10)
-        end
     else
         c:geometry {
             x      = wa.x + margin_left,
@@ -985,9 +978,6 @@ client.connect_signal("request::geometry", function(c)
             width  = math.min(wa.width - margin_left - margin_right, c.width),
             height = math.min(wa.height - margin_top - margin_bottom - wibox_height - wibox_margin, c.height)
         }
-        c.shape = function(cr, w, h)
-            gears.shape.rounded_rect(cr, w, h, 10)
-        end
     end
 end)
 

@@ -3,7 +3,7 @@
 exec >/dev/null 2>&1
 ksuperkey -e 'Super_L=Alt_L|F1'
 ksuperkey -e 'Super_R=Alt_L|F1'
-picom --animation -b
+picom --animations -b
 lxqt-policykit-agent &
 xss-lock -q -l ~/.config/awesome/xss-lock-tsl.sh &
 

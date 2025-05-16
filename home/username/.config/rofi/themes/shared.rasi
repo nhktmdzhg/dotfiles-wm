@@ -25,7 +25,7 @@
   exts-window-location:             south east;
   exts-window-x-offset:             0px;
   exts-window-y-offset:             0px;
-  exts-window-border-radius:        60px 0px 0px 0px;
+  exts-window-border-radius:        0px 0px 0px 0px;
   exts-button-custom-margin:        4px;
   exts-button-custom-padding:       7px 9px;
   exts-button-custom-border-radius: 16px;
