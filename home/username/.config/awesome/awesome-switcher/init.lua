@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global, deprecated, lowercase-global
 local cairo = require("lgi").cairo
 local mouse = mouse
 local screen = screen

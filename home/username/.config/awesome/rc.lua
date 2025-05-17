@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 local gears = require("gears")
 local awful = require("awful")
 require("awful.autofocus")
@@ -721,6 +722,9 @@ local globalkeys = gears.table.join(
     awful.key({ super }, "d", toggle_show_desktop),
     awful.key({ super }, "b", function()
         awful.spawn("librewolf")
+    end),
+    awful.key({ super }, "n", function()
+        awful.spawn("nvim-qt")
     end)
 )
 

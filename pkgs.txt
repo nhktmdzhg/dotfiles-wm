@@ -27,7 +27,4 @@ thunar-archive-plugin
 thunar-volman
 upower
 wireless_tools
-wmname
-xclip
-xsettingsd
 xss-lock
