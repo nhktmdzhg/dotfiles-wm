@@ -45,14 +45,5 @@ else
     echo "./home/username/ not found. Skipping home directory copy."
 fi
 
-# Copy /usr/share contents
-echo "Copying /usr/share contents..."
-if [ -d "./usr/share/" ]; then
-    sudo cp -rf ./usr/share/. /usr/share/
-    echo "/usr/share copied successfully."
-else
-    echo "./usr/share/ not found. Skipping /usr/share copy."
-fi
-
 echo "All operations completed."
 

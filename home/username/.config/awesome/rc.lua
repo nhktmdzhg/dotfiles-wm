@@ -19,21 +19,24 @@ local margin_right  = 10
 local wibox_height  = 30
 local wibox_margin  = 5
 
-if awesome.startup_errors then
-    awesome.spawn("dunstify -u critical -t 'Oops, there were errors during startup!' -a 'AwesomeWM' -i 'arch-error' '" ..
-        awesome.startup_errors .. "'")
-end
-
-do
-    local in_error = false
-    awesome.connect_signal("debug::error", function(err)
-        if in_error then return end
-        in_error = true
-        awesome.spawn("dunstify -u critical -t 'Oops, an error happened!' -a 'AwesomeWM' -i 'arch-error' '" ..
-            tostring(err) .. "'")
-        in_error = false
-    end)
-end
+package.loaded["naughty.dbus"] = {}
+awful.spawn.once("dunst")
+awful.spawn("pactl set-source-volume @DEFAULT_SOURCE@ 150%")
+awful.spawn("ksuperkey -e 'Super_L=Alt_L|F1'")
+awful.spawn("ksuperkey -e 'Super_R=Alt_L|F1'")
+awful.spawn.once("picom --animations -b")
+awful.spawn.once("lxqt-policykit-agent")
+awful.spawn.once("sh -c 'xss-lock -q -l ~/.config/awesome/xss-lock-tsl.sh'")
+awful.spawn("xset s off")
+awful.spawn("xset -dpms")
+awful.spawn.once("thunderbird")
+awful.spawn.once("mcontrolcenter")
+awful.spawn.once("discord")
+awful.spawn.once("sh -c 'python ~/.local/share/Zalo/main.py'")
+awful.spawn.once("fcitx5")
+awful.spawn.once("nm-applet")
+awful.spawn.once("powerprofilesctl set performance")
+awful.spawn.once("bluetoothctl power off")
 
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 
@@ -42,7 +45,6 @@ awful.layout.layouts = {
 }
 
 -- {{{ Wibar
-
 local function get_output_of_cmd(cmd)
     local handle = io.popen(cmd)
     local result = handle and handle:read("*a") or ""
@@ -1043,4 +1045,3 @@ client.connect_signal("property::fullscreen", function(c)
     end
 end)
 
-awful.spawn("pactl set-source-volume @DEFAULT_SOURCE@ 150%")
