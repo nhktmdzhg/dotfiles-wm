@@ -19,24 +19,27 @@ local margin_right  = 10
 local wibox_height  = 30
 local wibox_margin  = 5
 
+local function spawn_once(cmd_name, cmd_full)
+    awful.spawn.with_shell("pgrep -u $USER -x ".. cmd_name .. " > /dev/null || (" .. cmd_full .. ")")
+end
+
 package.loaded["naughty.dbus"] = {}
-awful.spawn.once("dunst")
+spawn_once("dunst", "dunst")
 awful.spawn("pactl set-source-volume @DEFAULT_SOURCE@ 150%")
 awful.spawn("ksuperkey -e 'Super_L=Alt_L|F1'")
 awful.spawn("ksuperkey -e 'Super_R=Alt_L|F1'")
-awful.spawn.once("picom --animations -b")
-awful.spawn.once("lxqt-policykit-agent")
-awful.spawn.once("sh -c 'xss-lock -q -l ~/.config/awesome/xss-lock-tsl.sh'")
+spawn_once("picom", "picom --animations -b")
+spawn_once("lxqt-policykit-agent", "lxqt-policykit-agent")
+spawn_once("xss-lock", "xss-lock -q -l ~/.config/awesome/xss-lock-tsl.sh")
 awful.spawn("xset s off")
 awful.spawn("xset -dpms")
-awful.spawn.once("thunderbird")
-awful.spawn.once("mcontrolcenter")
-awful.spawn.once("discord")
-awful.spawn.once("sh -c 'python ~/.local/share/Zalo/main.py'")
-awful.spawn.once("fcitx5")
-awful.spawn.once("nm-applet")
+spawn_once("thunderbird", "thunderbird")
+spawn_once("mcontrolcenter", "mcontrolcenter")
+spawn_once("Discord", "discord")
+spawn_once("zalo", "zalo")
+spawn_once("fcitx5", "fcitx5")
+spawn_once("nm-applet", "nm-applet")
 awful.spawn.once("powerprofilesctl set performance")
-awful.spawn.once("bluetoothctl power off")
 
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 

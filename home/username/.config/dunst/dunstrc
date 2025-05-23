@@ -22,7 +22,7 @@ font = "mplus Nerd Font 10"
 format = "<span size='x-large' font_desc='Cantarell,mplus Nerd Font 9' weight='bold' foreground='#f9f9f9'>%s</span>\n%b"
 
 show_age_threshold = 60
-icon_position = top
+icon_position = left
 max_icon_size = 80
 
 # EXPERIMENTAL
