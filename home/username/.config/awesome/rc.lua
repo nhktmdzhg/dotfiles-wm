@@ -891,7 +891,9 @@ awful.rules.rules = {
             keys = clientkeys,
             buttons = clientbuttons,
             screen = awful.screen.preferred,
-            placement = awful.placement.centered
+            callback = function (c)
+                awful.placement.centered(c, nil)
+            end
         }
     },
     {
@@ -937,17 +939,11 @@ awful.rules.rules = {
 -- {{{ Signals
 -- Signal function to execute when a new client appears.
 client.connect_signal("manage", function(c)
-    if awesome.startup
-        and not c.size_hints.user_position
-        and not c.size_hints.program_position then
-        -- Prevent clients from being unreachable after screen count changes.
-        awful.placement.no_offscreen(c)
-    end
     local wa = c.screen.workarea
     if not c.fullscreen then
         c:geometry {
-            x      = wa.x + margin_left,
-            y      = wa.y + margin_top + wibox_height + wibox_margin,
+            x      = math.max(wa.x + margin_left, c.x),
+            y      = math.max(wa.y + margin_top + wibox_height + wibox_margin, c.y),
             width  = math.min(wa.width - margin_left - margin_right, c.width),
             height = math.min(wa.height - margin_top - margin_bottom - wibox_height - wibox_margin, c.height)
         }
@@ -1027,8 +1023,8 @@ client.connect_signal("request::geometry", function(c)
         }
     else
         c:geometry {
-            x      = wa.x + margin_left,
-            y      = wa.y + margin_top + wibox_height + wibox_margin,
+            x      = math.max(wa.x + margin_left, c.x),
+            y      = math.max(wa.y + margin_top + wibox_height + wibox_margin, c.y),
             width  = math.min(wa.width - margin_left - margin_right, c.width),
             height = math.min(wa.height - margin_top - margin_bottom - wibox_height - wibox_margin, c.height)
         }
