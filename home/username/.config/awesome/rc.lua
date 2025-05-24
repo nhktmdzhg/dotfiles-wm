@@ -20,7 +20,7 @@ local wibox_height  = 30
 local wibox_margin  = 5
 
 local function spawn_once(cmd_name, cmd_full)
-    awful.spawn.with_shell("pgrep -u $USER -x ".. cmd_name .. " > /dev/null || (" .. cmd_full .. ")")
+    awful.spawn.with_shell("pgrep -u $USER -x " .. cmd_name .. " > /dev/null || (" .. cmd_full .. ")")
 end
 
 package.loaded["naughty.dbus"] = {}
@@ -796,17 +796,13 @@ local clientkeys = gears.table.join(
     end),
     awful.key({ super }, "f", function(c)
         c.fullscreen = not c.fullscreen
-        c:raise()
     end),
     awful.key({ super }, "x", function(c)
         c.maximized = not c.maximized
-        c:raise()
     end),
     awful.key({ super }, "z", function(c)
-        c.minimized = not c.minimized
-        if c.minimized then
-            c:raise()
-        end
+        c.minimized = true
+        c:lower()
     end)
 )
 
@@ -891,7 +887,7 @@ awful.rules.rules = {
             keys = clientkeys,
             buttons = clientbuttons,
             screen = awful.screen.preferred,
-            callback = function (c)
+            callback = function(c)
                 awful.placement.centered(c, nil)
             end
         }
@@ -1008,6 +1004,10 @@ client.connect_signal("focus", function(c)
 end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 
+local function clamp(x, min, max)
+    return math.max(min, math.min(max, x))
+end
+
 client.connect_signal("request::geometry", function(c)
     local screen = c.screen
     local wa = screen.workarea
@@ -1023,8 +1023,8 @@ client.connect_signal("request::geometry", function(c)
         }
     else
         c:geometry {
-            x      = math.max(wa.x + margin_left, c.x),
-            y      = math.max(wa.y + margin_top + wibox_height + wibox_margin, c.y),
+            x      = clamp(c.x, wa.x + margin_left, wa.x + wa.width - margin_right - c.width),
+            y      = clamp(c.y, wa.y + margin_top + wibox_height + wibox_margin, wa.y + wa.height - margin_bottom - c.height),
             width  = math.min(wa.width - margin_left - margin_right, c.width),
             height = math.min(wa.height - margin_top - margin_bottom - wibox_height - wibox_margin, c.height)
         }
@@ -1043,4 +1043,3 @@ client.connect_signal("property::fullscreen", function(c)
         awful.spawn("dunstctl set-paused false")
     end
 end)
-
