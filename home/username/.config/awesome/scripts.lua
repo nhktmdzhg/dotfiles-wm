@@ -46,12 +46,12 @@ function scripts.get_battery_icon()
     end
 
     local icons = {
-        empty          = '',
-        quarter        = '',
-        half           = '',
+        empty = '',
+        quarter = '',
+        half = '',
         three_quarters = '',
-        full           = '',
-        charging       = ''
+        full = '',
+        charging = ''
     }
 
     if status == "discharging" then
@@ -204,10 +204,8 @@ function scripts.change_brightness(arg)
     else
         icon = 'display-brightness-high'
     end
-    awful.spawn("dunstify \"" ..
-        brightness ..
-        "\" -h \"int:value:" ..
-        brightness .. "\" -a joyful_desktop -h string:synchronous:display-brightness -i " .. icon .. " -t 1000")
+    awful.spawn("dunstify \"" .. brightness .. "\" -h \"int:value:" .. brightness ..
+                    "\" -a joyful_desktop -h string:synchronous:display-brightness -i " .. icon .. " -t 1000")
 end
 
 return scripts

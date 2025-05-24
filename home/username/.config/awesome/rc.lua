@@ -8,16 +8,16 @@ local timer = require("gears.timer")
 local scripts = require("scripts")
 require("awful.hotkeys_popup.keys")
 
-local super         = "Mod4"
-local alt           = "Mod1"
-local ctrl          = "Control"
-local shift         = "Shift"
-local margin_top    = 10
+local super = "Mod4"
+local alt = "Mod1"
+local ctrl = "Control"
+local shift = "Shift"
+local margin_top = 10
 local margin_bottom = 10
-local margin_left   = 10
-local margin_right  = 10
-local wibox_height  = 30
-local wibox_margin  = 5
+local margin_left = 10
+local margin_right = 10
+local wibox_height = 30
+local wibox_margin = 5
 
 local function spawn_once(cmd_name, cmd_full)
     awful.spawn.with_shell("pgrep -u $USER -x " .. cmd_name .. " > /dev/null || (" .. cmd_full .. ")")
@@ -43,9 +43,7 @@ awful.spawn.once("powerprofilesctl set performance")
 
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 
-awful.layout.layouts = {
-    awful.layout.suit.floating
-}
+awful.layout.layouts = {awful.layout.suit.floating}
 
 -- {{{ Wibar
 local function get_output_of_cmd(cmd)
@@ -75,19 +73,15 @@ end
 --     awful.button({}, 5, function(t) awful.tag.viewprev(t.screen) end)
 -- )
 
-local tasklist_buttons = gears.table.join(
-    awful.button({}, 1, function(c)
-        if c == client.focus then
-            c.minimized = true
-        else
-            c:emit_signal(
-                "request::activate",
-                "tasklist",
-                { raise = true }
-            )
-        end
-    end)
-)
+local tasklist_buttons = gears.table.join(awful.button({}, 1, function(c)
+    if c == client.focus then
+        c.minimized = true
+    else
+        c:emit_signal("request::activate", "tasklist", {
+            raise = true
+        })
+    end
+end))
 
 local function set_wallpaper(s)
     local wallpaper_path = "/home/iamnanoka/wallpaper/march 7th 4k.jpg"
@@ -102,7 +96,7 @@ awful.screen.connect_for_each_screen(function(s)
     set_wallpaper(s)
 
     -- Each screen has its own tag table.
-    awful.tag({ "1" }, s, awful.layout.layouts[1])
+    awful.tag({"1"}, s, awful.layout.layouts[1])
 
     -- Create the wibox
     s.mywibox = wibox({
@@ -119,29 +113,29 @@ awful.screen.connect_for_each_screen(function(s)
     })
 
     s.mytasklist = awful.widget.tasklist {
-        screen          = s,
-        filter          = awful.widget.tasklist.filter.currenttags,
-        buttons         = tasklist_buttons,
-        style           = {
+        screen = s,
+        filter = awful.widget.tasklist.filter.currenttags,
+        buttons = tasklist_buttons,
+        style = {
             shape_border_width = 1,
             shape_border_color = '#777777',
-            shape              = gears.shape.rounded_rect
+            shape = gears.shape.rounded_rect
         },
-        layout          = {
+        layout = {
             spacing = 4,
-            layout  = wibox.layout.fixed.horizontal
+            layout = wibox.layout.fixed.horizontal
         },
         widget_template = {
             {
                 {
-                    id           = "icon_role",
-                    widget       = wibox.widget.imagebox,
+                    id = "icon_role",
+                    widget = wibox.widget.imagebox,
                     forced_width = 28
                 },
                 margins = 2,
-                widget  = wibox.container.margin
+                widget = wibox.container.margin
             },
-            id     = 'background_role',
+            id = 'background_role',
             widget = wibox.container.background
         }
     }
@@ -151,20 +145,20 @@ awful.screen.connect_for_each_screen(function(s)
     -- Custom widgets
     local sep_left = wibox.widget {
         markup = "",
-        align  = "center",
+        align = "center",
         valign = "center",
         widget = wibox.widget.textbox,
-        font   = "Iosevka 14"
+        font = "Iosevka 14"
     }
 
     local arch_logo = wibox.widget {
         {
             {
                 markup = "",
-                align  = "center",
+                align = "center",
                 valign = "center",
                 widget = wibox.widget.textbox,
-                font   = "Iosevka 18"
+                font = "Iosevka 18"
             },
             margins = 2,
             widget = wibox.container.margin
@@ -174,7 +168,7 @@ awful.screen.connect_for_each_screen(function(s)
         fg = "#434c5eff"
     }
     awful.tooltip {
-        objects = { arch_logo },
+        objects = {arch_logo},
         text = "[L] Main Menu [R] Extensions Menu"
     }
 
@@ -204,10 +198,10 @@ awful.screen.connect_for_each_screen(function(s)
 
     local sep_right = wibox.widget {
         markup = '',
-        align  = "center",
+        align = "center",
         valign = "center",
         widget = wibox.widget.textbox,
-        font   = "Iosevka 14"
+        font = "Iosevka 14"
     }
 
     local mysystray = wibox.widget {
@@ -226,8 +220,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     local window_name = wibox.widget {
         widget = wibox.widget.textbox,
-        font   = "Kurinto Mono JP 9",
-        align  = "center",
+        font = "Kurinto Mono JP 9",
+        align = "center",
         valign = "center"
     }
 
@@ -239,7 +233,7 @@ awful.screen.connect_for_each_screen(function(s)
     window_name_container.shape_clip = true
 
     awful.tooltip {
-        objects = { window_name_container },
+        objects = {window_name_container},
         text = "Window Name"
     }
 
@@ -268,8 +262,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     local battery_icon = wibox.widget {
         widget = wibox.widget.textbox,
-        font   = "MesloLGS Nerd Font Mono 15",
-        align  = "center",
+        font = "MesloLGS Nerd Font Mono 15",
+        align = "center",
         valign = "center"
     }
 
@@ -281,7 +275,7 @@ awful.screen.connect_for_each_screen(function(s)
     battery_icon_container.shape_clip = true
 
     awful.tooltip {
-        objects = { battery_icon_container },
+        objects = {battery_icon_container},
         text = "Battery Status"
     }
 
@@ -296,8 +290,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     local battery_percent = wibox.widget {
         widget = wibox.widget.textbox,
-        font   = "Kurinto Mono JP 9",
-        align  = "center",
+        font = "Kurinto Mono JP 9",
+        align = "center",
         valign = "center"
     }
 
@@ -309,7 +303,7 @@ awful.screen.connect_for_each_screen(function(s)
     battery_percent_container.shape_clip = true
 
     awful.tooltip {
-        objects = { battery_percent_container },
+        objects = {battery_percent_container},
         text = "Battery percent"
     }
 
@@ -324,8 +318,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     local network_icon = wibox.widget {
         widget = wibox.widget.textbox,
-        font   = "Material Bold 10",
-        align  = "center",
+        font = "Material Bold 10",
+        align = "center",
         valign = "center"
     }
 
@@ -337,7 +331,7 @@ awful.screen.connect_for_each_screen(function(s)
     network_icon_container.shape_clip = true
 
     awful.tooltip {
-        objects = { network_icon_container },
+        objects = {network_icon_container},
         text = "Network Status"
     }
 
@@ -352,8 +346,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     local network_status = wibox.widget {
         widget = wibox.widget.textbox,
-        font   = "Kurinto Mono JP 9",
-        align  = "center",
+        font = "Kurinto Mono JP 9",
+        align = "center",
         valign = "center"
     }
 
@@ -365,7 +359,7 @@ awful.screen.connect_for_each_screen(function(s)
     network_status_container.shape_clip = true
 
     awful.tooltip {
-        objects = { network_status_container },
+        objects = {network_status_container},
         text = "Network IP/SSID"
     }
 
@@ -380,8 +374,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     local volume_icon = wibox.widget {
         widget = wibox.widget.textbox,
-        font   = "Material Bold 10",
-        align  = "center",
+        font = "Material Bold 10",
+        align = "center",
         valign = "center"
     }
 
@@ -393,7 +387,7 @@ awful.screen.connect_for_each_screen(function(s)
     volume_icon_container.shape_clip = true
 
     awful.tooltip {
-        objects = { volume_icon_container },
+        objects = {volume_icon_container},
         text = "[L] Toggle Audio Mute [S] Audio Volume +/-"
     }
 
@@ -418,8 +412,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     local volume_percent = wibox.widget {
         widget = wibox.widget.textbox,
-        font   = "Kurinto Mono JP 9",
-        align  = "center",
+        font = "Kurinto Mono JP 9",
+        align = "center",
         valign = "center"
     }
 
@@ -431,7 +425,7 @@ awful.screen.connect_for_each_screen(function(s)
     volume_percent_container.shape_clip = true
 
     awful.tooltip {
-        objects = { volume_percent_container },
+        objects = {volume_percent_container},
         text = "[S] Audio Volume +/-"
     }
 
@@ -454,10 +448,10 @@ awful.screen.connect_for_each_screen(function(s)
 
     local calendar_icon = wibox.widget {
         widget = wibox.widget.textbox,
-        font   = "Material Bold 10",
-        align  = "center",
+        font = "Material Bold 10",
+        align = "center",
         valign = "center",
-        text   = ""
+        text = ""
     }
 
     local calendar_icon_container = wibox.container.margin(calendar_icon, 5, 5, 0, 0)
@@ -468,7 +462,7 @@ awful.screen.connect_for_each_screen(function(s)
     calendar_icon_container.shape_clip = true
 
     awful.tooltip {
-        objects = { calendar_icon_container },
+        objects = {calendar_icon_container},
         text = "Calendar"
     }
 
@@ -480,8 +474,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     local date_widget = wibox.widget {
         widget = wibox.widget.textbox,
-        font   = "Kurinto Mono JP 9",
-        align  = "center",
+        font = "Kurinto Mono JP 9",
+        align = "center",
         valign = "center"
     }
 
@@ -493,7 +487,7 @@ awful.screen.connect_for_each_screen(function(s)
     date_widget_container.shape_clip = true
 
     awful.tooltip {
-        objects = { date_widget_container },
+        objects = {date_widget_container},
         text = "Date"
     }
 
@@ -508,8 +502,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     local time_widget = wibox.widget {
         widget = wibox.widget.textbox,
-        font   = "Kurinto Mono 9",
-        align  = "center",
+        font = "Kurinto Mono 9",
+        align = "center",
         valign = "center"
     }
 
@@ -521,7 +515,7 @@ awful.screen.connect_for_each_screen(function(s)
     time_widget_container.shape_clip = true
 
     awful.tooltip {
-        objects = { time_widget_container },
+        objects = {time_widget_container},
         text = "Time"
     }
 
@@ -538,10 +532,10 @@ awful.screen.connect_for_each_screen(function(s)
         {
             {
                 markup = "󰍜",
-                align  = "center",
+                align = "center",
                 valign = "center",
                 widget = wibox.widget.textbox,
-                font   = "MesloLGS Nerd Font Mono 12"
+                font = "MesloLGS Nerd Font Mono 12"
             },
             margins = 2,
             widget = wibox.container.margin
@@ -551,7 +545,7 @@ awful.screen.connect_for_each_screen(function(s)
         fg = "#434c5eff"
     }
     awful.tooltip {
-        objects = { logout_logo },
+        objects = {logout_logo},
         text = "[L] Session Menu [R] Extensions Menu"
     }
 
@@ -572,7 +566,7 @@ awful.screen.connect_for_each_screen(function(s)
     end)
 
     -- Add widgets to the wibox
-    s.mywibox:setup {
+    s.mywibox:setup{
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
@@ -618,10 +612,7 @@ end)
 -- }}}
 
 -- {{{ Mouse bindings
-root.buttons(gears.table.join(
-    awful.button({}, 4, awful.tag.viewnext),
-    awful.button({}, 5, awful.tag.viewprev)
-))
+root.buttons(gears.table.join(awful.button({}, 4, awful.tag.viewnext), awful.button({}, 5, awful.tag.viewprev)))
 -- }}}
 
 -- {{{ Key bindings
@@ -654,157 +645,120 @@ end
 
 local switcher = require("awesome-switcher")
 
-local globalkeys = gears.table.join(
--- Brightness controls --
-    awful.key({}, "XF86MonBrightnessUp", function()
-        scripts.change_brightness(1)
-    end),
-    awful.key({}, "XF86MonBrightnessDown", function()
-        scripts.change_brightness(-1)
-    end),
-    -- Audio-volume controls --
-    awful.key({}, "XF86AudioRaiseVolume", function()
-        scripts.get_volume_info(1)
-    end),
-    awful.key({}, "XF86AudioLowerVolume", function()
-        scripts.get_volume_info(-1)
-    end),
-    awful.key({}, "XF86AudioMute", function()
-        scripts.get_volume_info(0)
-    end),
-    awful.key({}, "XF86AudioPlay", function()
-        awful.spawn.with_shell("playerctl play-pause")
-    end),
-    awful.key({}, "XF86AudioNext", function()
-        awful.spawn.with_shell("playerctl next")
-    end),
-    awful.key({}, "XF86AudioPrev", function()
-        awful.spawn.with_shell("playerctl previous")
-    end),
-    awful.key({}, "XF86AudioStop", function()
-        awful.spawn.with_shell("playerctl play-pause")
-    end),
-    awful.key({}, "XF86AudioPause", function()
-        awful.spawn.with_shell("playerctl play-pause")
-    end),
-    -- Window controls --
-    awful.key({ alt }, "Tab", function()
-        switcher.switch(1, alt, "Alt_L", shift, "Tab")
-    end),
-    awful.key({ alt, shift }, "Tab", function()
-        switcher.switch(-1, alt, "Alt_L", shift, "Tab")
-    end),
-    -- Rofi controls --
-    awful.key({ super }, "Escape", function()
-        awful.spawn.with_shell("~/.config/rofi/scripts/rofi-exts.sh session")
-    end),
-    awful.key({ alt }, "F1", function()
-        awful.spawn.with_shell(
-            "XMODIFIERS=@im=none rofi -theme-str '@import \"main.rasi\"' -no-lazy-grab -show drun -modi drun")
-    end),
-    -- Screenshot controls --
-    awful.key({}, "Print", function()
-        awful.spawn("flameshot")
-    end),
-    awful.key({ ctrl }, "Print", function()
-        awful.spawn("flameshot gui")
-    end),
-    -- Applications --
-    awful.key({ super }, "e", function()
-        awful.spawn("thunar")
-    end),
-    awful.key({ super }, "l", function()
-        awful.spawn("betterlockscreen -l blur")
-    end),
-    awful.key({ ctrl, alt }, "t", function()
-        awful.spawn.with_shell("XMODIFIERS= alacritty")
-    end),
-    awful.key({ ctrl, shift }, "Escape", function()
-        awful.spawn.with_shell("XMODIFIERS= alacritty -e btop")
-    end),
-    -- Awesome --
-    awful.key({ super, ctrl }, "r", awesome.restart),
-    awful.key({ super }, "d", toggle_show_desktop),
-    awful.key({ super }, "b", function()
+local globalkeys = gears.table.join( -- Brightness controls --
+awful.key({}, "XF86MonBrightnessUp", function()
+    scripts.change_brightness(1)
+end), awful.key({}, "XF86MonBrightnessDown", function()
+    scripts.change_brightness(-1)
+end), -- Audio-volume controls --
+awful.key({}, "XF86AudioRaiseVolume", function()
+    scripts.get_volume_info(1)
+end), awful.key({}, "XF86AudioLowerVolume", function()
+    scripts.get_volume_info(-1)
+end), awful.key({}, "XF86AudioMute", function()
+    scripts.get_volume_info(0)
+end), awful.key({}, "XF86AudioPlay", function()
+    awful.spawn.with_shell("playerctl play-pause")
+end), awful.key({}, "XF86AudioNext", function()
+    awful.spawn.with_shell("playerctl next")
+end), awful.key({}, "XF86AudioPrev", function()
+    awful.spawn.with_shell("playerctl previous")
+end), awful.key({}, "XF86AudioStop", function()
+    awful.spawn.with_shell("playerctl play-pause")
+end), awful.key({}, "XF86AudioPause", function()
+    awful.spawn.with_shell("playerctl play-pause")
+end), -- Window controls --
+awful.key({alt}, "Tab", function()
+    switcher.switch(1, alt, "Alt_L", shift, "Tab")
+end), awful.key({alt, shift}, "Tab", function()
+    switcher.switch(-1, alt, "Alt_L", shift, "Tab")
+end), -- Rofi controls --
+awful.key({super}, "Escape", function()
+    awful.spawn.with_shell("~/.config/rofi/scripts/rofi-exts.sh session")
+end), awful.key({alt}, "F1", function()
+    awful.spawn.with_shell(
+        "XMODIFIERS=@im=none rofi -theme-str '@import \"main.rasi\"' -no-lazy-grab -show drun -modi drun")
+end), -- Screenshot controls --
+awful.key({}, "Print", function()
+    awful.spawn("flameshot")
+end), awful.key({ctrl}, "Print", function()
+    awful.spawn("flameshot gui")
+end), -- Applications --
+awful.key({super}, "e", function()
+    awful.spawn("thunar")
+end), awful.key({super}, "l", function()
+    awful.spawn("betterlockscreen -l blur")
+end), awful.key({ctrl, alt}, "t", function()
+    awful.spawn.with_shell("XMODIFIERS= alacritty")
+end), awful.key({ctrl, shift}, "Escape", function()
+    awful.spawn.with_shell("XMODIFIERS= alacritty -e btop")
+end), -- Awesome --
+awful.key({super, ctrl}, "r", awesome.restart), awful.key({super}, "d", toggle_show_desktop),
+    awful.key({super}, "b", function()
         awful.spawn("librewolf")
-    end),
-    awful.key({ super }, "n", function()
+    end), awful.key({super}, "n", function()
         awful.spawn("nvim-qt")
-    end)
-)
+    end))
 
 root.keys(globalkeys)
 
-local clientkeys = gears.table.join(
-    awful.key({ super, shift }, "Up", function(c)
-        c:relative_move(0, -10, 0, 0)
-    end),
-    awful.key({ super, shift }, "Down", function(c)
-        c:relative_move(0, 10, 0, 0)
-    end),
-    awful.key({ super, shift }, "Left", function(c)
-        c:relative_move(-10, 0, 0, 0)
-    end),
-    awful.key({ super, shift }, "Right", function(c)
-        c:relative_move(10, 0, 0, 0)
-    end),
-    awful.key({ super }, "Up", function(c)
-        local screen = c.screen
-        local wa = screen.workarea
-        c:geometry {
-            x      = wa.x + margin_left,
-            y      = wa.y + margin_top + wibox_height + wibox_margin,
-            width  = wa.width - margin_left - margin_right,
-            height = (wa.height - margin_top - margin_bottom - wibox_height - wibox_margin) / 2
-        }
-    end),
-    awful.key({ super }, "Down", function(c)
-        local screen = c.screen
-        local wa = screen.workarea
-        local height = (wa.height - margin_top - margin_bottom - wibox_height - wibox_margin) / 2
-        c:geometry {
-            x      = wa.x + margin_left,
-            y      = wa.y + margin_top + wibox_height + wibox_margin + height,
-            width  = wa.width - margin_left - margin_right,
-            height = height
-        }
-    end),
-    awful.key({ super }, "Left", function(c)
-        local screen = c.screen
-        local wa = screen.workarea
-        c:geometry {
-            x      = wa.x + margin_left,
-            y      = wa.y + margin_top + wibox_height + wibox_margin,
-            width  = (wa.width - margin_left - margin_right) / 2,
-            height = wa.height - margin_top - margin_bottom - wibox_height - wibox_margin
-        }
-    end),
-    awful.key({ super }, "Right", function(c)
-        local screen = c.screen
-        local wa = screen.workarea
-        local width = (wa.width - margin_left - margin_right) / 2
-        c:geometry {
-            x      = wa.x + margin_left + width,
-            y      = wa.y + margin_top + wibox_height + wibox_margin,
-            width  = width,
-            height = wa.height - margin_top - margin_bottom - wibox_height - wibox_margin
-        }
-    end),
-    -- Window controls --
-    awful.key({ alt }, "F4", function(c)
-        c:kill()
-    end),
-    awful.key({ super }, "f", function(c)
-        c.fullscreen = not c.fullscreen
-    end),
-    awful.key({ super }, "x", function(c)
-        c.maximized = not c.maximized
-    end),
-    awful.key({ super }, "z", function(c)
-        c.minimized = true
-        c:lower()
-    end)
-)
+local clientkeys = gears.table.join(awful.key({super, shift}, "Up", function(c)
+    c:relative_move(0, -10, 0, 0)
+end), awful.key({super, shift}, "Down", function(c)
+    c:relative_move(0, 10, 0, 0)
+end), awful.key({super, shift}, "Left", function(c)
+    c:relative_move(-10, 0, 0, 0)
+end), awful.key({super, shift}, "Right", function(c)
+    c:relative_move(10, 0, 0, 0)
+end), awful.key({super}, "Up", function(c)
+    local screen = c.screen
+    local wa = screen.workarea
+    c:geometry{
+        x = wa.x + margin_left,
+        y = wa.y + margin_top + wibox_height + wibox_margin,
+        width = wa.width - margin_left - margin_right,
+        height = (wa.height - margin_top - margin_bottom - wibox_height - wibox_margin) / 2
+    }
+end), awful.key({super}, "Down", function(c)
+    local screen = c.screen
+    local wa = screen.workarea
+    local height = (wa.height - margin_top - margin_bottom - wibox_height - wibox_margin) / 2
+    c:geometry{
+        x = wa.x + margin_left,
+        y = wa.y + margin_top + wibox_height + wibox_margin + height,
+        width = wa.width - margin_left - margin_right,
+        height = height
+    }
+end), awful.key({super}, "Left", function(c)
+    local screen = c.screen
+    local wa = screen.workarea
+    c:geometry{
+        x = wa.x + margin_left,
+        y = wa.y + margin_top + wibox_height + wibox_margin,
+        width = (wa.width - margin_left - margin_right) / 2,
+        height = wa.height - margin_top - margin_bottom - wibox_height - wibox_margin
+    }
+end), awful.key({super}, "Right", function(c)
+    local screen = c.screen
+    local wa = screen.workarea
+    local width = (wa.width - margin_left - margin_right) / 2
+    c:geometry{
+        x = wa.x + margin_left + width,
+        y = wa.y + margin_top + wibox_height + wibox_margin,
+        width = width,
+        height = wa.height - margin_top - margin_bottom - wibox_height - wibox_margin
+    }
+end), -- Window controls --
+awful.key({alt}, "F4", function(c)
+    c:kill()
+end), awful.key({super}, "f", function(c)
+    c.fullscreen = not c.fullscreen
+end), awful.key({super}, "x", function(c)
+    c.maximized = not c.maximized
+end), awful.key({super}, "z", function(c)
+    c.minimized = true
+    c:lower()
+end))
 
 -- Bind all key numbers to tags.
 -- Be careful: we use keycodes to make it work on any keyboard layout.
@@ -856,19 +810,21 @@ local clientkeys = gears.table.join(
 --     )
 -- end
 
-local clientbuttons = gears.table.join(
-    awful.button({}, 1, function(c)
-        c:emit_signal("request::activate", "mouse_click", { raise = true })
-    end),
-    awful.button({ super }, 1, function(c)
-        c:emit_signal("request::activate", "mouse_click", { raise = true })
-        awful.mouse.client.move(c)
-    end),
-    awful.button({ super }, 3, function(c)
-        c:emit_signal("request::activate", "mouse_click", { raise = true })
-        awful.mouse.client.resize(c)
-    end)
-)
+local clientbuttons = gears.table.join(awful.button({}, 1, function(c)
+    c:emit_signal("request::activate", "mouse_click", {
+        raise = true
+    })
+end), awful.button({super}, 1, function(c)
+    c:emit_signal("request::activate", "mouse_click", {
+        raise = true
+    })
+    awful.mouse.client.move(c)
+end), awful.button({super}, 3, function(c)
+    c:emit_signal("request::activate", "mouse_click", {
+        raise = true
+    })
+    awful.mouse.client.resize(c)
+end))
 
 -- Set keys
 root.keys(globalkeys)
@@ -876,60 +832,44 @@ root.keys(globalkeys)
 
 -- {{{ Rules
 -- Rules to apply to new clients (through the "manage" signal).
-awful.rules.rules = {
-    {
-        rule = {},
-        properties = {
-            border_width = 0,
-            border_color = beautiful.border_normal,
-            focus = awful.client.focus.filter,
-            raise = true,
-            keys = clientkeys,
-            buttons = clientbuttons,
-            screen = awful.screen.preferred,
-            callback = function(c)
-                awful.placement.centered(c, nil)
-            end
-        }
-    },
-    {
-        rule_any = {
-            class = {
-                "neovide",
-                "Code"
-            }
-        },
-        properties = {
-            maximized = true,
-        }
-    },
-    {
-        rule_any = {
-            type = {
-                "splash",
-                "dialog"
-            }
-        },
-        properties = {
-            skip_taskbar = true,
-            placement = awful.placement.centered
-        }
-    },
-    {
-        rule_any = {
-            type = {
-                "menu",
-                "popup_menu",
-                "dropdown_menu",
-                "combo"
-            }
-        },
-        properties = {
-            skip_taskbar = true,
-            placement = awful.placement.resize_to_mouse
-        }
+awful.rules.rules = {{
+    rule = {},
+    properties = {
+        border_width = 0,
+        border_color = beautiful.border_normal,
+        focus = awful.client.focus.filter,
+        raise = true,
+        keys = clientkeys,
+        buttons = clientbuttons,
+        screen = awful.screen.preferred,
+        callback = function(c)
+            awful.placement.centered(c, nil)
+        end
     }
-}
+}, {
+    rule_any = {
+        class = {"neovide", "Code"}
+    },
+    properties = {
+        maximized = true
+    }
+}, {
+    rule_any = {
+        type = {"splash", "dialog"}
+    },
+    properties = {
+        skip_taskbar = true,
+        placement = awful.placement.centered
+    }
+}, {
+    rule_any = {
+        type = {"menu", "popup_menu", "dropdown_menu", "combo"}
+    },
+    properties = {
+        skip_taskbar = true,
+        placement = awful.placement.resize_to_mouse
+    }
+}}
 -- }}}
 
 -- {{{ Signals
@@ -937,10 +877,10 @@ awful.rules.rules = {
 client.connect_signal("manage", function(c)
     local wa = c.screen.workarea
     if not c.fullscreen then
-        c:geometry {
-            x      = math.max(wa.x + margin_left, c.x),
-            y      = math.max(wa.y + margin_top + wibox_height + wibox_margin, c.y),
-            width  = math.min(wa.width - margin_left - margin_right, c.width),
+        c:geometry{
+            x = math.max(wa.x + margin_left, c.x),
+            y = math.max(wa.y + margin_top + wibox_height + wibox_margin, c.y),
+            width = math.min(wa.width - margin_left - margin_right, c.width),
             height = math.min(wa.height - margin_top - margin_bottom - wibox_height - wibox_margin, c.height)
         }
         awful.spawn("dunstctl set-paused false")
@@ -952,30 +892,31 @@ end)
 -- Add a titlebar if titlebars_enabled is set to true in the rules.
 client.connect_signal("request::titlebars", function(c)
     -- buttons for the titlebar
-    local buttons = gears.table.join(
-        awful.button({}, 1, function()
-            c:emit_signal("request::activate", "titlebar", { raise = true })
-            awful.mouse.client.move(c)
-        end),
-        awful.button({}, 3, function()
-            c:emit_signal("request::activate", "titlebar", { raise = true })
-            awful.mouse.client.resize(c)
-        end)
-    )
+    local buttons = gears.table.join(awful.button({}, 1, function()
+        c:emit_signal("request::activate", "titlebar", {
+            raise = true
+        })
+        awful.mouse.client.move(c)
+    end), awful.button({}, 3, function()
+        c:emit_signal("request::activate", "titlebar", {
+            raise = true
+        })
+        awful.mouse.client.resize(c)
+    end))
 
-    awful.titlebar(c):setup {
+    awful.titlebar(c):setup{
         { -- Left
             awful.titlebar.widget.iconwidget(c),
             buttons = buttons,
-            layout  = wibox.layout.fixed.horizontal
+            layout = wibox.layout.fixed.horizontal
         },
-        {     -- Middle
+        { -- Middle
             { -- Title
-                align  = "center",
+                align = "center",
                 widget = awful.titlebar.widget.titlewidget(c)
             },
             buttons = buttons,
-            layout  = wibox.layout.flex.horizontal
+            layout = wibox.layout.flex.horizontal
         },
         { -- Right
             awful.titlebar.widget.maximizedbutton(c),
@@ -1002,7 +943,9 @@ client.connect_signal("focus", function(c)
         awful.spawn("dunstctl set-paused false")
     end
 end)
-client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+client.connect_signal("unfocus", function(c)
+    c.border_color = beautiful.border_normal
+end)
 
 local function clamp(x, min, max)
     return math.max(min, math.min(max, x))
@@ -1015,17 +958,17 @@ client.connect_signal("request::geometry", function(c)
     if c.fullscreen then
         return
     elseif c.maximized then
-        c:geometry {
-            x      = wa.x + margin_left,
-            y      = wa.y + margin_top + wibox_height + wibox_margin,
-            width  = wa.width - margin_left - margin_right,
+        c:geometry{
+            x = wa.x + margin_left,
+            y = wa.y + margin_top + wibox_height + wibox_margin,
+            width = wa.width - margin_left - margin_right,
             height = wa.height - margin_top - margin_bottom - wibox_height - wibox_margin
         }
     else
-        c:geometry {
-            x      = clamp(c.x, wa.x + margin_left, wa.x + wa.width - margin_right - c.width),
-            y      = clamp(c.y, wa.y + margin_top + wibox_height + wibox_margin, wa.y + wa.height - margin_bottom - c.height),
-            width  = math.min(wa.width - margin_left - margin_right, c.width),
+        c:geometry{
+            x = clamp(c.x, wa.x + margin_left, wa.x + wa.width - margin_right - c.width),
+            y = clamp(c.y, wa.y + margin_top + wibox_height + wibox_margin, wa.y + wa.height - margin_bottom - c.height),
+            width = math.min(wa.width - margin_left - margin_right, c.width),
             height = math.min(wa.height - margin_top - margin_bottom - wibox_height - wibox_margin, c.height)
         }
     end
@@ -1033,7 +976,9 @@ end)
 
 client.connect_signal("property::fullscreen", function(c)
     local screen = c.screen
-    if c == screen.selected_tag then return end
+    if c == screen.selected_tag then
+        return
+    end
 
     if c.fullscreen then
         screen.mywibox.visible = false
