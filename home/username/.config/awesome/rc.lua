@@ -20,7 +20,8 @@ local wibox_height = 30
 local wibox_margin = 5
 
 local function spawn_once(cmd_name, cmd_full)
-    awful.spawn.with_shell("pgrep -u $USER -x " .. cmd_name .. " > /dev/null || (" .. cmd_full .. ")")
+    -- awful.spawn.with_shell("pgrep -u $USER -x " .. cmd_name .. " > /dev/null || (" .. cmd_full .. ")") -- This is for zsh
+    awful.spawn.with_shell("pgrep -u $USER -x " .. cmd_name .. " > /dev/null; or " .. cmd_full) -- This is for fish
 end
 
 package.loaded["naughty.dbus"] = {}
@@ -29,7 +30,7 @@ awful.spawn("pactl set-source-volume @DEFAULT_SOURCE@ 150%")
 awful.spawn("ksuperkey -e 'Super_L=Alt_L|F1'")
 awful.spawn("ksuperkey -e 'Super_R=Alt_L|F1'")
 spawn_once("picom", "picom --animations -b")
-spawn_once("lxqt-policykit-agent", "lxqt-policykit-agent")
+spawn_once("lxqt-policykit-", "lxqt-policykit-agent")
 spawn_once("xss-lock", "xss-lock -q -l ~/.config/awesome/xss-lock-tsl.sh")
 awful.spawn("xset s off")
 awful.spawn("xset -dpms")
