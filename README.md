@@ -23,4 +23,3 @@ Maybe in this repo I forgot to add some neccessary files, so if you find any mis
 - Ctrl + Alt + T: Open terminal (Default: Alacritty)
 - Ctrl + Shift + Esc: Open btop
 
-In the display manager login, choose "My AwesomeWM" instead of "Awesome" to use my configuration.
