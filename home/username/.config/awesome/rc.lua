@@ -849,7 +849,7 @@ awful.rules.rules = {{
     }
 }, {
     rule_any = {
-        class = {"neovide", "Code"}
+        class = {"nvim-qt", "VSCodium"}
     },
     properties = {
         maximized = true
