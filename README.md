@@ -22,4 +22,14 @@ Maybe in this repo I forgot to add some neccessary files, so if you find any mis
 - Super + E: Open File Manager (Default: Thunar)
 - Ctrl + Alt + T: Open terminal (Default: Alacritty)
 - Ctrl + Shift + Esc: Open btop
+- Super + L: Lock screen (Default: betterlockscreen)
+- Super + Ctrl + R: Reload AwesomeWM
+- Super + B: Open browser (Default: Librewolf)
+- Super + N: Open Neovim-qt
+- Super + Up: Move window to the top
+- Super + Down: Move window to the bottom
+- Super + Left: Move window to the left
+- Super + Right: Move window to the right
+- Super + Leftclick: Move window follow mouse cursor
+- Super + Rightclick: Resize window follow mouse cursor
 

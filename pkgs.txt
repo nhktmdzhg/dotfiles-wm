@@ -6,13 +6,14 @@ bluez
 bluez-utils
 brightnessctl
 btop
+darkly-qt5-git
+darkly-qt6-git
 dash
 dunst
 fastfetch
 flameshot
 gsimplecal
 ksuperkey
-kvantum-qt5
 lxqt-policykit
 neovide
 nm-applet
@@ -21,6 +22,8 @@ pavucontrol
 picom-ftlabs-git
 playerctl
 power-profiles-daemon
+qt5ct
+qt6ct
 rofi
 thunar
 thunar-archive-plugin
