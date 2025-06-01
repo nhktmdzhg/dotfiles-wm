@@ -13,8 +13,9 @@ progress_bar_frame_width = 0
 transparency = 3
 horizontal_padding = 11
 frame_width = 6
-frame_color = "#3b4252"
-separator_color = "#404859"
+frame_color = "#89b4fa"
+separator_color = frame
+highlight = "#89b4fa"
 idle_threshold = 120
 
 font = "mplus Nerd Font 10"
@@ -47,19 +48,16 @@ always_run_script = true
 
 [urgency_low]
 timeout = 3
-background = "#3b4252"
-foreground = "#f9f9f9"
-highlight = "#f9f9f9"
+background = "#1e1e2e"
+foreground = "#cdd6f4"
 
 [urgency_normal]
 timeout = 6
-background = "#3b4252"
-foreground = "#f9f9f9"
-highlight = "#f9f9f9"
+background = "#1e1e2e"
+foreground = "#cdd6f4"
 
 [urgency_critical]
 timeout = 0
-background = "#3b4252"
-foreground = "#f9f9f9"
-highlight = "#f9f9f9"
+foreground = "#cdd6f4"
+frame_color = "#fab387"
 

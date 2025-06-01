@@ -1,8 +1,4 @@
-#!/bin/dash
-# call when startx is executed
-# ~/.xinitrc
-#
-# Executed by startx (run your window manager from here)
+#!/bin/sh
 userresources=$HOME/.Xresources
 usermodmap=$HOME/.Xmodmap
 sysresources=/etc/X11/xinit/.Xresources

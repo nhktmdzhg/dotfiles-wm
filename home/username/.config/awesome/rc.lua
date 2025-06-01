@@ -41,6 +41,7 @@ spawn_once("zalo", "zalo")
 spawn_once("fcitx5", "fcitx5")
 spawn_once("nm-applet", "nm-applet")
 awful.spawn.once("powerprofilesctl set performance")
+awful.spawn.once("bluetoothctl power off")
 
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 
