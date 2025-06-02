@@ -20,8 +20,7 @@ local wibox_height = 30
 local wibox_margin = 5
 
 local function spawn_once(cmd_name, cmd_full)
-    -- awful.spawn.with_shell("pgrep -u $USER -x " .. cmd_name .. " > /dev/null || (" .. cmd_full .. ")") -- This is for zsh
-    awful.spawn.with_shell("pgrep -u $USER -x " .. cmd_name .. " > /dev/null; or " .. cmd_full) -- This is for fish
+    awful.spawn.with_shell("pgrep -u $USER -x " .. cmd_name .. " > /dev/null; or " .. cmd_full)
 end
 
 package.loaded["naughty.dbus"] = {}
@@ -47,7 +46,7 @@ beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 
 awful.layout.layouts = {awful.layout.suit.floating}
 
--- {{{ Wibar
+-- Wibar
 local function get_output_of_cmd(cmd)
     local handle = io.popen(cmd)
     local result = handle and handle:read("*a") or ""
@@ -611,13 +610,11 @@ awful.screen.connect_for_each_screen(function(s)
         }
     }
 end)
--- }}}
 
--- {{{ Mouse bindings
+-- Mouse bindings
 root.buttons(gears.table.join(awful.button({}, 4, awful.tag.viewnext), awful.button({}, 5, awful.tag.viewprev)))
--- }}}
 
--- {{{ Key bindings
+-- Key bindings
 local function toggle_show_desktop()
     local current_tag = awful.screen.focused().selected_tag
     local client_on_tag = current_tag:clients()
@@ -830,10 +827,8 @@ end))
 
 -- Set keys
 root.keys(globalkeys)
--- }}}
 
--- {{{ Rules
--- Rules to apply to new clients (through the "manage" signal).
+-- Rules
 awful.rules.rules = {{
     rule = {},
     properties = {
@@ -872,10 +867,8 @@ awful.rules.rules = {{
         placement = awful.placement.resize_to_mouse
     }
 }}
--- }}}
 
--- {{{ Signals
--- Signal function to execute when a new client appears.
+-- Signals
 client.connect_signal("manage", function(c)
     local wa = c.screen.workarea
     if not c.fullscreen then
@@ -891,45 +884,45 @@ client.connect_signal("manage", function(c)
     end
 end)
 
--- Add a titlebar if titlebars_enabled is set to true in the rules.
-client.connect_signal("request::titlebars", function(c)
-    -- buttons for the titlebar
-    local buttons = gears.table.join(awful.button({}, 1, function()
-        c:emit_signal("request::activate", "titlebar", {
-            raise = true
-        })
-        awful.mouse.client.move(c)
-    end), awful.button({}, 3, function()
-        c:emit_signal("request::activate", "titlebar", {
-            raise = true
-        })
-        awful.mouse.client.resize(c)
-    end))
-
-    awful.titlebar(c):setup{
-        { -- Left
-            awful.titlebar.widget.iconwidget(c),
-            buttons = buttons,
-            layout = wibox.layout.fixed.horizontal
-        },
-        { -- Middle
-            { -- Title
-                align = "center",
-                widget = awful.titlebar.widget.titlewidget(c)
-            },
-            buttons = buttons,
-            layout = wibox.layout.flex.horizontal
-        },
-        { -- Right
-            awful.titlebar.widget.maximizedbutton(c),
-            awful.titlebar.widget.stickybutton(c),
-            awful.titlebar.widget.ontopbutton(c),
-            awful.titlebar.widget.closebutton(c),
-            layout = wibox.layout.fixed.horizontal()
-        },
-        layout = wibox.layout.align.horizontal
-    }
-end)
+-- Request titlebar 
+-- client.connect_signal("request::titlebars", function(c)
+--     -- buttons for the titlebar
+--     local buttons = gears.table.join(awful.button({}, 1, function()
+--         c:emit_signal("request::activate", "titlebar", {
+--             raise = true
+--         })
+--         awful.mouse.client.move(c)
+--     end), awful.button({}, 3, function()
+--         c:emit_signal("request::activate", "titlebar", {
+--             raise = true
+--         })
+--         awful.mouse.client.resize(c)
+--     end))
+--
+--     awful.titlebar(c):setup{
+--         { -- Left
+--             awful.titlebar.widget.iconwidget(c),
+--             buttons = buttons,
+--             layout = wibox.layout.fixed.horizontal
+--         },
+--         { -- Middle
+--             { -- Title
+--                 align = "center",
+--                 widget = awful.titlebar.widget.titlewidget(c)
+--             },
+--             buttons = buttons,
+--             layout = wibox.layout.flex.horizontal
+--         },
+--         { -- Right
+--             awful.titlebar.widget.maximizedbutton(c),
+--             awful.titlebar.widget.stickybutton(c),
+--             awful.titlebar.widget.ontopbutton(c),
+--             awful.titlebar.widget.closebutton(c),
+--             layout = wibox.layout.fixed.horizontal()
+--         },
+--         layout = wibox.layout.align.horizontal
+--     }
+-- end)
 
 beautiful.focus_follows_mouse = false
 beautiful.bg_systray = "#434c5e"
@@ -990,3 +983,4 @@ client.connect_signal("property::fullscreen", function(c)
         awful.spawn("dunstctl set-paused false")
     end
 end)
+
