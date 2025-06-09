@@ -263,12 +263,13 @@ awful.screen.connect_for_each_screen(function(s)
 
     local battery_icon = wibox.widget {
         widget = wibox.widget.textbox,
-        font = "JetBrainsMono Nerd Font 13",
+        -- font = "JetBrainsMono Nerd Font 10",
+        font = "MesloLGS Nerd Font Mono 14",
         align = "center",
         valign = "center"
     }
 
-    local battery_icon_container = wibox.container.margin(battery_icon, 5, 7, 5, 5)
+    local battery_icon_container = wibox.container.margin(battery_icon, 5, 5, 0, 0)
     battery_icon_container = wibox.container.background(battery_icon_container)
     battery_icon_container.bg = "#f9f9f9ee"
     battery_icon_container.fg = "#434c5eff"

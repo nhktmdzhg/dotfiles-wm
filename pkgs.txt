@@ -29,6 +29,7 @@ thunar
 thunar-archive-plugin
 thunar-volman
 ttf-jetbrains-mono-nerd
+ttf-meslo-nerd
 upower
 wireless_tools
 xss-lock
