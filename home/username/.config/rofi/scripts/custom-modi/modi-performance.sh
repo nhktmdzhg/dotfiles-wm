@@ -33,6 +33,6 @@ I="<span font_desc='${ROW_ICON_FONT}' weight='bold'>${I_}</span>   Current mode:
 MESSAGE="<span font_desc='${MSG_ICON_FONT}' weight='bold'></span>"
 
 printf '%b\n' '\0use-hot-keys\037true' '\0markup-rows\037true' "\0message\037${MESSAGE}" \
-              "$I" "$A" "$B" "$C"
+"$I" "$A" "$B" "$C"
 
 exit ${?}

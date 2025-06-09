@@ -20,7 +20,7 @@ local wibox_height = 30
 local wibox_margin = 5
 
 local function spawn_once(cmd_name, cmd_full)
-    awful.spawn.with_shell("pgrep -u $USER -x " .. cmd_name .. " > /dev/null; or " .. cmd_full)
+    awful.spawn.with_shell("pgrep -u $USER -x " .. cmd_name .. " > /dev/null; or exec " .. cmd_full)
 end
 
 package.loaded["naughty.dbus"] = {}
@@ -176,9 +176,9 @@ awful.screen.connect_for_each_screen(function(s)
     arch_logo:connect_signal("button::press", function(_, _, _, button)
         if button == 1 then
             awful.spawn.with_shell(
-                "XMODIFIERS=@im=none rofi -theme-str '@import \"main.rasi\"' -no-lazy-grab -show drun -modi drun")
+                "XMODIFIERS=@im=none exec rofi -theme-str '@import \"main.rasi\"' -no-lazy-grab -show drun -modi drun")
         elseif button == 3 then
-            awful.spawn.with_shell("~/.config/rofi/scripts/rofi-exts.sh")
+            awful.spawn.with_shell("exec ~/.config/rofi/scripts/rofi-exts.sh")
         end
     end)
 
@@ -263,12 +263,12 @@ awful.screen.connect_for_each_screen(function(s)
 
     local battery_icon = wibox.widget {
         widget = wibox.widget.textbox,
-        font = "MesloLGS Nerd Font Mono 15",
+        font = "JetBrainsMono Nerd Font 13",
         align = "center",
         valign = "center"
     }
 
-    local battery_icon_container = wibox.container.margin(battery_icon, 5, 5, 0, 0)
+    local battery_icon_container = wibox.container.margin(battery_icon, 5, 7, 5, 5)
     battery_icon_container = wibox.container.background(battery_icon_container)
     battery_icon_container.bg = "#f9f9f9ee"
     battery_icon_container.fg = "#434c5eff"
@@ -536,7 +536,7 @@ awful.screen.connect_for_each_screen(function(s)
                 align = "center",
                 valign = "center",
                 widget = wibox.widget.textbox,
-                font = "MesloLGS Nerd Font Mono 12"
+                font = "JetBrainsMono Nerd Font 12"
             },
             margins = 2,
             widget = wibox.container.margin
@@ -552,9 +552,9 @@ awful.screen.connect_for_each_screen(function(s)
 
     logout_logo:connect_signal("button::press", function(_, _, _, button)
         if button == 1 then
-            awful.spawn.with_shell("~/.config/rofi/scripts/rofi-exts.sh session")
+            awful.spawn.with_shell("exec ~/.config/rofi/scripts/rofi-exts.sh session")
         elseif button == 3 then
-            awful.spawn.with_shell("~/.config/rofi/scripts/rofi-exts.sh media")
+            awful.spawn.with_shell("exec ~/.config/rofi/scripts/rofi-exts.sh media")
         end
     end)
 
@@ -612,7 +612,7 @@ awful.screen.connect_for_each_screen(function(s)
 end)
 
 -- Mouse bindings
-root.buttons(gears.table.join(awful.button({}, 4, awful.tag.viewnext), awful.button({}, 5, awful.tag.viewprev)))
+-- root.buttons(gears.table.join(awful.button({}, 4, awful.tag.viewnext), awful.button({}, 5, awful.tag.viewprev)))
 
 -- Key bindings
 local function toggle_show_desktop()
@@ -657,15 +657,15 @@ end), awful.key({}, "XF86AudioLowerVolume", function()
 end), awful.key({}, "XF86AudioMute", function()
     scripts.get_volume_info(0)
 end), awful.key({}, "XF86AudioPlay", function()
-    awful.spawn.with_shell("playerctl play-pause")
+    awful.spawn("playerctl play-pause")
 end), awful.key({}, "XF86AudioNext", function()
-    awful.spawn.with_shell("playerctl next")
+    awful.spawn("playerctl next")
 end), awful.key({}, "XF86AudioPrev", function()
-    awful.spawn.with_shell("playerctl previous")
+    awful.spawn("playerctl previous")
 end), awful.key({}, "XF86AudioStop", function()
-    awful.spawn.with_shell("playerctl play-pause")
+    awful.spawn("playerctl play-pause")
 end), awful.key({}, "XF86AudioPause", function()
-    awful.spawn.with_shell("playerctl play-pause")
+    awful.spawn("playerctl play-pause")
 end), -- Window controls --
 awful.key({alt}, "Tab", function()
     switcher.switch(1, alt, "Alt_L", shift, "Tab")
@@ -673,10 +673,10 @@ end), awful.key({alt, shift}, "Tab", function()
     switcher.switch(-1, alt, "Alt_L", shift, "Tab")
 end), -- Rofi controls --
 awful.key({super}, "Escape", function()
-    awful.spawn.with_shell("~/.config/rofi/scripts/rofi-exts.sh session")
+    awful.spawn.with_shell("exec ~/.config/rofi/scripts/rofi-exts.sh session")
 end), awful.key({alt}, "F1", function()
     awful.spawn.with_shell(
-        "XMODIFIERS=@im=none rofi -theme-str '@import \"main.rasi\"' -no-lazy-grab -show drun -modi drun")
+        "XMODIFIERS=@im=none exec rofi -theme-str '@import \"main.rasi\"' -no-lazy-grab -show drun -modi drun")
 end), -- Screenshot controls --
 awful.key({}, "Print", function()
     awful.spawn("flameshot")
@@ -688,9 +688,9 @@ awful.key({super}, "e", function()
 end), awful.key({super}, "l", function()
     awful.spawn("betterlockscreen -l blur")
 end), awful.key({ctrl, alt}, "t", function()
-    awful.spawn.with_shell("XMODIFIERS= alacritty")
+    awful.spawn.with_shell("XMODIFIERS= exec alacritty")
 end), awful.key({ctrl, shift}, "Escape", function()
-    awful.spawn.with_shell("XMODIFIERS= alacritty -e btop")
+    awful.spawn.with_shell("XMODIFIERS= exec alacritty -e btop")
 end), -- Awesome --
 awful.key({super, ctrl}, "r", awesome.restart), awful.key({super}, "d", toggle_show_desktop),
     awful.key({super}, "b", function()
@@ -856,7 +856,9 @@ awful.rules.rules = {{
     },
     properties = {
         skip_taskbar = true,
-        placement = awful.placement.centered
+        callback = function(c)
+            awful.placement.centered(c, nil)
+        end
     }
 }, {
     rule_any = {
@@ -864,7 +866,20 @@ awful.rules.rules = {{
     },
     properties = {
         skip_taskbar = true,
-        placement = awful.placement.resize_to_mouse
+        -- placement = awful.placement.resize_to_mouse
+        callback = function(c)
+            awful.placement.resize_to_mouse(c, nil)
+        end
+    }
+}, {
+    rule_any = {
+        class = {"Gsimplecal", "gsimplecal"}
+    },
+    properties = {
+        skip_taskbar = true,
+        callback = function(c)
+            awful.placement.resize_to_mouse(c, nil)
+        end
     }
 }}
 
@@ -983,4 +998,3 @@ client.connect_signal("property::fullscreen", function(c)
         awful.spawn("dunstctl set-paused false")
     end
 end)
-

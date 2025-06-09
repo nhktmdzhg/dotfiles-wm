@@ -2,7 +2,7 @@
 // https://github.com/owl4ce/dotfiles
 
 * {
-  text-font:                        "Comfortaa Bold 12";
+  text-font:                        "Kurinto Sans Core 12";
   icon-font:                        "Material 14";
   center-align:                     0.5;
   window-padding:                   15.4% 8%;
@@ -18,7 +18,7 @@
   // Below for "exts.rasi" theme configuration.
   // Auto-configured through shell-script.
 
-  exts-textbox-font:                "Comfortaa Bold 48";
+  exts-textbox-font:                "Kurinto Sans Core 48";
   exts-window-padding:              6.5% 4% 4% 4%;
   exts-window-width:                26%;
   exts-window-height:               89.5%;

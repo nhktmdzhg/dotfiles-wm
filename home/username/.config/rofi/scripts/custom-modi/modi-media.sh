@@ -35,9 +35,9 @@ BRIGHTNESS=$(( BRIGHTNESS_VALUE * 100 / MAX_BRIGHTNESS ))
 if [ "$AUDIO_VOLUME" -eq 0 -o "$AUDIO_MUTED" = 'yes' ]; then
     [ -z "$AUDIO_MUTED" ] || MUTED='Muted'
     A_=''
-elif [ "$AUDIO_VOLUME" -lt 30 ]; then
+    elif [ "$AUDIO_VOLUME" -lt 30 ]; then
     A_=''
-elif [ "$AUDIO_VOLUME" -lt 70 ]; then
+    elif [ "$AUDIO_VOLUME" -lt 70 ]; then
     A_=''
 else
     A_=''
@@ -49,7 +49,7 @@ E_='' E="<span font_desc='${ROW_ICON_FONT}' weight='bold'>${E_}</span>   ${BR
 MESSAGE="<span font_desc='${MSG_ICON_FONT}' weight='bold'></span>"
 
 printf '%b\n' '\0use-hot-keys\037true' '\0markup-rows\037true' "\0message\037${MESSAGE}" \
-              "${A}\0nonselectable\037true" "$B" "$C" "$D" "${E}\0nonselectable\037true" "$F" "$G"
+"${A}\0nonselectable\037true" "$B" "$C" "$D" "${E}\0nonselectable\037true" "$F" "$G"
 
 exit ${?}
 

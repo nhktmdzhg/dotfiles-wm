@@ -94,19 +94,19 @@ color = "#f5e0dc"
 size = 12
 
 [font.normal]
-family = "MesloLGS Nerd Font Mono"
+family = "JetBrainsMono Nerd Font"
 style = "Regular"
 
 [font.bold]
-family = "monospace"
+family = "JetBrainsMono Nerd Font"
 style = "Bold"
 
 [font.italic]
-family = "monospace"
+family = "JetBrainsMono Nerd Font"
 style = "Italic"
 
 [font.bold_italic]
-family = "monospace"
+family = "JetBrainsMono Nerd Font"
 style = "Bold Italic"
 
 [selection]
@@ -198,5 +198,5 @@ mods = "Control"
 action = "ResetFontSize"
 
 [general]
-live_config_reload = true
+live_config_reload = false
 working_directory = "None"

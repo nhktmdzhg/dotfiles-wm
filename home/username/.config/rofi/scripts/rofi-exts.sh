@@ -29,16 +29,16 @@ esac
 
 SYSTEM_LANG="$SYSTEM_LANG" \
 exec rofi -theme-str '@import "exts.rasi"' \
-          -modi "$CUSTOM_MODI" \
-          -no-show-icons \
-          -no-lazy-grab \
-          -no-plugins \
-          -kb-custom-19 '' \
-          -kb-move-char-back '' \
-          -kb-move-char-forward '' \
-          -kb-mode-previous 'Left' \
-          -kb-mode-next 'Right' \
-          -show "${MODI:-${SYSINFO}}"
+-modi "$CUSTOM_MODI" \
+-no-show-icons \
+-no-lazy-grab \
+-no-plugins \
+-kb-custom-19 '' \
+-kb-move-char-back '' \
+-kb-move-char-forward '' \
+-kb-mode-previous 'Left' \
+-kb-mode-next 'Right' \
+-show "${MODI:-${SYSINFO}}"
 
 exit ${?}
 
