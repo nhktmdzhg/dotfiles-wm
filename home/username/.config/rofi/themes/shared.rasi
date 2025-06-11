@@ -1,6 +1,3 @@
-// Rofi shared theme configuration.
-// https://github.com/owl4ce/dotfiles
-
 * {
   text-font:                        "Kurinto Sans Core 12";
   icon-font:                        "Material 14";
