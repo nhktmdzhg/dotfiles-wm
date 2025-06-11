@@ -7,6 +7,7 @@ local beautiful = require("beautiful")
 local timer = require("gears.timer")
 local scripts = require("scripts")
 require("awful.hotkeys_popup.keys")
+local palette = require("mocha")
 
 local super = "Mod4"
 local alt = "Mod1"
@@ -119,7 +120,7 @@ awful.screen.connect_for_each_screen(function(s)
         buttons = tasklist_buttons,
         style = {
             shape_border_width = 1,
-            shape_border_color = '#777777',
+            shape_border_color = palette.sapphire.hex,
             shape = gears.shape.rounded_rect
         },
         layout = {
@@ -131,9 +132,9 @@ awful.screen.connect_for_each_screen(function(s)
                 {
                     id = "icon_role",
                     widget = wibox.widget.imagebox,
-                    forced_width = 28
+                    forced_width = 24
                 },
-                margins = 2,
+                margins = 4,
                 widget = wibox.container.margin
             },
             id = 'background_role',
@@ -215,8 +216,8 @@ awful.screen.connect_for_each_screen(function(s)
     }
 
     mysystray = wibox.container.background(mysystray)
-    mysystray.bg = "#434c5e"
-    mysystray.shape = gears.shape.rounded_rect
+    mysystray.bg = palette.surface0.hex
+    mysystray.shape = gears.shape.rounded_bar
     mysystray.shape_clip = true
 
     local window_name = wibox.widget {
@@ -228,8 +229,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     local window_name_container = wibox.container.margin(window_name, 5, 5, 0, 0)
     window_name_container = wibox.container.background(window_name_container)
-    window_name_container.bg = "#434c5eee"
-    window_name_container.fg = "#f9f9f9ff"
+    window_name_container.bg = palette.surface0.hex
+    window_name_container.fg = palette.text.hex
     window_name_container.shape = gears.shape.rounded_bar
     window_name_container.shape_clip = true
 
@@ -271,8 +272,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     local battery_icon_container = wibox.container.margin(battery_icon, 5, 5, 0, 0)
     battery_icon_container = wibox.container.background(battery_icon_container)
-    battery_icon_container.bg = "#f9f9f9ee"
-    battery_icon_container.fg = "#434c5eff"
+    battery_icon_container.bg = palette.text.hex
+    battery_icon_container.fg = palette.surface0.hex
     battery_icon_container.shape = gears.shape.circle
     battery_icon_container.shape_clip = true
 
@@ -299,8 +300,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     local battery_percent_container = wibox.container.margin(battery_percent, 5, 5, 0, 0)
     battery_percent_container = wibox.container.background(battery_percent_container)
-    battery_percent_container.bg = "#434c5eee"
-    battery_percent_container.fg = "#f9f9f9ff"
+    battery_percent_container.bg = palette.surface0.hex
+    battery_percent_container.fg = palette.text.hex
     battery_percent_container.shape = gears.shape.rounded_bar
     battery_percent_container.shape_clip = true
 
@@ -327,8 +328,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     local network_icon_container = wibox.container.margin(network_icon, 5, 5, 0, 0)
     network_icon_container = wibox.container.background(network_icon_container)
-    network_icon_container.bg = "#f9f9f9ee"
-    network_icon_container.fg = "#434c5eff"
+    network_icon_container.bg = palette.text.hex
+    network_icon_container.fg = palette.surface0.hex
     network_icon_container.shape = gears.shape.circle
     network_icon_container.shape_clip = true
 
@@ -355,8 +356,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     local network_status_container = wibox.container.margin(network_status, 5, 5, 0, 0)
     network_status_container = wibox.container.background(network_status_container)
-    network_status_container.bg = "#434c5eee"
-    network_status_container.fg = "#f9f9f9ff"
+    network_status_container.bg = palette.surface0.hex
+    network_status_container.fg = palette.text.hex
     network_status_container.shape = gears.shape.rounded_bar
     network_status_container.shape_clip = true
 
@@ -383,8 +384,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     local volume_icon_container = wibox.container.margin(volume_icon, 5, 5, 0, 0)
     volume_icon_container = wibox.container.background(volume_icon_container)
-    volume_icon_container.bg = "#f9f9f9ee"
-    volume_icon_container.fg = "#434c5eff"
+    volume_icon_container.bg = palette.text.hex
+    volume_icon_container.fg = palette.surface0.hex
     volume_icon_container.shape = gears.shape.circle
     volume_icon_container.shape_clip = true
 
@@ -421,8 +422,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     local volume_percent_container = wibox.container.margin(volume_percent, 5, 5, 0, 0)
     volume_percent_container = wibox.container.background(volume_percent_container)
-    volume_percent_container.bg = "#434c5eee"
-    volume_percent_container.fg = "#f9f9f9ff"
+    volume_percent_container.bg = palette.surface0.hex
+    volume_percent_container.fg = palette.text.hex
     volume_percent_container.shape = gears.shape.rounded_bar
     volume_percent_container.shape_clip = true
 
@@ -458,8 +459,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     local calendar_icon_container = wibox.container.margin(calendar_icon, 5, 5, 0, 0)
     calendar_icon_container = wibox.container.background(calendar_icon_container)
-    calendar_icon_container.bg = "#f9f9f9ee"
-    calendar_icon_container.fg = "#434c5eff"
+    calendar_icon_container.bg = palette.text.hex
+    calendar_icon_container.fg = palette.surface0.hex
     calendar_icon_container.shape = gears.shape.circle
     calendar_icon_container.shape_clip = true
 
@@ -483,8 +484,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     local date_widget_container = wibox.container.margin(date_widget, 5, 5, 0, 0)
     date_widget_container = wibox.container.background(date_widget_container)
-    date_widget_container.bg = "#434c5eee"
-    date_widget_container.fg = "#f9f9f9ff"
+    date_widget_container.bg = palette.surface0.hex
+    date_widget_container.fg = palette.text.hex
     date_widget_container.shape = gears.shape.rounded_bar
     date_widget_container.shape_clip = true
 
@@ -511,8 +512,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     local time_widget_container = wibox.container.margin(time_widget, 5, 5, 0, 0)
     time_widget_container = wibox.container.background(time_widget_container)
-    time_widget_container.bg = "#434c5eee"
-    time_widget_container.fg = "#f9f9f9ff"
+    time_widget_container.bg = palette.surface0.hex
+    time_widget_container.fg = palette.text.hex
     time_widget_container.shape = gears.shape.rounded_bar
     time_widget_container.shape_clip = true
 
@@ -941,7 +942,7 @@ end)
 -- end)
 
 beautiful.focus_follows_mouse = false
-beautiful.bg_systray = "#434c5e"
+beautiful.bg_systray = palette.surface0.hex
 
 client.connect_signal("focus", function(c)
     c.border_color = beautiful.border_focus
