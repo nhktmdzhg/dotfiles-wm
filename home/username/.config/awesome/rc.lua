@@ -134,7 +134,7 @@ awful.screen.connect_for_each_screen(function(s)
                     widget = wibox.widget.imagebox,
                     forced_width = 24
                 },
-                margins = 4,
+                margins = 3,
                 widget = wibox.container.margin
             },
             id = 'background_role',
@@ -1000,3 +1000,10 @@ client.connect_signal("property::fullscreen", function(c)
         awful.spawn("dunstctl set-paused false")
     end
 end)
+
+-- Tasklist color
+beautiful.tasklist_bg_focus = palette.surface0.hex
+beautiful.tasklist_bg_normal = "#00000000"
+beautiful.tasklist_bg_urgent = palette.red.hex
+beautiful.tasklist_bg_minimize = "#00000000"
+beautiful.tasklist_shape_focus = gears.shape.rectangle
