@@ -27,8 +27,8 @@ end
 package.loaded["naughty.dbus"] = {}
 spawn_once("dunst", "dunst")
 awful.spawn("pactl set-source-volume @DEFAULT_SOURCE@ 150%")
-awful.spawn("ksuperkey -e 'Super_L=Alt_L|F1'")
-awful.spawn("ksuperkey -e 'Super_R=Alt_L|F1'")
+awful.spawn("ksuperkey -e 'Super_L=Alt_L|F2'")
+awful.spawn("ksuperkey -e 'Super_R=Alt_L|F2'")
 spawn_once("picom", "picom --animations -b")
 spawn_once("lxqt-policykit-", "lxqt-policykit-agent")
 spawn_once("xss-lock", "xss-lock -q -l ~/.config/awesome/xss-lock-tsl.sh")
@@ -40,7 +40,6 @@ spawn_once("Discord", "discord")
 spawn_once("zalo", "zalo")
 spawn_once("fcitx5", "fcitx5")
 spawn_once("nm-applet", "nm-applet")
-awful.spawn.once("powerprofilesctl set performance")
 awful.spawn.once("bluetoothctl power off")
 
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
@@ -177,9 +176,9 @@ awful.screen.connect_for_each_screen(function(s)
     arch_logo:connect_signal("button::press", function(_, _, _, button)
         if button == 1 then
             awful.spawn.with_shell(
-                "XMODIFIERS=@im=none exec rofi -theme-str '@import \"main.rasi\"' -no-lazy-grab -show drun -modi drun")
+                "XMODIFIERS=@im=none exec rofi -no-lazy-grab -show drun -modi drun")
         elseif button == 3 then
-            awful.spawn.with_shell("exec ~/.config/rofi/scripts/rofi-exts.sh")
+            awful.spawn("wlogout")
         end
     end)
 
@@ -531,43 +530,6 @@ awful.screen.connect_for_each_screen(function(s)
         end
     }
 
-    local logout_logo = wibox.widget {
-        {
-            {
-                markup = "󰍜",
-                align = "center",
-                valign = "center",
-                widget = wibox.widget.textbox,
-                font = "JetBrainsMono Nerd Font 12"
-            },
-            margins = 2,
-            widget = wibox.container.margin
-        },
-        widget = wibox.container.background,
-        bg = "#f9f9f9ee",
-        fg = "#434c5eff"
-    }
-    awful.tooltip {
-        objects = {logout_logo},
-        text = "[L] Session Menu [R] Extensions Menu"
-    }
-
-    logout_logo:connect_signal("button::press", function(_, _, _, button)
-        if button == 1 then
-            awful.spawn.with_shell("exec ~/.config/rofi/scripts/rofi-exts.sh session")
-        elseif button == 3 then
-            awful.spawn.with_shell("exec ~/.config/rofi/scripts/rofi-exts.sh media")
-        end
-    end)
-
-    logout_logo:connect_signal("mouse::enter", function()
-        logout_logo.bg = "#f9f9f9cc"
-    end)
-
-    logout_logo:connect_signal("mouse::leave", function()
-        logout_logo.bg = "#f9f9f9ee"
-    end)
-
     -- Add widgets to the wibox
     s.mywibox:setup{
         layout = wibox.layout.align.horizontal,
@@ -604,11 +566,7 @@ awful.screen.connect_for_each_screen(function(s)
             seperator,
             date_widget_container,
             seperator,
-            time_widget_container,
-            seperator,
-            sep_left,
-            logout_logo,
-            sep_right
+            time_widget_container
         }
     }
 end)
@@ -673,12 +631,12 @@ awful.key({alt}, "Tab", function()
     switcher.switch(1, alt, "Alt_L", shift, "Tab")
 end), awful.key({alt, shift}, "Tab", function()
     switcher.switch(-1, alt, "Alt_L", shift, "Tab")
-end), -- Rofi controls --
+end),  -- Menu controls --
 awful.key({super}, "Escape", function()
-    awful.spawn.with_shell("exec ~/.config/rofi/scripts/rofi-exts.sh session")
-end), awful.key({alt}, "F1", function()
+    awful.spawn("wlogout")
+end), awful.key({alt}, "F2", function()
     awful.spawn.with_shell(
-        "XMODIFIERS=@im=none exec rofi -theme-str '@import \"main.rasi\"' -no-lazy-grab -show drun -modi drun")
+        "XMODIFIERS=@im=none exec rofi -no-lazy-grab -show drun -modi drun")
 end), -- Screenshot controls --
 awful.key({}, "Print", function()
     awful.spawn("flameshot")

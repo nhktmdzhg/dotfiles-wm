@@ -1,8 +1,4 @@
-// User's rofi theme configuration.
-// https://github.com/owl4ce/dotfiles
-
 configuration {
-
   filebrowser {
     directories-first: true;
   }
@@ -23,14 +19,10 @@ configuration {
   display-run:         "";
   display-filebrowser: "";
   display-window:      "";
-//display-calc:        "";
 
   me-select-entry:     "";
   me-accept-entry:     "MousePrimary";
 }
-
-// Default vertical with max 3 columns with fixed spacing configuration,
-// for rofi version 1.7.x, 4px for outer space, 6px for inner space.
 
 window {
   border: inherit;
@@ -80,4 +72,145 @@ button {
   margin: -1px;
 }
 
-@import "themes/color.rasi"
+* {
+  accent1:          #cdd6f4;
+  accent2:          #cdd6f4;
+  button-gradient:  linear-gradient(90, #cdd6f4, #cdd6f4);
+  background-alpha: #313244f7;
+  background:       #313244;
+  background-light: #45475a;
+  background-focus: #585b70;
+  foreground:       #cdd6f4;
+  foreground-list:  #cdd6f4;
+  on:               #a6e3a1;
+  off:              #f38ba8;
+  urgent:           #fab387;
+}
+
+* {
+  text-font:                        "Kurinto Sans Core 12";
+  icon-font:                        "Material 14";
+  center-align:                     0.5;
+  window-padding:                   15.4% 8%;
+  button-padding:                   14px;
+  entry-padding:                    @button-padding;
+  indicator-padding:                @entry-padding;
+  message-padding:                  @indicator-padding;
+  element-padding:                  @message-padding;
+  element-border:                   0px 4px;
+  element-icon-margin:              0px 6px 0px 0px;
+  border-radius:                    8px;
+}
+
+window {
+  width: 100%;
+  height: 100%;
+}
+
+* {
+  font: @text-font;
+  text-color: @foreground-list;
+  vertical-align: @center-align;
+}
+
+window {
+  background-color: @background-alpha;
+  padding: @window-padding;
+}
+
+inputbar {
+  children: [ mode-switcher, entry, indicator ];
+}
+
+mode-switcher, button,
+entry,
+indicator, num-filtered-rows, textbox-sep, num-rows {
+  background-color: @background-light;
+  text-color: @accent1;
+  horizontal-align: @center-align;
+}
+
+button {
+  font: @icon-font;
+  padding: @button-padding;
+}
+
+button.selected {
+  background-image: @button-gradient;
+  text-color: @background-light;
+}
+
+entry {
+  padding: @entry-padding;
+  placeholder: "March 7th";
+  placeholder-color: @background-focus;
+}
+
+indicator {
+  children: [ num-filtered-rows, textbox-sep, num-rows ];
+  expand: false;
+  orientation: horizontal;
+  padding: @indicator-padding;
+}
+
+num-filtered-rows,
+textbox-sep,
+num-rows {
+  str: "/";
+}
+
+listview {
+  columns: 4;
+}
+
+element {
+  padding: @element-padding;
+  border: @element-border;
+}
+
+element.normal.normal,
+element.alternate.normal {
+  background-color: @background-light;
+  text-color: inherit;
+  border-color: @background-light;
+}
+
+element.normal.active,
+element.normal.urgent,
+element.alternate.active,
+element.alternate.urgent,
+element.selected.normal,
+element.selected.active,
+element.selected.urgent {
+  background-color: @background-focus;
+  text-color: inherit;
+}
+
+element.selected.normal,
+element.selected.active,
+element.selected.urgent {
+  border-color: @accent2;
+}
+
+element.normal.active,
+element.alternate.active {
+  border-color: @on;
+}
+
+element.normal.urgent,
+element.alternate.urgent {
+  border-color: @urgent;
+}
+
+element-icon {
+  margin: @element-icon-margin;
+}
+
+message {
+  background-color: @background-light;
+  padding: @message-padding;
+}
+
+textbox {
+  background-color: inherit;
+}

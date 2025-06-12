@@ -21,7 +21,6 @@ nvim
 pavucontrol
 picom-ftlabs-git
 playerctl
-power-profiles-daemon
 qt5ct
 qt6ct
 rofi
@@ -32,4 +31,5 @@ ttf-jetbrains-mono-nerd
 ttf-meslo-nerd
 upower
 wireless_tools
+wlogout
 xss-lock

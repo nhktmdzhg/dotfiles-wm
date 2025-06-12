@@ -1,0 +1,36 @@
+{
+    "label" : "lock",
+    "action" : "~/.config/awesome/xss-lock-tsl.sh",
+    "text" : "Lock",
+    "keybind" : "l"
+}
+{
+    "label" : "hibernate",
+    "action" : "systemctl --no-ask-password hibernate",
+    "text" : "Hibernate",
+    "keybind" : "h"
+}
+{
+    "label" : "logout",
+    "action" : "loginctl --no-ask-password kill-user ${EUID:-$(id -u)} --signal=SIGKILL",
+    "text" : "Logout",
+    "keybind" : "e"
+}
+{
+    "label" : "shutdown",
+    "action" : "systemctl --no-ask-password poweroff",
+    "text" : "Shutdown",
+    "keybind" : "s"
+}
+{
+    "label" : "suspend",
+    "action" : "systemctl --no-ask-password suspend",
+    "text" : "Suspend",
+    "keybind" : "u"
+}
+{
+    "label" : "reboot",
+    "action" : "systemctl --no-ask-password reboot",
+    "text" : "Reboot",
+    "keybind" : "r"
+}
