@@ -11,13 +11,14 @@ darkly-qt6-git
 dash
 dunst
 fastfetch
+file-roller
 flameshot
 gsimplecal
 ksuperkey
 lxqt-policykit
-neovide
-nm-applet
+nmcurse-git
 nvim
+nvim-qt
 pavucontrol
 picom-ftlabs-git
 playerctl

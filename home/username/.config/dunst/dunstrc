@@ -34,8 +34,6 @@ icon_size = 48
 
 sticky_history = false
 
-dmenu = "rofi -theme-str '@import "action.rasi"' -no-show-icons -no-lazy-grab -no-plugins -dmenu -mesg 'Context Menu'"
-
 browser = "cachy-browser"
 
 mouse_left_click = close_current

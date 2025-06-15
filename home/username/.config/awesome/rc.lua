@@ -39,7 +39,6 @@ spawn_once("mcontrolcenter", "mcontrolcenter")
 spawn_once("Discord", "discord")
 spawn_once("zalo", "zalo")
 spawn_once("fcitx5", "fcitx5")
-spawn_once("nm-applet", "nm-applet")
 awful.spawn.once("bluetoothctl power off")
 
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
@@ -337,6 +336,20 @@ awful.screen.connect_for_each_screen(function(s)
         text = "Network Status"
     }
 
+    network_icon_container:connect_signal("button::press", function(_, _, _, button)
+        if button == 1 then
+            awful.spawn.with_shell("XMODIFIERS= exec alacritty -e nmcurse")
+        end
+    end)
+
+    network_icon_container:connect_signal("mouse::enter", function()
+        network_icon_container.bg = palette.text.hex .. "cc"
+    end)
+
+    network_icon_container:connect_signal("mouse::leave", function()
+        network_icon_container.bg = palette.text.hex
+    end)
+
     timer {
         timeout = 1,
         autostart = true,
@@ -412,6 +425,14 @@ awful.screen.connect_for_each_screen(function(s)
         end
     end)
 
+    volume_icon_container:connect_signal("mouse::enter", function()
+        volume_icon_container.bg = palette.text.hex .. "cc"
+    end)
+
+    volume_icon_container:connect_signal("mouse::leave", function()
+        volume_icon_container.bg = palette.text.hex
+    end)
+
     local volume_percent = wibox.widget {
         widget = wibox.widget.textbox,
         font = "Kurinto Mono JP 9",
@@ -472,6 +493,14 @@ awful.screen.connect_for_each_screen(function(s)
         if button == 1 then
             awful.spawn("gsimplecal")
         end
+    end)
+
+    calendar_icon_container:connect_signal("mouse::enter", function()
+        calendar_icon_container.bg = palette.text.hex .. "cc"
+    end)
+
+    calendar_icon_container:connect_signal("mouse::leave", function()
+        calendar_icon_container.bg = palette.text.hex
     end)
 
     local date_widget = wibox.widget {
