@@ -16,7 +16,7 @@ flameshot
 gsimplecal
 ksuperkey
 lxqt-policykit
-nmcurse-git
+nmcurse-nhk-git
 nvim
 nvim-qt
 pavucontrol
