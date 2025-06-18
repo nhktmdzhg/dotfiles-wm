@@ -174,8 +174,7 @@ awful.screen.connect_for_each_screen(function(s)
 
     arch_logo:connect_signal("button::press", function(_, _, _, button)
         if button == 1 then
-            awful.spawn.with_shell(
-                "XMODIFIERS=@im=none exec rofi -no-lazy-grab -show drun -modi drun")
+            awful.spawn.with_shell("XMODIFIERS=@im=none exec rofi -no-lazy-grab -show drun -modi drun")
         elseif button == 3 then
             awful.spawn("wlogout")
         end
@@ -660,12 +659,11 @@ awful.key({alt}, "Tab", function()
     switcher.switch(1, alt, "Alt_L", shift, "Tab")
 end), awful.key({alt, shift}, "Tab", function()
     switcher.switch(-1, alt, "Alt_L", shift, "Tab")
-end),  -- Menu controls --
+end), -- Menu controls --
 awful.key({super}, "Escape", function()
     awful.spawn("wlogout")
 end), awful.key({alt}, "F2", function()
-    awful.spawn.with_shell(
-        "XMODIFIERS=@im=none exec rofi -no-lazy-grab -show drun -modi drun")
+    awful.spawn.with_shell("XMODIFIERS=@im=none exec rofi -no-lazy-grab -show drun -modi drun")
 end), -- Screenshot controls --
 awful.key({}, "Print", function()
     awful.spawn("flameshot")
@@ -686,6 +684,8 @@ awful.key({super, ctrl}, "r", awesome.restart), awful.key({super}, "d", toggle_s
         awful.spawn("librewolf")
     end), awful.key({super}, "n", function()
         awful.spawn("nvim-qt")
+    end), awful.key({super}, "c", function()
+        awful.spawn("discord")
     end))
 
 root.keys(globalkeys)
@@ -834,7 +834,7 @@ awful.rules.rules = {{
     }
 }, {
     rule_any = {
-        class = {"nvim-qt", "VSCodium"}
+        class = {"nvim-qt", "Code"}
     },
     properties = {
         maximized = true
