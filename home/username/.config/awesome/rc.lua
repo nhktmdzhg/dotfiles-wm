@@ -21,7 +21,8 @@ local wibox_height = 30
 local wibox_margin = 5
 
 local function spawn_once(cmd_name, cmd_full)
-    awful.spawn.with_shell("pgrep -u $USER -x " .. cmd_name .. " > /dev/null; or exec " .. cmd_full)
+    awful.spawn.with_shell("pgrep -u $USER -x " .. cmd_name .. " > /dev/null 2>&1; or exec " .. cmd_full ..
+                               " > /dev/null 2>&1")
 end
 
 package.loaded["naughty.dbus"] = {}
@@ -29,14 +30,17 @@ spawn_once("dunst", "dunst")
 awful.spawn("pactl set-source-volume @DEFAULT_SOURCE@ 150%")
 awful.spawn("ksuperkey -e 'Super_L=Alt_L|F2'")
 awful.spawn("ksuperkey -e 'Super_R=Alt_L|F2'")
-spawn_once("picom", "picom --animations -b")
+spawn_once("picom", "picom --animations")
 spawn_once("lxqt-policykit-", "lxqt-policykit-agent")
 spawn_once("xss-lock", "xss-lock -q -l ~/.config/awesome/xss-lock-tsl.sh")
 awful.spawn("xset s off")
 awful.spawn("xset -dpms")
 spawn_once("thunderbird", "thunderbird")
 spawn_once("mcontrolcenter", "mcontrolcenter")
-spawn_once("Discord", "discord")
+spawn_once("Discord",
+    "env DISCORD_DISABLE_GPU_SANDBOX=1 ELECTRON_OZONE_PLATFORM_HINT=auto /usr/bin/discord --no-sandbox --enable-zero-copy --ignore-gpu-blocklist --enable-gpu-rasterization --enable-native-gpu-memory-buffers --enable-features=VaapiVideoDecoder --disable-features=UseChromeOSDirectVideoDecoder --use-gl=desktop")
+-- Wayland version
+-- spawn_once("Discord", "env OZONE_PLATFORM=wayland XDG_SESSION_TYPE=wayland DISCORD_DISABLE_GPU_SANDBOX=1 DISCORD_ENABLE_WAYLAND_PIPEWIRE=1 ELECTRON_OZONE_PLATFORM_HINT=auto /usr/bin/discord --no-sandbox --enable-zero-copy --ignore-gpu-blocklist --enable-gpu-rasterization --enable-native-gpu-memory-buffers --enable-features=,WebRTCPipeWireCapturer,UseOzonePlatform,VaapiVideoDecoder --disable-features=UseChromeOSDirectVideoDecoder --ozone-platform=wayland --use-gl=desktop")
 spawn_once("zalo", "zalo")
 spawn_once("fcitx5", "fcitx5")
 awful.spawn.once("bluetoothctl power off")
@@ -46,14 +50,6 @@ beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 awful.layout.layouts = {awful.layout.suit.floating}
 
 -- Wibar
-local function get_output_of_cmd(cmd)
-    local handle = io.popen(cmd)
-    local result = handle and handle:read("*a") or ""
-    if handle then
-        handle:close()
-    end
-    return result
-end
 
 -- Create a wibox for each screen and add it
 -- local taglist_buttons = gears.table.join(
@@ -261,7 +257,6 @@ awful.screen.connect_for_each_screen(function(s)
 
     local battery_icon = wibox.widget {
         widget = wibox.widget.textbox,
-        -- font = "JetBrainsMono Nerd Font 10",
         font = "MesloLGS Nerd Font Mono 14",
         align = "center",
         valign = "center"
@@ -312,7 +307,7 @@ awful.screen.connect_for_each_screen(function(s)
         autostart = true,
         callnow = true,
         callback = function()
-            battery_percent.text = scripts.get_battery_percent() .. "%"
+            battery_percent.text = scripts.get_battery_percent() .. " %"
         end
     }
 
@@ -526,7 +521,7 @@ awful.screen.connect_for_each_screen(function(s)
         autostart = true,
         callnow = true,
         callback = function()
-            date_widget.text = get_output_of_cmd("date +\"%Y年%m月%d日\"")
+            date_widget.text = scripts.get_output_of_cmd("date +'%Y年%m月%d日'")
         end
     }
 
@@ -554,7 +549,7 @@ awful.screen.connect_for_each_screen(function(s)
         autostart = true,
         callnow = true,
         callback = function()
-            time_widget.text = get_output_of_cmd("date +\"%H:%M:%S %p\"")
+            time_widget.text = scripts.get_output_of_cmd("date +'%H:%M:%S %p'")
         end
     }
 
@@ -673,7 +668,7 @@ end), -- Applications --
 awful.key({super}, "e", function()
     awful.spawn("thunar")
 end), awful.key({super}, "l", function()
-    awful.spawn("betterlockscreen -l blur")
+    awful.spawn.with_shell("exec ~/.config/awesome/xss-lock-tsl.sh")
 end), awful.key({ctrl, alt}, "t", function()
     awful.spawn.with_shell("XMODIFIERS= exec alacritty")
 end), awful.key({ctrl, shift}, "Escape", function()
@@ -681,7 +676,7 @@ end), awful.key({ctrl, shift}, "Escape", function()
 end), -- Awesome --
 awful.key({super, ctrl}, "r", awesome.restart), awful.key({super}, "d", toggle_show_desktop),
     awful.key({super}, "b", function()
-        awful.spawn("librewolf")
+        awful.spawn("firefox")
     end), awful.key({super}, "n", function()
         awful.spawn("nvim-qt")
     end), awful.key({super}, "c", function()
@@ -699,8 +694,7 @@ end), awful.key({super, shift}, "Left", function(c)
 end), awful.key({super, shift}, "Right", function(c)
     c:relative_move(10, 0, 0, 0)
 end), awful.key({super}, "Up", function(c)
-    local screen = c.screen
-    local wa = screen.workarea
+    local wa = c.screen.workarea
     c:geometry{
         x = wa.x + margin_left,
         y = wa.y + margin_top + wibox_height + wibox_margin,
@@ -708,8 +702,7 @@ end), awful.key({super}, "Up", function(c)
         height = (wa.height - margin_top - margin_bottom - wibox_height - wibox_margin) / 2
     }
 end), awful.key({super}, "Down", function(c)
-    local screen = c.screen
-    local wa = screen.workarea
+    local wa = c.screen.workarea
     local height = (wa.height - margin_top - margin_bottom - wibox_height - wibox_margin) / 2
     c:geometry{
         x = wa.x + margin_left,
@@ -718,8 +711,7 @@ end), awful.key({super}, "Down", function(c)
         height = height
     }
 end), awful.key({super}, "Left", function(c)
-    local screen = c.screen
-    local wa = screen.workarea
+    local wa = c.screen.workarea
     c:geometry{
         x = wa.x + margin_left,
         y = wa.y + margin_top + wibox_height + wibox_margin,
@@ -727,8 +719,7 @@ end), awful.key({super}, "Left", function(c)
         height = wa.height - margin_top - margin_bottom - wibox_height - wibox_margin
     }
 end), awful.key({super}, "Right", function(c)
-    local screen = c.screen
-    local wa = screen.workarea
+    local wa = c.screen.workarea
     local width = (wa.width - margin_left - margin_right) / 2
     c:geometry{
         x = wa.x + margin_left + width,
@@ -932,7 +923,6 @@ beautiful.focus_follows_mouse = false
 beautiful.bg_systray = palette.surface0.hex
 
 client.connect_signal("focus", function(c)
-    c.border_color = beautiful.border_focus
     local screen = c.screen
     if c.fullscreen then
         screen.mywibox.visible = false
@@ -942,17 +932,13 @@ client.connect_signal("focus", function(c)
         awful.spawn("dunstctl set-paused false")
     end
 end)
-client.connect_signal("unfocus", function(c)
-    c.border_color = beautiful.border_normal
-end)
 
 local function clamp(x, min, max)
     return math.max(min, math.min(max, x))
 end
 
 client.connect_signal("request::geometry", function(c)
-    local screen = c.screen
-    local wa = screen.workarea
+    local wa = c.screen.workarea
 
     if c.fullscreen then
         return

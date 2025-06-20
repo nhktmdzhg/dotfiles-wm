@@ -2,7 +2,7 @@ local awful = require("awful")
 
 local scripts = {}
 
-local function get_output_of_cmd(cmd)
+function scripts.get_output_of_cmd(cmd)
     local handle = io.popen(cmd)
     local result = handle and handle:read("*a") or ""
     if handle then
@@ -12,7 +12,7 @@ local function get_output_of_cmd(cmd)
 end
 
 function scripts.get_battery_icon()
-    local devices_output = get_output_of_cmd("upower -e")
+    local devices_output = scripts.get_output_of_cmd("upower -e")
     local battery_device
 
     for line in devices_output:gmatch("[^\n]+") do
@@ -26,7 +26,7 @@ function scripts.get_battery_icon()
         return nil
     end
 
-    local info_output = get_output_of_cmd("upower -i " .. battery_device)
+    local info_output = scripts.get_output_of_cmd("upower -i " .. battery_device)
 
     local status, percentage
 
@@ -72,7 +72,7 @@ function scripts.get_battery_icon()
 end
 
 function scripts.get_battery_percent()
-    local devices_output = get_output_of_cmd("upower -e")
+    local devices_output = scripts.get_output_of_cmd("upower -e")
     local battery_device
 
     for line in devices_output:gmatch("[^\n]+") do
@@ -86,7 +86,7 @@ function scripts.get_battery_percent()
         return nil
     end
 
-    local info_output = get_output_of_cmd("upower -i " .. battery_device)
+    local info_output = scripts.get_output_of_cmd("upower -i " .. battery_device)
 
     for line in info_output:gmatch("[^\n]+") do
         if line:find("percentage:") then
@@ -101,7 +101,7 @@ function scripts.get_battery_percent()
 end
 
 function scripts.get_network_info(arg)
-    local ethernet = get_output_of_cmd("ip addr show enp4s0")
+    local ethernet = scripts.get_output_of_cmd("ip addr show enp4s0")
     local ip_ethernet = ""
     for line in ethernet:gmatch("[^\n]+") do
         if line:find("inet ") then
@@ -109,7 +109,7 @@ function scripts.get_network_info(arg)
             break
         end
     end
-    local essid = get_output_of_cmd("iwgetid -r")
+    local essid = scripts.get_output_of_cmd("iwgetid -r")
     local icon, stat
     if ip_ethernet ~= "" then
         icon = ""
@@ -137,7 +137,7 @@ function scripts.get_volume_info(arg)
         awful.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle")
     end
 
-    local vol_raw = get_output_of_cmd("pactl get-sink-volume @DEFAULT_SINK@")
+    local vol_raw = scripts.get_output_of_cmd("pactl get-sink-volume @DEFAULT_SINK@")
     local volume
     for line in vol_raw:gmatch("[^\n]+") do
         local percent = line:match("(%d+)%%")
@@ -147,7 +147,7 @@ function scripts.get_volume_info(arg)
         end
     end
 
-    local mute_raw = get_output_of_cmd("pactl get-sink-mute @DEFAULT_SINK@")
+    local mute_raw = scripts.get_output_of_cmd("pactl get-sink-mute @DEFAULT_SINK@")
     local muted = false
     for line in mute_raw:gmatch("[^\n]+") do
         if line:lower():find("mute:") then
@@ -182,14 +182,14 @@ function scripts.get_volume_info(arg)
 end
 
 function scripts.change_brightness(arg)
-    local brightness_val = tonumber(get_output_of_cmd("brightnessctl g"):match("(%d+)"))
+    local brightness_val = tonumber(scripts.get_output_of_cmd("brightnessctl g"):match("(%d+)"))
     if arg == 1 then
         awful.spawn("brightnessctl set 5%+ -q")
     elseif arg == -1 then
         awful.spawn("brightnessctl set 5%- -q")
     end
 
-    local max_brightness = tonumber(get_output_of_cmd("brightnessctl m"):match("(%d+)"))
+    local max_brightness = tonumber(scripts.get_output_of_cmd("brightnessctl m"):match("(%d+)"))
     local brightness = math.floor((brightness_val / max_brightness) * 100)
     if arg == 1 then
         brightness = math.min(brightness + 5, 100)
