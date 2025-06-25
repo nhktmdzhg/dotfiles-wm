@@ -20,7 +20,7 @@ nmcurse-nhk-git
 nvim
 nvim-qt
 pavucontrol
-picom-ftlabs-git
+picom
 playerctl
 qt5ct
 qt6ct

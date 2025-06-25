@@ -38,7 +38,7 @@ _M.settings = {
     preview_box_title_color = {0, 0, 0, 1},
 
     cycle_raise_client = true,
-    cycle_all_clients = false
+    cycle_all_clients = false,
 }
 
 -- Create a wibox to contain all the client-widgets
