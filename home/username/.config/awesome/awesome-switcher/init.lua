@@ -32,7 +32,8 @@ _M.settings = {
     preview_box_delay = 150,
     preview_box_title_font = {"sans", "italic", "normal"},
     preview_box_title_font_size_factor = 0.8,
-    preview_box_title_color = {0, 0, 0, 1}
+    preview_box_title_color = {0, 0, 0, 1},
+    cycle_all_clients = false,
 }
 
 -- Create a wibox to contain all the client-widgets
@@ -78,6 +79,44 @@ function _M.getClients()
 
         idx = idx + 1
         c = awful.client.focus.history.get(s, idx)
+    end
+
+    -- Minimized clients will not appear in the focus history
+    -- Find them by cycling through all clients, and adding them to the list
+    -- if not already there.
+    -- This will preserve the history AND enable you to focus on minimized clients
+
+    local t = s.selected_tag
+    local all = client.get(s)
+
+    for i = 1, #all do
+        c = all[i]
+        local ctags = c:tags();
+
+        -- check if the client is on the current tag
+        local isCurrentTag = false
+        for j = 1, #ctags do
+            if t == ctags[j] then
+                isCurrentTag = true
+                break
+            end
+        end
+
+        if isCurrentTag or _M.settings.cycle_all_clients then
+            -- check if client is already in the history
+            -- if not, add it
+            local addToTable = true
+            for k = 1, #clients do
+                if clients[k] == c then
+                    addToTable = false
+                    break
+                end
+            end
+
+            if addToTable then
+                table.insert(clients, c)
+            end
+        end
     end
 
     return clients
