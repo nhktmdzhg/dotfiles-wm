@@ -1,4 +1,4 @@
----@diagnostic disable: undefined-global, deprecated, lowercase-global
+---@diagnostic disable: undefined-global, lowercase-global, deprecated
 local cairo = require("lgi").cairo
 local mouse = mouse
 local screen = screen
@@ -12,10 +12,7 @@ local timer = gears.timer
 local client = client
 awful.client = require('awful.client')
 
-local naughty = require("naughty")
 local string = string
-local tostring = tostring
-local tonumber = tonumber
 local debug = debug
 local pairs = pairs
 local unpack = unpack or table.unpack
@@ -35,17 +32,14 @@ _M.settings = {
     preview_box_delay = 150,
     preview_box_title_font = {"sans", "italic", "normal"},
     preview_box_title_font_size_factor = 0.8,
-    preview_box_title_color = {0, 0, 0, 1},
-
-    cycle_raise_client = true,
-    cycle_all_clients = false,
+    preview_box_title_color = {0, 0, 0, 1}
 }
 
 -- Create a wibox to contain all the client-widgets
 _M.preview_wbox = wibox({
     width = screen[mouse.screen].geometry.width
 })
-_M.preview_wbox.border_width = 3
+_M.preview_wbox.border_width = 0
 _M.preview_wbox.ontop = true
 _M.preview_wbox.visible = false
 
@@ -86,44 +80,6 @@ function _M.getClients()
         c = awful.client.focus.history.get(s, idx)
     end
 
-    -- Minimized clients will not appear in the focus history
-    -- Find them by cycling through all clients, and adding them to the list
-    -- if not already there.
-    -- This will preserve the history AND enable you to focus on minimized clients
-
-    local t = s.selected_tag
-    local all = client.get(s)
-
-    for i = 1, #all do
-        local c = all[i]
-        local ctags = c:tags();
-
-        -- check if the client is on the current tag
-        local isCurrentTag = false
-        for j = 1, #ctags do
-            if t == ctags[j] then
-                isCurrentTag = true
-                break
-            end
-        end
-
-        if isCurrentTag or _M.settings.cycle_all_clients then
-            -- check if client is already in the history
-            -- if not, add it
-            local addToTable = true
-            for k = 1, #clients do
-                if clients[k] == c then
-                    addToTable = false
-                    break
-                end
-            end
-
-            if addToTable then
-                table.insert(clients, c)
-            end
-        end
-    end
-
     return clients
 end
 
@@ -162,11 +118,11 @@ function _M.clientsHaveChanged()
     return _M.tableLength(clients) ~= _M.tableLength(_M.altTabTable)
 end
 
-function _M.createPreviewText(client)
-    if client.class then
-        return " - " .. client.class
+function _M.createPreviewText(c)
+    if c.class then
+        return " - " .. c.class
     else
-        return " - " .. client.name
+        return " - " .. c.name
     end
 end
 
@@ -187,11 +143,9 @@ end
 
 function _M.cycle(dir)
     -- Switch to next client
-    _M.altTabIndex = _M.altTabIndex + dir
-    if _M.altTabIndex > #_M.altTabTable then
-        _M.altTabIndex = 1 -- wrap around
-    elseif _M.altTabIndex < 1 then
-        _M.altTabIndex = #_M.altTabTable -- wrap around
+    _M.altTabIndex = (_M.altTabIndex + dir) % #_M.altTabTable
+    if _M.altTabIndex == 0 then
+        _M.altTabIndex = #_M.altTabTable
     end
 
     _M.updatePreview()
@@ -200,10 +154,6 @@ function _M.cycle(dir)
 
     if not _M.settings.preview_box then
         client.focus = _M.altTabTable[_M.altTabIndex].client
-    end
-
-    if _M.settings.cycle_raise_client == true then
-        _M.altTabTable[_M.altTabIndex].client:raise()
     end
 end
 
@@ -289,11 +239,11 @@ function _M.preview()
     -- create all the widgets
     for i = 1, #leftRightTab do
         _M.preview_widgets[i] = wibox.widget.base.make_widget()
-        _M.preview_widgets[i].fit = function(preview_widget, width, height)
+        _M.preview_widgets[i].fit = function(_, _, _)
             return w, h
         end
         local c = leftRightTab[i]
-        _M.preview_widgets[i].draw = function(preview_widget, preview_wbox, cr, width, height)
+        _M.preview_widgets[i].draw = function(_, _, cairo_context, width, height)
             if width ~= 0 and height ~= 0 then
 
                 local a = 0.8
@@ -319,13 +269,13 @@ function _M.preview()
                 local iconboxHeight = iconboxWidth
 
                 -- Titles
-                cr:select_font_face(unpack(_M.settings.preview_box_title_font))
-                cr:set_font_face(cr:get_font_face())
-                cr:set_font_size(fontSize)
+                cairo_context:select_font_face(unpack(_M.settings.preview_box_title_font))
+                cairo_context:set_font_face(cairo_context:get_font_face())
+                cairo_context:set_font_size(fontSize)
 
                 text = _M.createPreviewText(c)
-                textWidth = cr:text_extents(text).width
-                textHeight = cr:text_extents(text).height
+                textWidth = cairo_context:text_extents(text).width
+                textHeight = cairo_context:text_extents(text).height
 
                 local titleboxWidth = textWidth + iconboxWidth
                 local titleboxHeight = textboxHeight
@@ -336,21 +286,21 @@ function _M.preview()
                 sx = iconboxWidth / icon.width
                 sy = iconboxHeight / icon.height
 
-                cr:translate(tx, ty)
-                cr:scale(sx, sy)
-                cr:set_source_surface(icon, 0, 0)
-                cr:paint()
-                cr:scale(1 / sx, 1 / sy)
-                cr:translate(-tx, -ty)
+                cairo_context:translate(tx, ty)
+                cairo_context:scale(sx, sy)
+                cairo_context:set_source_surface(icon, 0, 0)
+                cairo_context:paint()
+                cairo_context:scale(1 / sx, 1 / sy)
+                cairo_context:translate(-tx, -ty)
 
                 -- Draw titles
                 tx = tx + iconboxWidth
                 ty = h + (textboxHeight + textHeight) / 2
 
-                cr:set_source_rgba(unpack(_M.settings.preview_box_title_color))
-                cr:move_to(tx, ty)
-                cr:show_text(text)
-                cr:stroke()
+                cairo_context:set_source_rgba(unpack(_M.settings.preview_box_title_color))
+                cairo_context:move_to(tx, ty)
+                cairo_context:show_text(text)
+                cairo_context:stroke()
 
                 -- Draw previews
                 local cg = c:geometry()
@@ -366,18 +316,18 @@ function _M.preview()
                 ty = (h - sy * cg.height) / 2
 
                 local tmp = gears.surface(c.content)
-                cr:translate(tx, ty)
-                cr:scale(sx, sy)
-                cr:set_source_surface(tmp, 0, 0)
-                cr:paint()
+                cairo_context:translate(tx, ty)
+                cairo_context:scale(sx, sy)
+                cairo_context:set_source_surface(tmp, 0, 0)
+                cairo_context:paint()
                 tmp:finish()
 
                 -- Overlays
-                cr:scale(1 / sx, 1 / sy)
-                cr:translate(-tx, -ty)
-                cr:set_source_rgba(0, 0, 0, overlay)
-                cr:rectangle(tx, ty, sx * cg.width, sy * cg.height)
-                cr:fill()
+                cairo_context:scale(1 / sx, 1 / sy)
+                cairo_context:translate(-tx, -ty)
+                cairo_context:set_source_rgba(0, 0, 0, overlay)
+                cairo_context:rectangle(tx, ty, sx * cg.width, sy * cg.height)
+                cairo_context:fill()
             end
         end
 
@@ -389,10 +339,11 @@ function _M.preview()
 
     -- Spacers left and right
     local spacer = wibox.widget.base.make_widget()
-    spacer.fit = function(leftSpacer, width, height)
+    spacer.fit = function(_, _, _)
         return (W - w * #_M.altTabTable) / 2, _M.preview_wbox.height
     end
-    spacer.draw = function(preview_widget, preview_wbox, cr, width, height)
+    spacer.draw = function(_, _, _, _, _)
+        -- Draw nothing, just a spacer
     end
 
     -- layout
