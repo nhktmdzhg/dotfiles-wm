@@ -170,7 +170,7 @@ awful.screen.connect_for_each_screen(function(s)
 
     arch_logo:connect_signal("button::press", function(_, _, _, button)
         if button == 1 then
-            awful.spawn.with_shell("XMODIFIERS=@im=none exec rofi -no-lazy-grab -show drun -modi drun")
+            awful.spawn.with_shell("XMODIFIERS=@im=none exec rofi -no-lazy-grab -show drun")
         elseif button == 3 then
             awful.spawn("wlogout")
         end
@@ -243,6 +243,8 @@ awful.screen.connect_for_each_screen(function(s)
                 name = c.name
             else
                 name = "No focused window"
+                s.mywibox.visible = true
+                awful.spawn("dunstctl set-paused false")
             end
             local length = string.len(name)
             if length < 60 then
@@ -279,7 +281,9 @@ awful.screen.connect_for_each_screen(function(s)
         autostart = true,
         callnow = true,
         callback = function()
-            battery_icon.text = scripts.get_battery_icon()
+            scripts.get_battery_icon(function(icon)
+                battery_icon.text = icon
+            end)
         end
     }
 
@@ -307,7 +311,13 @@ awful.screen.connect_for_each_screen(function(s)
         autostart = true,
         callnow = true,
         callback = function()
-            battery_percent.text = scripts.get_battery_percent() .. " %"
+            scripts.get_battery_percent(function(percent)
+                if percent then
+                    battery_percent.text = percent .. " %"
+                else
+                    battery_percent.text = "N/A"
+                end
+            end)
         end
     }
 
@@ -349,7 +359,9 @@ awful.screen.connect_for_each_screen(function(s)
         autostart = true,
         callnow = true,
         callback = function()
-            network_icon.text = scripts.get_network_info(0)
+            scripts.get_network_info(0, function(icon)
+                network_icon.text = icon
+            end)
         end
     }
 
@@ -377,7 +389,9 @@ awful.screen.connect_for_each_screen(function(s)
         autostart = true,
         callnow = true,
         callback = function()
-            network_status.text = scripts.get_network_info(1)
+            scripts.get_network_info(1, function(status)
+                network_status.text = status
+            end)
         end
     }
 
@@ -405,17 +419,19 @@ awful.screen.connect_for_each_screen(function(s)
         autostart = true,
         callnow = true,
         callback = function()
-            volume_icon.text = scripts.get_volume_info(2)
+            scripts.get_volume_info(2, function(icon)
+                volume_icon.text = icon
+            end)
         end
     }
 
     volume_icon_container:connect_signal("button::press", function(_, _, _, button)
         if button == 1 then
-            scripts.get_volume_info(0)
+            scripts.get_volume_info(0, _)
         elseif button == 4 then
-            scripts.get_volume_info(1)
+            scripts.get_volume_info(1, _)
         elseif button == 5 then
-            scripts.get_volume_info(-1)
+            scripts.get_volume_info(-1, _)
         end
     end)
 
@@ -451,15 +467,17 @@ awful.screen.connect_for_each_screen(function(s)
         autostart = true,
         callnow = true,
         callback = function()
-            volume_percent.text = scripts.get_volume_info(3)
+            scripts.get_volume_info(3, function(status)
+                volume_percent.text = status or "N/A"
+            end)
         end
     }
 
     volume_percent_container:connect_signal("button::press", function(_, _, _, button)
         if button == 4 then
-            scripts.get_volume_info(1)
+            scripts.get_volume_info(1, _)
         elseif button == 5 then
-            scripts.get_volume_info(-1)
+            scripts.get_volume_info(-1, _)
         end
     end)
 
@@ -521,7 +539,9 @@ awful.screen.connect_for_each_screen(function(s)
         autostart = true,
         callnow = true,
         callback = function()
-            date_widget.text = scripts.get_output_of_cmd("date +'%Y年%m月%d日'")
+            awful.spawn.easy_async("date +'%Y年%m月%d日'", function(stdout)
+                date_widget.text = stdout:gsub("%s+$", "")
+            end)
         end
     }
 
@@ -549,7 +569,9 @@ awful.screen.connect_for_each_screen(function(s)
         autostart = true,
         callnow = true,
         callback = function()
-            time_widget.text = scripts.get_output_of_cmd("date +'%H:%M:%S %p'")
+            awful.spawn.easy_async("date +'%H:%M:%S %p'", function(stdout)
+                time_widget.text = stdout:gsub("%s+$", "")
+            end)
         end
     }
 
@@ -634,11 +656,11 @@ end), awful.key({}, "XF86MonBrightnessDown", function()
     scripts.change_brightness(-1)
 end), -- Audio-volume controls --
 awful.key({}, "XF86AudioRaiseVolume", function()
-    scripts.get_volume_info(1)
+    scripts.get_volume_info(1, _)
 end), awful.key({}, "XF86AudioLowerVolume", function()
-    scripts.get_volume_info(-1)
+    scripts.get_volume_info(-1, _)
 end), awful.key({}, "XF86AudioMute", function()
-    scripts.get_volume_info(0)
+    scripts.get_volume_info(0, _)
 end), awful.key({}, "XF86AudioPlay", function()
     awful.spawn("playerctl play-pause")
 end), awful.key({}, "XF86AudioNext", function()
@@ -658,7 +680,7 @@ end), -- Menu controls --
 awful.key({super}, "Escape", function()
     awful.spawn("wlogout")
 end), awful.key({alt}, "F2", function()
-    awful.spawn.with_shell("XMODIFIERS=@im=none exec rofi -no-lazy-grab -show drun -modi drun")
+    awful.spawn.with_shell("XMODIFIERS=@im=none exec rofi -no-lazy-grab -show drun")
 end), -- Screenshot controls --
 awful.key({}, "Print", function()
     awful.spawn("flameshot")

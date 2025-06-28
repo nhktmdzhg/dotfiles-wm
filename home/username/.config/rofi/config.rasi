@@ -1,8 +1,4 @@
 configuration {
-  filebrowser {
-    directories-first: true;
-  }
-
   cycle:               true;
   disable-history:     true;
   hover-select:        true;
@@ -13,12 +9,9 @@ configuration {
   monitor:             "-4";
   dpi:                    0;
 
-  modi:                "drun,run,filebrowser,window";
+  modi:                "drun";
 
   display-drun:        "";
-  display-run:         "";
-  display-filebrowser: "";
-  display-window:      "";
 
   me-select-entry:     "";
   me-accept-entry:     "MousePrimary";
