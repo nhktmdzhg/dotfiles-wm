@@ -1,13 +1,15 @@
----@diagnostic disable: undefined-global
 local gears = require("gears")
 local awful = require("awful")
-require("awful.autofocus")
 local wibox = require("wibox")
 local beautiful = require("beautiful")
 local timer = require("gears.timer")
 local scripts = require("scripts")
-require("awful.hotkeys_popup.keys")
 local palette = require("mocha")
+local client = require("client")
+local screen = require("screen")
+local awesome = require("awesome")
+local root = require("root")
+require("awful.autofocus")
 
 local super = "Mod4"
 local alt = "Mod1"
@@ -427,11 +429,11 @@ awful.screen.connect_for_each_screen(function(s)
 
     volume_icon_container:connect_signal("button::press", function(_, _, _, button)
         if button == 1 then
-            scripts.get_volume_info(0, _)
+            scripts.get_volume_info(0, nil)
         elseif button == 4 then
-            scripts.get_volume_info(1, _)
+            scripts.get_volume_info(1, nil)
         elseif button == 5 then
-            scripts.get_volume_info(-1, _)
+            scripts.get_volume_info(-1, nil)
         end
     end)
 
@@ -475,9 +477,9 @@ awful.screen.connect_for_each_screen(function(s)
 
     volume_percent_container:connect_signal("button::press", function(_, _, _, button)
         if button == 4 then
-            scripts.get_volume_info(1, _)
+            scripts.get_volume_info(1, nil)
         elseif button == 5 then
-            scripts.get_volume_info(-1, _)
+            scripts.get_volume_info(-1, nil)
         end
     end)
 
@@ -656,11 +658,11 @@ end), awful.key({}, "XF86MonBrightnessDown", function()
     scripts.change_brightness(-1)
 end), -- Audio-volume controls --
 awful.key({}, "XF86AudioRaiseVolume", function()
-    scripts.get_volume_info(1, _)
+    scripts.get_volume_info(1, nil)
 end), awful.key({}, "XF86AudioLowerVolume", function()
-    scripts.get_volume_info(-1, _)
+    scripts.get_volume_info(-1, nil)
 end), awful.key({}, "XF86AudioMute", function()
-    scripts.get_volume_info(0, _)
+    scripts.get_volume_info(0, nil)
 end), awful.key({}, "XF86AudioPlay", function()
     awful.spawn("playerctl play-pause")
 end), awful.key({}, "XF86AudioNext", function()

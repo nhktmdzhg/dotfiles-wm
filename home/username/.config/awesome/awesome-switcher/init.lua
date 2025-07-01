@@ -33,7 +33,7 @@ _M.settings = {
     preview_box_title_font = {"sans", "italic", "normal"},
     preview_box_title_font_size_factor = 0.8,
     preview_box_title_color = {0, 0, 0, 1},
-    cycle_all_clients = false,
+    cycle_all_clients = false
 }
 
 -- Create a wibox to contain all the client-widgets
