@@ -118,7 +118,7 @@ function scripts.get_network_info(arg, callback)
 
             if ip_ethernet ~= "" then
                 icon = ""
-                stat = ip_ethernet
+                stat = "Wired connection"
             elseif essid ~= "" then
                 icon = ""
                 stat = essid

@@ -684,9 +684,7 @@ awful.key({super}, "Escape", function()
 end), awful.key({alt}, "F2", function()
     awful.spawn.with_shell("XMODIFIERS=@im=none exec rofi -no-lazy-grab -show drun")
 end), -- Screenshot controls --
-awful.key({}, "Print", function()
-    awful.spawn("flameshot")
-end), awful.key({ctrl}, "Print", function()
+awful.key({ctrl}, "Print", function()
     awful.spawn("flameshot gui")
 end), -- Applications --
 awful.key({super}, "e", function()

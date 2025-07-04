@@ -1,5 +1,4 @@
 alacritty
-alsa-utils
 awesome
 betterlockscreen
 bluez
@@ -11,7 +10,6 @@ darkly-qt6-git
 dash
 dunst
 fastfetch
-file-roller
 flameshot
 gsimplecal
 ksuperkey

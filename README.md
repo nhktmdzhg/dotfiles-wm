@@ -17,14 +17,13 @@ Maybe in this repo I forgot to add some neccessary files, so if you find any mis
 - Alt + Shift + Tab: Switch window in reverse
 - Super + Esc: Session menu
 - Super: Open rofi menu
-- PrtSc: Open flameshot
 - Ctrl + PrtSc: Select area to screenshot
 - Super + E: Open File Manager (Default: Thunar)
 - Ctrl + Alt + T: Open terminal (Default: Alacritty)
 - Ctrl + Shift + Esc: Open btop
 - Super + L: Lock screen (Default: betterlockscreen)
 - Super + Ctrl + R: Reload AwesomeWM
-- Super + B: Open browser (Default: Librewolf)
+- Super + B: Open browser (Default: Firefox)
 - Super + N: Open Neovim-qt
 - Super + Up: Move window to the top
 - Super + Down: Move window to the bottom

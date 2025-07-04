@@ -6,12 +6,9 @@ configuration {
   steal-focus:         false;
   window-thumbnail:    true;
 
-  monitor:             "-4";
   dpi:                    0;
 
   modi:                "drun";
-
-  display-drun:        "";
 
   me-select-entry:     "";
   me-accept-entry:     "MousePrimary";
