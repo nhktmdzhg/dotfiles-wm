@@ -12,7 +12,7 @@
 }
 {
     "label" : "logout",
-    "action" : "loginctl --no-ask-password kill-user ${EUID:-$(id -u)} --signal=SIGKILL",
+    "action" : "loginctl --no-ask-password terminate-user $USER",
     "text" : "Logout",
     "keybind" : "e"
 }

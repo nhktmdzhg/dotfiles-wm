@@ -50,7 +50,6 @@ awful.spawn.once("bluetoothctl power off")
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 
 awful.layout.layouts = {awful.layout.suit.floating}
-
 -- Wibar
 
 -- Create a wibox for each screen and add it
@@ -383,7 +382,7 @@ awful.screen.connect_for_each_screen(function(s)
 
     awful.tooltip {
         objects = {network_status_container},
-        text = "Network IP/SSID"
+        text = "SSID"
     }
 
     timer {
