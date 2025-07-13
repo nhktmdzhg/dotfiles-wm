@@ -47,7 +47,7 @@ spawn_once("zalo", "zalo")
 spawn_once("fcitx5", "fcitx5")
 awful.spawn.once("bluetoothctl power off")
 
-beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
 
 awful.layout.layouts = {awful.layout.suit.floating}
 -- Wibar
@@ -82,8 +82,7 @@ end))
 
 local function set_wallpaper(s)
     local home = os.getenv("HOME")
-    local wallpaper_path = home .. "/wallpaper/march 7th 4k.jpg"
-    gears.wallpaper.maximized(wallpaper_path, s, true)
+    gears.wallpaper.maximized(home .. "/wallpaper/march 7th 4k.jpg", s, true)
 end
 
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
@@ -837,7 +836,6 @@ awful.rules.rules = {{
     rule = {},
     properties = {
         border_width = 0,
-        border_color = beautiful.border_normal,
         focus = awful.client.focus.filter,
         raise = true,
         keys = clientkeys,
@@ -943,9 +941,6 @@ end)
 --     }
 -- end)
 
-beautiful.focus_follows_mouse = false
-beautiful.bg_systray = palette.surface0.hex
-
 client.connect_signal("focus", function(c)
     local screen = c.screen
     if c.fullscreen then
@@ -997,10 +992,3 @@ client.connect_signal("property::fullscreen", function(c)
         awful.spawn("dunstctl set-paused false")
     end
 end)
-
--- Tasklist color
-beautiful.tasklist_bg_focus = palette.surface0.hex
-beautiful.tasklist_bg_normal = "#00000000"
-beautiful.tasklist_bg_urgent = palette.red.hex
-beautiful.tasklist_bg_minimize = "#00000000"
-beautiful.tasklist_shape_focus = gears.shape.rectangle
