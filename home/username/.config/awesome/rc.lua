@@ -81,7 +81,8 @@ local tasklist_buttons = gears.table.join(awful.button({}, 1, function(c)
 end))
 
 local function set_wallpaper(s)
-    local wallpaper_path = "/home/iamnanoka/wallpaper/march 7th 4k.jpg"
+    local home = os.getenv("HOME")
+    local wallpaper_path = home .. "/wallpaper/march 7th 4k.jpg"
     gears.wallpaper.maximized(wallpaper_path, s, true)
 end
 
@@ -685,6 +686,8 @@ end), awful.key({alt}, "F2", function()
 end), -- Screenshot controls --
 awful.key({ctrl}, "Print", function()
     awful.spawn("flameshot gui")
+end), awful.key({}, "Print", function()
+    awful.spawn("flameshot full")
 end), -- Applications --
 awful.key({super}, "e", function()
     awful.spawn("thunar")
