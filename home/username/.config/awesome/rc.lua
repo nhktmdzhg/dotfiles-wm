@@ -166,7 +166,8 @@ awful.screen.connect_for_each_screen(function(s)
     }
     awful.tooltip {
         objects = {arch_logo},
-        text = "[L] Main Menu [R] Extensions Menu"
+        text = "[L] Main Menu [R] Extensions Menu",
+        mode = "outside"
     }
 
     arch_logo:connect_signal("button::press", function(_, _, _, button)
@@ -230,7 +231,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     awful.tooltip {
         objects = {window_name_container},
-        text = "Window Name"
+        text = "Window Name",
+        mode = "outside"
     }
 
     timer {
@@ -274,7 +276,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     awful.tooltip {
         objects = {battery_icon_container},
-        text = "Battery Status"
+        text = "Battery Status",
+        mode = "outside"
     }
 
     timer {
@@ -304,7 +307,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     awful.tooltip {
         objects = {battery_percent_container},
-        text = "Battery percent"
+        text = "Battery percent",
+        mode = "outside"
     }
 
     timer {
@@ -338,7 +342,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     awful.tooltip {
         objects = {network_icon_container},
-        text = "Network Status"
+        text = "Network Status",
+        mode = "outside"
     }
 
     network_icon_container:connect_signal("button::press", function(_, _, _, button)
@@ -382,7 +387,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     awful.tooltip {
         objects = {network_status_container},
-        text = "SSID"
+        text = "SSID",
+        mode = "outside"
     }
 
     timer {
@@ -412,7 +418,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     awful.tooltip {
         objects = {volume_icon_container},
-        text = "[L] Toggle Audio Mute [S] Audio Volume +/-"
+        text = "[L] Toggle Audio Mute [S] Audio Volume +/-",
+        mode = "outside"
     }
 
     timer {
@@ -460,7 +467,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     awful.tooltip {
         objects = {volume_percent_container},
-        text = "[S] Audio Volume +/-"
+        text = "[S] Audio Volume +/-",
+        mode = "outside"
     }
 
     timer {
@@ -499,7 +507,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     awful.tooltip {
         objects = {calendar_icon_container},
-        text = "Calendar"
+        text = "Calendar",
+        mode = "outside"
     }
 
     calendar_icon_container:connect_signal("button::press", function(_, _, _, button)
@@ -532,7 +541,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     awful.tooltip {
         objects = {date_widget_container},
-        text = "Date"
+        text = "Date",
+        mode = "outside"
     }
 
     timer {
@@ -562,7 +572,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     awful.tooltip {
         objects = {time_widget_container},
-        text = "Time"
+        text = "Time",
+        mode = "outside"
     }
 
     timer {

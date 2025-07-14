@@ -15,5 +15,8 @@ theme.tasklist_bg_normal = "#00000000"
 theme.tasklist_bg_urgent = palette.red.hex
 theme.tasklist_bg_minimize = "#00000000"
 theme.tasklist_shape_focus = gears.shape.rectangle
-
+theme.tooltip_bg = palette.surface2.hex
+theme.tooltip_fg = palette.text.hex
+theme.tooltip_font = theme.font
+theme.tooltip_shape = gears.shape.octogon
 return theme
