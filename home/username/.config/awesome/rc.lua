@@ -23,29 +23,34 @@ local wibox_height = 30
 local wibox_margin = 5
 
 local function spawn_once(cmd_name, cmd_full)
-    awful.spawn.with_shell("pgrep -u $USER -x " .. cmd_name .. " > /dev/null 2>&1; or exec " .. cmd_full ..
-                               " > /dev/null 2>&1")
+    awful.spawn.easy_async({"pgrep", "-u", os.getenv("USER"), "-x", cmd_name}, function(_, _, _, exitcode)
+        if exitcode ~= 0 then
+            awful.spawn(cmd_full)
+        end
+    end)
 end
 
 package.loaded["naughty.dbus"] = {}
 spawn_once("dunst", "dunst")
-awful.spawn("pactl set-source-volume @DEFAULT_SOURCE@ 150%")
-awful.spawn("ksuperkey -e 'Super_L=Alt_L|F2'")
-awful.spawn("ksuperkey -e 'Super_R=Alt_L|F2'")
+awful.spawn({"pactl", "set-source-volume", "@DEFAULT_SOURCE@", "150%"})
+awful.spawn({"ksuperkey", "-e", "Super_L=Alt_L|F2"})
+awful.spawn({"ksuperkey", "-e", "Super_R=Alt_L|F2"})
 spawn_once("picom", "picom")
 spawn_once("lxqt-policykit-", "lxqt-policykit-agent")
-spawn_once("xss-lock", "xss-lock -q -l ~/.config/awesome/xss-lock-tsl.sh")
-awful.spawn("xset s off")
-awful.spawn("xset -dpms")
+spawn_once("xss-lock", {"xss-lock", "-q", "-l", os.getenv("HOME") .. "/.config/awesome/xss-lock-tsl.sh"})
+awful.spawn({"xset", "s", "off"})
+awful.spawn({"xset", "-dpms"})
 spawn_once("thunderbird", "thunderbird")
 spawn_once("mcontrolcenter", "mcontrolcenter")
 spawn_once("Discord",
-    "env DISCORD_DISABLE_GPU_SANDBOX=1 ELECTRON_OZONE_PLATFORM_HINT=auto /usr/bin/discord --no-sandbox --enable-zero-copy --ignore-gpu-blocklist --enable-gpu-rasterization --enable-native-gpu-memory-buffers --enable-features=VaapiVideoDecoder --disable-features=UseChromeOSDirectVideoDecoder --use-gl=desktop")
+    {"env", "DISCORD_DISABLE_GPU_SANDBOX=1", "ELECTRON_OZONE_PLATFORM_HINT=auto", "/usr/bin/discord", "--no-sandbox",
+     "--enable-zero-copy", "--ignore-gpu-blocklist", "--enable-gpu-rasterization", "--enable-native-gpu-memory-buffers",
+     "--enable-features=VaapiVideoDecoder", "--disable-features=UseChromeOSDirectVideoDecoder", "--use-gl=desktop"})
 -- Wayland version
--- spawn_once("Discord", "env OZONE_PLATFORM=wayland XDG_SESSION_TYPE=wayland DISCORD_DISABLE_GPU_SANDBOX=1 DISCORD_ENABLE_WAYLAND_PIPEWIRE=1 ELECTRON_OZONE_PLATFORM_HINT=auto /usr/bin/discord --no-sandbox --enable-zero-copy --ignore-gpu-blocklist --enable-gpu-rasterization --enable-native-gpu-memory-buffers --enable-features=,WebRTCPipeWireCapturer,UseOzonePlatform,VaapiVideoDecoder --disable-features=UseChromeOSDirectVideoDecoder --ozone-platform=wayland --use-gl=desktop")
+-- spawn_once("Discord", {"env", "OZONE_PLATFORM=wayland", "XDG_SESSION_TYPE=wayland", "DISCORD_DISABLE_GPU_SANDBOX=1", "DISCORD_ENABLE_WAYLAND_PIPEWIRE=1", "ELECTRON_OZONE_PLATFORM_HINT=auto", "/usr/bin/discord", "--no-sandbox", "--enable-zero-copy", "--ignore-gpu-blocklist", "--enable-gpu-rasterization", "--enable-native-gpu-memory-buffers", "--enable-features=WebRTCPipeWireCapturer,UseOzonePlatform,VaapiVideoDecoder", "--disable-features=UseChromeOSDirectVideoDecoder", "--ozone-platform=wayland", "--use-gl=desktop"})
 spawn_once("zalo", "zalo")
 spawn_once("fcitx5", "fcitx5")
-awful.spawn.once("bluetoothctl power off")
+awful.spawn.once({"bluetoothctl", "power", "off"})
 
 beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
 
@@ -172,7 +177,7 @@ awful.screen.connect_for_each_screen(function(s)
 
     arch_logo:connect_signal("button::press", function(_, _, _, button)
         if button == 1 then
-            awful.spawn.with_shell("XMODIFIERS=@im=none exec rofi -no-lazy-grab -show drun")
+            awful.spawn({"env", "XMODIFIERS=@im=none", "rofi", "-no-lazy-grab", "-show", "drun"})
         elseif button == 3 then
             awful.spawn("wlogout")
         end
@@ -247,7 +252,7 @@ awful.screen.connect_for_each_screen(function(s)
             else
                 name = "No focused window"
                 s.mywibox.visible = true
-                awful.spawn("dunstctl set-paused false")
+                awful.spawn({"dunstctl", "set-paused", "false"})
             end
             local length = string.len(name)
             if length < 60 then
@@ -348,7 +353,7 @@ awful.screen.connect_for_each_screen(function(s)
 
     network_icon_container:connect_signal("button::press", function(_, _, _, button)
         if button == 1 then
-            awful.spawn.with_shell("XMODIFIERS= exec alacritty -e nmcurse")
+            awful.spawn({"env", "XMODIFIERS=", "alacritty", "-e", "nmcurse"})
         end
     end)
 
@@ -550,7 +555,7 @@ awful.screen.connect_for_each_screen(function(s)
         autostart = true,
         callnow = true,
         callback = function()
-            awful.spawn.easy_async("date +'%Y年%m月%d日'", function(stdout)
+            awful.spawn.easy_async({"date", "+'%Y年%m月%d日'"}, function(stdout)
                 date_widget.text = stdout:gsub("%s+$", "")
             end)
         end
@@ -581,7 +586,7 @@ awful.screen.connect_for_each_screen(function(s)
         autostart = true,
         callnow = true,
         callback = function()
-            awful.spawn.easy_async("date +'%H:%M:%S %p'", function(stdout)
+            awful.spawn.easy_async({"date", "+'%H:%M:%S %p'"}, function(stdout)
                 time_widget.text = stdout:gsub("%s+$", "")
             end)
         end
@@ -674,15 +679,15 @@ end), awful.key({}, "XF86AudioLowerVolume", function()
 end), awful.key({}, "XF86AudioMute", function()
     scripts.get_volume_info(0, nil)
 end), awful.key({}, "XF86AudioPlay", function()
-    awful.spawn("playerctl play-pause")
+    awful.spawn({"playerctl", "play-pause"})
 end), awful.key({}, "XF86AudioNext", function()
-    awful.spawn("playerctl next")
+    awful.spawn({"playerctl", "next"})
 end), awful.key({}, "XF86AudioPrev", function()
-    awful.spawn("playerctl previous")
+    awful.spawn({"playerctl", "previous"})
 end), awful.key({}, "XF86AudioStop", function()
-    awful.spawn("playerctl play-pause")
+    awful.spawn({"playerctl", "play-pause"})
 end), awful.key({}, "XF86AudioPause", function()
-    awful.spawn("playerctl play-pause")
+    awful.spawn({"playerctl", "play-pause"})
 end), -- Window controls --
 awful.key({alt}, "Tab", function()
     switcher.switch(1, alt, "Alt_L", shift, "Tab")
@@ -692,21 +697,21 @@ end), -- Menu controls --
 awful.key({super}, "Escape", function()
     awful.spawn("wlogout")
 end), awful.key({alt}, "F2", function()
-    awful.spawn.with_shell("XMODIFIERS=@im=none exec rofi -no-lazy-grab -show drun")
+    awful.spawn({"env", "XMODIFIERS=@im=none", "rofi", "-no-lazy-grab", "-show", "drun"})
 end), -- Screenshot controls --
 awful.key({ctrl}, "Print", function()
-    awful.spawn("flameshot gui")
+    awful.spawn({"flameshot", "gui"})
 end), awful.key({}, "Print", function()
-    awful.spawn("flameshot full")
+    awful.spawn({"flameshot", "full"})
 end), -- Applications --
 awful.key({super}, "e", function()
     awful.spawn("thunar")
 end), awful.key({super}, "l", function()
-    awful.spawn.with_shell("exec ~/.config/awesome/xss-lock-tsl.sh")
+    awful.spawn({os.getenv("HOME") .. "/.config/awesome/xss-lock-tsl.sh"})
 end), awful.key({ctrl, alt}, "t", function()
-    awful.spawn.with_shell("XMODIFIERS= exec alacritty")
+    awful.spawn({"env", "XMODIFIERS=", "alacritty"})
 end), awful.key({ctrl, shift}, "Escape", function()
-    awful.spawn.with_shell("XMODIFIERS= exec alacritty -e btop")
+    awful.spawn({"env", "XMODIFIERS=", "alacritty", "-e", "btop"})
 end), -- Awesome --
 awful.key({super, ctrl}, "r", awesome.restart), awful.key({super}, "d", toggle_show_desktop),
     awful.key({super}, "b", function()
@@ -906,9 +911,9 @@ client.connect_signal("manage", function(c)
             width = math.min(wa.width - margin_left - margin_right, c.width),
             height = math.min(wa.height - margin_top - margin_bottom - wibox_height - wibox_margin, c.height)
         }
-        awful.spawn("dunstctl set-paused false")
+        awful.spawn({"dunstctl", "set-paused", "false"})
     else
-        awful.spawn("dunstctl set-paused true")
+        awful.spawn({"dunstctl", "set-paused", "true"})
     end
 end)
 
@@ -956,10 +961,10 @@ client.connect_signal("focus", function(c)
     local screen = c.screen
     if c.fullscreen then
         screen.mywibox.visible = false
-        awful.spawn("dunstctl set-paused true")
+        awful.spawn({"dunstctl", "set-paused", "true"})
     else
         screen.mywibox.visible = true
-        awful.spawn("dunstctl set-paused false")
+        awful.spawn({"dunstctl", "set-paused", "false"})
     end
 end)
 
@@ -997,9 +1002,9 @@ client.connect_signal("property::fullscreen", function(c)
 
     if c.fullscreen then
         screen.mywibox.visible = false
-        awful.spawn("dunstctl set-paused true")
+        awful.spawn({"dunstctl", "set-paused", "true"})
     else
         screen.mywibox.visible = true
-        awful.spawn("dunstctl set-paused false")
+        awful.spawn({"dunstctl", "set-paused", "false"})
     end
 end)

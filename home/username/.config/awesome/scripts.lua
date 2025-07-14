@@ -3,7 +3,7 @@ local awful = require("awful")
 local scripts = {}
 
 function scripts.get_battery_icon(callback)
-    awful.spawn.easy_async("upower -e", function(stdout)
+    awful.spawn.easy_async({"upower", "-e"}, function(stdout)
         local battery_device = nil
 
         for line in stdout:gmatch("[^\n]+") do
@@ -18,7 +18,7 @@ function scripts.get_battery_icon(callback)
             return
         end
 
-        awful.spawn.easy_async("upower -i " .. battery_device, function(info_output)
+        awful.spawn.easy_async({"upower", "-i", battery_device}, function(info_output)
             local status, percentage
 
             for line in info_output:gmatch("[^\n]+") do
@@ -69,7 +69,7 @@ function scripts.get_battery_icon(callback)
 end
 
 function scripts.get_battery_percent(callback)
-    awful.spawn.easy_async("upower -e", function(stdout)
+    awful.spawn.easy_async({"upower", "-e"}, function(stdout)
         local battery_device = nil
 
         for line in stdout:gmatch("[^\n]+") do
@@ -84,7 +84,7 @@ function scripts.get_battery_percent(callback)
             return
         end
 
-        awful.spawn.easy_async("upower -i " .. battery_device, function(info_output)
+        awful.spawn.easy_async({"upower", "-i", battery_device}, function(info_output)
             for line in info_output:gmatch("[^\n]+") do
                 if line:find("percentage:") then
                     local percent_str = line:match("(%d+)%%")
@@ -103,7 +103,7 @@ function scripts.get_battery_percent(callback)
 end
 
 function scripts.get_network_info(arg, callback)
-    awful.spawn.easy_async("ip addr show enp4s0", function(ethernet_output)
+    awful.spawn.easy_async({"ip", "addr", "show", "enp4s0"}, function(ethernet_output)
         local ip_ethernet = ""
 
         for line in ethernet_output:gmatch("[^\n]+") do
@@ -113,7 +113,7 @@ function scripts.get_network_info(arg, callback)
             end
         end
 
-        awful.spawn.easy_async("iwgetid -r", function(essid)
+        awful.spawn.easy_async({"iwgetid", "-r"}, function(essid)
             local icon, stat
 
             if ip_ethernet ~= "" then
@@ -140,14 +140,14 @@ end
 
 function scripts.get_volume_info(arg, callback)
     if arg == 1 then
-        awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%")
+        awful.spawn({"pactl", "set-sink-volume", "@DEFAULT_SINK@", "+5%"})
     elseif arg == -1 then
-        awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%")
+        awful.spawn({"pactl", "set-sink-volume", "@DEFAULT_SINK@", "-5%"})
     elseif arg == 0 then
-        awful.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle")
+        awful.spawn({"pactl", "set-sink-mute", "@DEFAULT_SINK@", "toggle"})
     end
 
-    awful.spawn.easy_async("pactl get-sink-volume @DEFAULT_SINK@", function(vol_raw)
+    awful.spawn.easy_async({"pactl", "get-sink-volume", "@DEFAULT_SINK@"}, function(vol_raw)
         local volume
         for line in vol_raw:gmatch("[^\n]+") do
             local percent = line:match("(%d+)%%")
@@ -157,7 +157,7 @@ function scripts.get_volume_info(arg, callback)
             end
         end
 
-        awful.spawn.easy_async("pactl get-sink-mute @DEFAULT_SINK@", function(mute_raw)
+        awful.spawn.easy_async({"pactl", "get-sink-mute", "@DEFAULT_SINK@"}, function(mute_raw)
             local muted = false
             for line in mute_raw:gmatch("[^\n]+") do
                 if line:lower():find("mute:") then
@@ -178,7 +178,7 @@ function scripts.get_volume_info(arg, callback)
             elseif volume <= 150 then
                 icon = ""
             else
-                awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ 150%")
+                awful.spawn({"pactl", "set-sink-volume", "@DEFAULT_SINK@", "150%"})
                 icon = ""
             end
 
@@ -194,7 +194,7 @@ function scripts.get_volume_info(arg, callback)
 end
 
 function scripts.change_brightness(arg)
-    awful.spawn.easy_async("brightnessctl g", function(brightness_output)
+    awful.spawn.easy_async({"brightnessctl", "g"}, function(brightness_output)
         local brightness_val = tonumber(brightness_output:match("(%d+)"))
 
         if not brightness_val then
@@ -202,12 +202,12 @@ function scripts.change_brightness(arg)
         end
 
         if arg == 1 then
-            awful.spawn("brightnessctl set 5%+ -q")
+            awful.spawn({"brightnessctl", "set", "5%+", "-q"})
         elseif arg == -1 then
-            awful.spawn("brightnessctl set 5%- -q")
+            awful.spawn({"brightnessctl", "set", "5%-", "-q"})
         end
 
-        awful.spawn.easy_async("brightnessctl m", function(max_output)
+        awful.spawn.easy_async({"brightnessctl", "m"}, function(max_output)
             local max_brightness = tonumber(max_output:match("(%d+)"))
 
             if not max_brightness then
@@ -230,8 +230,8 @@ function scripts.change_brightness(arg)
                 icon = 'display-brightness-high'
             end
 
-            awful.spawn("dunstify \"" .. brightness .. "\" -h \"int:value:" .. brightness ..
-                            "\" -h string:synchronous:display-brightness -i " .. icon .. " -t 1000")
+            awful.spawn({"dunstify", tostring(brightness), "-h", "int:value:" .. brightness,
+                            "-h", "string:synchronous:display-brightness", "-i", icon, "-t", "1000"})
         end)
     end)
 end
