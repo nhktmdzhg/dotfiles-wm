@@ -23,38 +23,41 @@ local wibox_height = 30
 local wibox_margin = 5
 
 local function spawn_once(cmd_name, cmd_full)
-    awful.spawn.easy_async({"pgrep", "-u", os.getenv("USER"), "-x", cmd_name}, function(_, _, _, exitcode)
+    awful.spawn.easy_async({ "pgrep", "-u", os.getenv("USER"), "-x", cmd_name }, function(_, _, _, exitcode)
         if exitcode ~= 0 then
             awful.spawn(cmd_full)
         end
     end)
 end
 
+local home = os.getenv("HOME")
+
 package.loaded["naughty.dbus"] = {}
 spawn_once("dunst", "dunst")
-awful.spawn({"pactl", "set-source-volume", "@DEFAULT_SOURCE@", "150%"})
-awful.spawn({"ksuperkey", "-e", "Super_L=Alt_L|F2"})
-awful.spawn({"ksuperkey", "-e", "Super_R=Alt_L|F2"})
+awful.spawn({ "pactl", "set-source-volume", "@DEFAULT_SOURCE@", "150%" })
+awful.spawn({ "ksuperkey", "-e", "Super_L=Alt_L|F2" })
+awful.spawn({ "ksuperkey", "-e", "Super_R=Alt_L|F2" })
 spawn_once("picom", "picom")
 spawn_once("lxqt-policykit-", "lxqt-policykit-agent")
-spawn_once("xss-lock", {"xss-lock", "-q", "-l", os.getenv("HOME") .. "/.config/awesome/xss-lock-tsl.sh"})
-awful.spawn({"xset", "s", "off"})
-awful.spawn({"xset", "-dpms"})
+spawn_once("xss-lock", { "xss-lock", "-q", "-l", home .. "/.config/awesome/xss-lock-tsl.sh" })
+awful.spawn({ "xset", "s", "off" })
+awful.spawn({ "xset", "-dpms" })
 spawn_once("thunderbird", "thunderbird")
 spawn_once("mcontrolcenter", "mcontrolcenter")
 spawn_once("Discord",
-    {"env", "DISCORD_DISABLE_GPU_SANDBOX=1", "ELECTRON_OZONE_PLATFORM_HINT=auto", "/usr/bin/discord", "--no-sandbox",
-     "--enable-zero-copy", "--ignore-gpu-blocklist", "--enable-gpu-rasterization", "--enable-native-gpu-memory-buffers",
-     "--enable-features=VaapiVideoDecoder", "--disable-features=UseChromeOSDirectVideoDecoder", "--use-gl=desktop"})
+    { "env", "DISCORD_DISABLE_GPU_SANDBOX=1", "ELECTRON_OZONE_PLATFORM_HINT=auto", "/usr/bin/discord", "--no-sandbox",
+        "--enable-zero-copy", "--ignore-gpu-blocklist", "--enable-gpu-rasterization",
+        "--enable-native-gpu-memory-buffers",
+        "--enable-features=VaapiVideoDecoder", "--disable-features=UseChromeOSDirectVideoDecoder", "--use-gl=desktop" })
 -- Wayland version
 -- spawn_once("Discord", {"env", "OZONE_PLATFORM=wayland", "XDG_SESSION_TYPE=wayland", "DISCORD_DISABLE_GPU_SANDBOX=1", "DISCORD_ENABLE_WAYLAND_PIPEWIRE=1", "ELECTRON_OZONE_PLATFORM_HINT=auto", "/usr/bin/discord", "--no-sandbox", "--enable-zero-copy", "--ignore-gpu-blocklist", "--enable-gpu-rasterization", "--enable-native-gpu-memory-buffers", "--enable-features=WebRTCPipeWireCapturer,UseOzonePlatform,VaapiVideoDecoder", "--disable-features=UseChromeOSDirectVideoDecoder", "--ozone-platform=wayland", "--use-gl=desktop"})
 spawn_once("zalo", "zalo")
 spawn_once("fcitx5", "fcitx5")
-awful.spawn.once({"bluetoothctl", "power", "off"})
+awful.spawn.once({ "bluetoothctl", "power", "off" })
 
 beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
 
-awful.layout.layouts = {awful.layout.suit.floating}
+awful.layout.layouts = { awful.layout.suit.floating }
 -- Wibar
 
 -- Create a wibox for each screen and add it
@@ -86,7 +89,6 @@ local tasklist_buttons = gears.table.join(awful.button({}, 1, function(c)
 end))
 
 local function set_wallpaper(s)
-    local home = os.getenv("HOME")
     gears.wallpaper.maximized(home .. "/wallpaper/march 7th 4k.jpg", s, true)
 end
 
@@ -98,7 +100,7 @@ awful.screen.connect_for_each_screen(function(s)
     set_wallpaper(s)
 
     -- Each screen has its own tag table.
-    awful.tag({"1"}, s, awful.layout.layouts[1])
+    awful.tag({ "1" }, s, awful.layout.layouts[1])
 
     -- Create the wibox
     s.mywibox = wibox({
@@ -170,14 +172,14 @@ awful.screen.connect_for_each_screen(function(s)
         fg = "#434c5eff"
     }
     awful.tooltip {
-        objects = {arch_logo},
+        objects = { arch_logo },
         text = "[L] Main Menu [R] Extensions Menu",
         mode = "outside"
     }
 
     arch_logo:connect_signal("button::press", function(_, _, _, button)
         if button == 1 then
-            awful.spawn({"env", "XMODIFIERS=@im=none", "rofi", "-no-lazy-grab", "-show", "drun"})
+            awful.spawn({ "env", "XMODIFIERS=@im=none", "rofi", "-no-lazy-grab", "-show", "drun" })
         elseif button == 3 then
             awful.spawn("wlogout")
         end
@@ -235,7 +237,7 @@ awful.screen.connect_for_each_screen(function(s)
     window_name_container.shape_clip = true
 
     awful.tooltip {
-        objects = {window_name_container},
+        objects = { window_name_container },
         text = "Window Name",
         mode = "outside"
     }
@@ -252,7 +254,7 @@ awful.screen.connect_for_each_screen(function(s)
             else
                 name = "No focused window"
                 s.mywibox.visible = true
-                awful.spawn({"dunstctl", "set-paused", "false"})
+                awful.spawn({ "dunstctl", "set-paused", "false" })
             end
             local length = string.len(name)
             if length < 60 then
@@ -280,7 +282,7 @@ awful.screen.connect_for_each_screen(function(s)
     battery_icon_container.shape_clip = true
 
     awful.tooltip {
-        objects = {battery_icon_container},
+        objects = { battery_icon_container },
         text = "Battery Status",
         mode = "outside"
     }
@@ -311,7 +313,7 @@ awful.screen.connect_for_each_screen(function(s)
     battery_percent_container.shape_clip = true
 
     awful.tooltip {
-        objects = {battery_percent_container},
+        objects = { battery_percent_container },
         text = "Battery percent",
         mode = "outside"
     }
@@ -346,14 +348,14 @@ awful.screen.connect_for_each_screen(function(s)
     network_icon_container.shape_clip = true
 
     awful.tooltip {
-        objects = {network_icon_container},
+        objects = { network_icon_container },
         text = "Network Status",
         mode = "outside"
     }
 
     network_icon_container:connect_signal("button::press", function(_, _, _, button)
         if button == 1 then
-            awful.spawn({"env", "XMODIFIERS=", "alacritty", "-e", "nmcurse"})
+            awful.spawn({ "env", "XMODIFIERS=", "alacritty", "-e", "nmcurse" })
         end
     end)
 
@@ -391,7 +393,7 @@ awful.screen.connect_for_each_screen(function(s)
     network_status_container.shape_clip = true
 
     awful.tooltip {
-        objects = {network_status_container},
+        objects = { network_status_container },
         text = "SSID",
         mode = "outside"
     }
@@ -422,7 +424,7 @@ awful.screen.connect_for_each_screen(function(s)
     volume_icon_container.shape_clip = true
 
     awful.tooltip {
-        objects = {volume_icon_container},
+        objects = { volume_icon_container },
         text = "[L] Toggle Audio Mute [S] Audio Volume +/-",
         mode = "outside"
     }
@@ -471,7 +473,7 @@ awful.screen.connect_for_each_screen(function(s)
     volume_percent_container.shape_clip = true
 
     awful.tooltip {
-        objects = {volume_percent_container},
+        objects = { volume_percent_container },
         text = "[S] Audio Volume +/-",
         mode = "outside"
     }
@@ -511,7 +513,7 @@ awful.screen.connect_for_each_screen(function(s)
     calendar_icon_container.shape_clip = true
 
     awful.tooltip {
-        objects = {calendar_icon_container},
+        objects = { calendar_icon_container },
         text = "Calendar",
         mode = "outside"
     }
@@ -545,7 +547,7 @@ awful.screen.connect_for_each_screen(function(s)
     date_widget_container.shape_clip = true
 
     awful.tooltip {
-        objects = {date_widget_container},
+        objects = { date_widget_container },
         text = "Date",
         mode = "outside"
     }
@@ -555,7 +557,7 @@ awful.screen.connect_for_each_screen(function(s)
         autostart = true,
         callnow = true,
         callback = function()
-            awful.spawn.easy_async({"date", "+'%Y年%m月%d日'"}, function(stdout)
+            awful.spawn.easy_async({ "date", "+%Y年%m月%d日" }, function(stdout)
                 date_widget.text = stdout:gsub("%s+$", "")
             end)
         end
@@ -576,7 +578,7 @@ awful.screen.connect_for_each_screen(function(s)
     time_widget_container.shape_clip = true
 
     awful.tooltip {
-        objects = {time_widget_container},
+        objects = { time_widget_container },
         text = "Time",
         mode = "outside"
     }
@@ -586,14 +588,14 @@ awful.screen.connect_for_each_screen(function(s)
         autostart = true,
         callnow = true,
         callback = function()
-            awful.spawn.easy_async({"date", "+'%H:%M:%S %p'"}, function(stdout)
+            awful.spawn.easy_async({ "date", "+%H:%M:%S %p" }, function(stdout)
                 time_widget.text = stdout:gsub("%s+$", "")
             end)
         end
     }
 
     -- Add widgets to the wibox
-    s.mywibox:setup{
+    s.mywibox:setup {
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
@@ -667,116 +669,143 @@ end
 local switcher = require("awesome-switcher")
 
 local globalkeys = gears.table.join( -- Brightness controls --
-awful.key({}, "XF86MonBrightnessUp", function()
-    scripts.change_brightness(1)
-end), awful.key({}, "XF86MonBrightnessDown", function()
-    scripts.change_brightness(-1)
-end), -- Audio-volume controls --
-awful.key({}, "XF86AudioRaiseVolume", function()
-    scripts.get_volume_info(1, nil)
-end), awful.key({}, "XF86AudioLowerVolume", function()
-    scripts.get_volume_info(-1, nil)
-end), awful.key({}, "XF86AudioMute", function()
-    scripts.get_volume_info(0, nil)
-end), awful.key({}, "XF86AudioPlay", function()
-    awful.spawn({"playerctl", "play-pause"})
-end), awful.key({}, "XF86AudioNext", function()
-    awful.spawn({"playerctl", "next"})
-end), awful.key({}, "XF86AudioPrev", function()
-    awful.spawn({"playerctl", "previous"})
-end), awful.key({}, "XF86AudioStop", function()
-    awful.spawn({"playerctl", "play-pause"})
-end), awful.key({}, "XF86AudioPause", function()
-    awful.spawn({"playerctl", "play-pause"})
-end), -- Window controls --
-awful.key({alt}, "Tab", function()
-    switcher.switch(1, alt, "Alt_L", shift, "Tab")
-end), awful.key({alt, shift}, "Tab", function()
-    switcher.switch(-1, alt, "Alt_L", shift, "Tab")
-end), -- Menu controls --
-awful.key({super}, "Escape", function()
-    awful.spawn("wlogout")
-end), awful.key({alt}, "F2", function()
-    awful.spawn({"env", "XMODIFIERS=@im=none", "rofi", "-no-lazy-grab", "-show", "drun"})
-end), -- Screenshot controls --
-awful.key({ctrl}, "Print", function()
-    awful.spawn({"flameshot", "gui"})
-end), awful.key({}, "Print", function()
-    awful.spawn({"flameshot", "full"})
-end), -- Applications --
-awful.key({super}, "e", function()
-    awful.spawn("thunar")
-end), awful.key({super}, "l", function()
-    awful.spawn({os.getenv("HOME") .. "/.config/awesome/xss-lock-tsl.sh"})
-end), awful.key({ctrl, alt}, "t", function()
-    awful.spawn({"env", "XMODIFIERS=", "alacritty"})
-end), awful.key({ctrl, shift}, "Escape", function()
-    awful.spawn({"env", "XMODIFIERS=", "alacritty", "-e", "btop"})
-end), -- Awesome --
-awful.key({super, ctrl}, "r", awesome.restart), awful.key({super}, "d", toggle_show_desktop),
-    awful.key({super}, "b", function()
-        awful.spawn("firefox")
-    end), awful.key({super}, "n", function()
+    awful.key({}, "XF86MonBrightnessUp", function()
+        scripts.change_brightness(1)
+    end),
+    awful.key({}, "XF86MonBrightnessDown", function()
+        scripts.change_brightness(-1)
+    end), -- Audio-volume controls --
+    awful.key({}, "XF86AudioRaiseVolume", function()
+        scripts.get_volume_info(1, nil)
+    end),
+    awful.key({}, "XF86AudioLowerVolume", function()
+        scripts.get_volume_info(-1, nil)
+    end),
+    awful.key({}, "XF86AudioMute", function()
+        scripts.get_volume_info(0, nil)
+    end),
+    awful.key({}, "XF86AudioPlay", function()
+        awful.spawn({ "playerctl", "play-pause" })
+    end),
+    awful.key({}, "XF86AudioNext", function()
+        awful.spawn({ "playerctl", "next" })
+    end),
+    awful.key({}, "XF86AudioPrev", function()
+        awful.spawn({ "playerctl", "previous" })
+    end),
+    awful.key({}, "XF86AudioStop", function()
+        awful.spawn({ "playerctl", "play-pause" })
+    end),
+    awful.key({}, "XF86AudioPause", function()
+        awful.spawn({ "playerctl", "play-pause" })
+    end), -- Window controls --
+    awful.key({ alt }, "Tab", function()
+        switcher.switch(1, alt, "Alt_L", shift, "Tab")
+    end),
+    awful.key({ alt, shift }, "Tab", function()
+        switcher.switch(-1, alt, "Alt_L", shift, "Tab")
+    end), -- Menu controls --
+    awful.key({ super }, "Escape", function()
+        awful.spawn("wlogout")
+    end),
+    awful.key({ alt }, "F2", function()
+        awful.spawn({ "env", "XMODIFIERS=@im=none", "rofi", "-no-lazy-grab", "-show", "drun" })
+    end), -- Screenshot controls --
+    awful.key({ ctrl }, "Print", function()
+        awful.spawn({ "flameshot", "gui" })
+    end),
+    awful.key({}, "Print", function()
+        awful.spawn({ "flameshot", "full" })
+    end), -- Applications --
+    awful.key({ super }, "e", function()
+        awful.spawn("thunar")
+    end),
+    awful.key({ super }, "l", function()
+        awful.spawn({ home .. "/.config/awesome/xss-lock-tsl.sh" })
+    end),
+    awful.key({ ctrl, alt }, "t", function()
+        awful.spawn({ "env", "XMODIFIERS=", "alacritty" })
+    end),
+    awful.key({ ctrl, shift }, "Escape", function()
+        awful.spawn({ "env", "XMODIFIERS=", "alacritty", "-e", "btop" })
+    end), -- Awesome --
+    awful.key({ super, ctrl }, "r", awesome.restart),
+    awful.key({ super }, "d", toggle_show_desktop),
+    awful.key({ super }, "b", function()
+        awful.spawn("zen-browser")
+    end),
+    awful.key({ super }, "n", function()
         awful.spawn("nvim-qt")
-    end), awful.key({super}, "c", function()
+    end),
+    awful.key({ super }, "c", function()
         awful.spawn("discord")
     end))
 
 root.keys(globalkeys)
 
-local clientkeys = gears.table.join(awful.key({super, shift}, "Up", function(c)
-    c:relative_move(0, -10, 0, 0)
-end), awful.key({super, shift}, "Down", function(c)
-    c:relative_move(0, 10, 0, 0)
-end), awful.key({super, shift}, "Left", function(c)
-    c:relative_move(-10, 0, 0, 0)
-end), awful.key({super, shift}, "Right", function(c)
-    c:relative_move(10, 0, 0, 0)
-end), awful.key({super}, "Up", function(c)
-    local wa = c.screen.workarea
-    c:geometry{
-        x = wa.x + margin_left,
-        y = wa.y + margin_top + wibox_height + wibox_margin,
-        width = wa.width - margin_left - margin_right,
-        height = (wa.height - margin_top - margin_bottom - wibox_height - wibox_margin) / 2
-    }
-end), awful.key({super}, "Down", function(c)
-    local wa = c.screen.workarea
-    local height = (wa.height - margin_top - margin_bottom - wibox_height - wibox_margin) / 2
-    c:geometry{
-        x = wa.x + margin_left,
-        y = wa.y + margin_top + wibox_height + wibox_margin + height,
-        width = wa.width - margin_left - margin_right,
-        height = height
-    }
-end), awful.key({super}, "Left", function(c)
-    local wa = c.screen.workarea
-    c:geometry{
-        x = wa.x + margin_left,
-        y = wa.y + margin_top + wibox_height + wibox_margin,
-        width = (wa.width - margin_left - margin_right) / 2,
-        height = wa.height - margin_top - margin_bottom - wibox_height - wibox_margin
-    }
-end), awful.key({super}, "Right", function(c)
-    local wa = c.screen.workarea
-    local width = (wa.width - margin_left - margin_right) / 2
-    c:geometry{
-        x = wa.x + margin_left + width,
-        y = wa.y + margin_top + wibox_height + wibox_margin,
-        width = width,
-        height = wa.height - margin_top - margin_bottom - wibox_height - wibox_margin
-    }
-end), -- Window controls --
-awful.key({alt}, "F4", function(c)
-    c:kill()
-end), awful.key({super}, "f", function(c)
-    c.fullscreen = not c.fullscreen
-end), awful.key({super}, "x", function(c)
-    c.maximized = not c.maximized
-end), awful.key({super}, "z", function(c)
-    c.minimized = true
-    c:lower()
-end))
+local clientkeys = gears.table.join(awful.key({ super, shift }, "Up", function(c)
+        c:relative_move(0, -10, 0, 0)
+    end),
+    awful.key({ super, shift }, "Down", function(c)
+        c:relative_move(0, 10, 0, 0)
+    end),
+    awful.key({ super, shift }, "Left", function(c)
+        c:relative_move(-10, 0, 0, 0)
+    end),
+    awful.key({ super, shift }, "Right", function(c)
+        c:relative_move(10, 0, 0, 0)
+    end),
+    awful.key({ super }, "Up", function(c)
+        local wa = c.screen.workarea
+        c:geometry {
+            x = wa.x + margin_left,
+            y = wa.y + margin_top + wibox_height + wibox_margin,
+            width = wa.width - margin_left - margin_right,
+            height = (wa.height - margin_top - margin_bottom - wibox_height - wibox_margin) / 2
+        }
+    end),
+    awful.key({ super }, "Down", function(c)
+        local wa = c.screen.workarea
+        local height = (wa.height - margin_top - margin_bottom - wibox_height - wibox_margin) / 2
+        c:geometry {
+            x = wa.x + margin_left,
+            y = wa.y + margin_top + wibox_height + wibox_margin + height,
+            width = wa.width - margin_left - margin_right,
+            height = height
+        }
+    end),
+    awful.key({ super }, "Left", function(c)
+        local wa = c.screen.workarea
+        c:geometry {
+            x = wa.x + margin_left,
+            y = wa.y + margin_top + wibox_height + wibox_margin,
+            width = (wa.width - margin_left - margin_right) / 2,
+            height = wa.height - margin_top - margin_bottom - wibox_height - wibox_margin
+        }
+    end),
+    awful.key({ super }, "Right", function(c)
+        local wa = c.screen.workarea
+        local width = (wa.width - margin_left - margin_right) / 2
+        c:geometry {
+            x = wa.x + margin_left + width,
+            y = wa.y + margin_top + wibox_height + wibox_margin,
+            width = width,
+            height = wa.height - margin_top - margin_bottom - wibox_height - wibox_margin
+        }
+    end), -- Window controls --
+    awful.key({ alt }, "F4", function(c)
+        c:kill()
+    end),
+    awful.key({ super }, "f", function(c)
+        c.fullscreen = not c.fullscreen
+    end),
+    awful.key({ super }, "x", function(c)
+        c.maximized = not c.maximized
+    end),
+    awful.key({ super }, "z", function(c)
+        c.minimized = true
+        c:lower()
+    end))
 
 -- Bind all key numbers to tags.
 -- Be careful: we use keycodes to make it work on any keyboard layout.
@@ -832,12 +861,12 @@ local clientbuttons = gears.table.join(awful.button({}, 1, function(c)
     c:emit_signal("request::activate", "mouse_click", {
         raise = true
     })
-end), awful.button({super}, 1, function(c)
+end), awful.button({ super }, 1, function(c)
     c:emit_signal("request::activate", "mouse_click", {
         raise = true
     })
     awful.mouse.client.move(c)
-end), awful.button({super}, 3, function(c)
+end), awful.button({ super }, 3, function(c)
     c:emit_signal("request::activate", "mouse_click", {
         raise = true
     })
@@ -848,7 +877,7 @@ end))
 root.keys(globalkeys)
 
 -- Rules
-awful.rules.rules = {{
+awful.rules.rules = { {
     rule = {},
     properties = {
         border_width = 0,
@@ -863,14 +892,14 @@ awful.rules.rules = {{
     }
 }, {
     rule_any = {
-        class = {"nvim-qt", "Code"}
+        class = { "nvim-qt", "Code" }
     },
     properties = {
         maximized = true
     }
 }, {
     rule_any = {
-        type = {"splash", "dialog"}
+        type = { "splash", "dialog" }
     },
     properties = {
         skip_taskbar = true,
@@ -880,7 +909,7 @@ awful.rules.rules = {{
     }
 }, {
     rule_any = {
-        type = {"menu", "popup_menu", "dropdown_menu", "combo"}
+        type = { "menu", "popup_menu", "dropdown_menu", "combo" }
     },
     properties = {
         skip_taskbar = true,
@@ -891,7 +920,7 @@ awful.rules.rules = {{
     }
 }, {
     rule_any = {
-        class = {"Gsimplecal", "gsimplecal"}
+        class = { "Gsimplecal", "gsimplecal" }
     },
     properties = {
         skip_taskbar = true,
@@ -899,25 +928,25 @@ awful.rules.rules = {{
             awful.placement.resize_to_mouse(c, nil)
         end
     }
-}}
+} }
 
 -- Signals
 client.connect_signal("manage", function(c)
     local wa = c.screen.workarea
     if not c.fullscreen then
-        c:geometry{
+        c:geometry {
             x = math.max(wa.x + margin_left, c.x),
             y = math.max(wa.y + margin_top + wibox_height + wibox_margin, c.y),
             width = math.min(wa.width - margin_left - margin_right, c.width),
             height = math.min(wa.height - margin_top - margin_bottom - wibox_height - wibox_margin, c.height)
         }
-        awful.spawn({"dunstctl", "set-paused", "false"})
+        awful.spawn({ "dunstctl", "set-paused", "false" })
     else
-        awful.spawn({"dunstctl", "set-paused", "true"})
+        awful.spawn({ "dunstctl", "set-paused", "true" })
     end
 end)
 
--- Request titlebar 
+-- Request titlebar
 -- client.connect_signal("request::titlebars", function(c)
 --     -- buttons for the titlebar
 --     local buttons = gears.table.join(awful.button({}, 1, function()
@@ -961,10 +990,10 @@ client.connect_signal("focus", function(c)
     local screen = c.screen
     if c.fullscreen then
         screen.mywibox.visible = false
-        awful.spawn({"dunstctl", "set-paused", "true"})
+        awful.spawn({ "dunstctl", "set-paused", "true" })
     else
         screen.mywibox.visible = true
-        awful.spawn({"dunstctl", "set-paused", "false"})
+        awful.spawn({ "dunstctl", "set-paused", "false" })
     end
 end)
 
@@ -978,14 +1007,14 @@ client.connect_signal("request::geometry", function(c)
     if c.fullscreen then
         return
     elseif c.maximized then
-        c:geometry{
+        c:geometry {
             x = wa.x + margin_left,
             y = wa.y + margin_top + wibox_height + wibox_margin,
             width = wa.width - margin_left - margin_right,
             height = wa.height - margin_top - margin_bottom - wibox_height - wibox_margin
         }
     else
-        c:geometry{
+        c:geometry {
             x = clamp(c.x, wa.x + margin_left, wa.x + wa.width - margin_right - c.width),
             y = clamp(c.y, wa.y + margin_top + wibox_height + wibox_margin, wa.y + wa.height - margin_bottom - c.height),
             width = math.min(wa.width - margin_left - margin_right, c.width),
@@ -1002,9 +1031,9 @@ client.connect_signal("property::fullscreen", function(c)
 
     if c.fullscreen then
         screen.mywibox.visible = false
-        awful.spawn({"dunstctl", "set-paused", "true"})
+        awful.spawn({ "dunstctl", "set-paused", "true" })
     else
         screen.mywibox.visible = true
-        awful.spawn({"dunstctl", "set-paused", "false"})
+        awful.spawn({ "dunstctl", "set-paused", "false" })
     end
 end)
