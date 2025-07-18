@@ -63,5 +63,6 @@ config.keys = {
 config.initial_cols = 117
 config.initial_rows = 35
 config.scrollback_lines = 10000
-
+config.window_decorations = 'NONE'
+config.enable_wayland = false
 return config

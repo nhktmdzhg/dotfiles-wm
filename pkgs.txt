@@ -28,7 +28,7 @@ thunar-volman
 ttf-jetbrains-mono-nerd
 ttf-meslo-nerd
 upower
-wezterm
+wezterm-git
 wireless_tools
 wlogout
 xss-lock
