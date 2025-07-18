@@ -1,6 +1,3 @@
----------------------------
--- Default awesome theme --
----------------------------
 local palette = require("mocha")
 local gears = require("gears")
 
