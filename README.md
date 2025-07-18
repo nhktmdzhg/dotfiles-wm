@@ -6,7 +6,7 @@ You can find it [here](https://github.com/nhktmdzhg/nvim).
 In my config, I also use the Kurinto font in many places. This is a very good font, covering many languages and has a lot of glyphs. You can download it [here](https://www.kurinto.com/download.htm). I don't include it in this repo because it is not open source and It's very large (>1GB). If you don't use it, you can change in ~/.config/awesome/rc.lua to any Mono font you like.  
 Maybe in this repo I forgot to add some neccessary files, so if you find any missing files, please put it on the issues tab, I will push the new commit as soon as possible.
 ## My Screenshots
-![Screenshot 1](meo/screenshot.png)
+![Screenshot 1](meo/screenshot2.png)
 ## Keyboard Shortcut
 - Alt + F4: Close window
 - Super + D: Show desktop
@@ -19,11 +19,11 @@ Maybe in this repo I forgot to add some neccessary files, so if you find any mis
 - Super: Open rofi menu
 - Ctrl + PrtSc: Select area to screenshot
 - Super + E: Open File Manager (Default: Thunar)
-- Ctrl + Alt + T: Open terminal (Default: Alacritty)
+- Ctrl + Alt + T: Open terminal (Default: Wezterm)
 - Ctrl + Shift + Esc: Open btop
 - Super + L: Lock screen (Default: betterlockscreen)
 - Super + Ctrl + R: Reload AwesomeWM
-- Super + B: Open browser (Default: Firefox)
+- Super + B: Open browser (Default: Zen)
 - Super + N: Open Neovim-qt
 - Super + Up: Move window to the top
 - Super + Down: Move window to the bottom

@@ -1,4 +1,3 @@
-alacritty
 awesome
 betterlockscreen
 bluez
@@ -29,6 +28,7 @@ thunar-volman
 ttf-jetbrains-mono-nerd
 ttf-meslo-nerd
 upower
+wezterm
 wireless_tools
 wlogout
 xss-lock

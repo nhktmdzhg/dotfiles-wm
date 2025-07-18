@@ -12,7 +12,7 @@
 }
 {
     "label" : "logout",
-    "action" : "loginctl --no-ask-password terminate-user $USER",
+    "action" : "loginctl --no-ask-password kill-user $USER --signal=SIGKILL",
     "text" : "Logout",
     "keybind" : "e"
 }

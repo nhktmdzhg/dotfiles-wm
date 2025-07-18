@@ -33,6 +33,7 @@ end
 local home = os.getenv("HOME")
 
 package.loaded["naughty.dbus"] = {}
+spawn_once("xsettingds", "xsettingsd")
 spawn_once("dunst", "dunst")
 awful.spawn({ "pactl", "set-source-volume", "@DEFAULT_SOURCE@", "150%" })
 awful.spawn({ "ksuperkey", "-e", "Super_L=Alt_L|F2" })
@@ -173,7 +174,7 @@ awful.screen.connect_for_each_screen(function(s)
     }
     awful.tooltip {
         objects = { arch_logo },
-        text = "[L] Main Menu [R] Extensions Menu",
+        text = "[L] Main Menu [R] Power Menu",
         mode = "outside"
     }
 
@@ -355,7 +356,7 @@ awful.screen.connect_for_each_screen(function(s)
 
     network_icon_container:connect_signal("button::press", function(_, _, _, button)
         if button == 1 then
-            awful.spawn({ "env", "XMODIFIERS=", "alacritty", "-e", "nmcurse" })
+            awful.spawn({ "wezterm", "-e", "nmcurse" })
         end
     end)
 
@@ -724,10 +725,10 @@ local globalkeys = gears.table.join( -- Brightness controls --
         awful.spawn({ home .. "/.config/awesome/xss-lock-tsl.sh" })
     end),
     awful.key({ ctrl, alt }, "t", function()
-        awful.spawn({ "env", "XMODIFIERS=", "alacritty" })
+        awful.spawn({ "wezterm" })
     end),
     awful.key({ ctrl, shift }, "Escape", function()
-        awful.spawn({ "env", "XMODIFIERS=", "alacritty", "-e", "btop" })
+        awful.spawn({ "wezterm", "-e", "btop" })
     end), -- Awesome --
     awful.key({ super, ctrl }, "r", awesome.restart),
     awful.key({ super }, "d", toggle_show_desktop),
