@@ -1,5 +1,7 @@
-local gears = require("gears")
-local awful = require("awful")
+local wallpaper = require("gears.wallpaper")
+local awful_screen = require("awful.screen")
+local tag = require("awful.tag")
+local layout = require("awful.layout")
 local wibox = require("wibox")
 local screen = require("screen")
 local widgets = require("config.widgets")
@@ -7,7 +9,7 @@ local widgets = require("config.widgets")
 local wibar = {}
 
 local function set_wallpaper(s, vars)
-    gears.wallpaper.maximized(vars.home .. "/wallpaper/march 7th 4k.jpg", s, true)
+    wallpaper.maximized(vars.home .. "/wallpaper/march 7th 4k.jpg", s, true)
 end
 
 function wibar.init(vars)
@@ -16,12 +18,12 @@ function wibar.init(vars)
         set_wallpaper(s, vars)
     end)
 
-    awful.screen.connect_for_each_screen(function(s)
+    awful_screen.connect_for_each_screen(function(s)
         -- Wallpaper
         set_wallpaper(s, vars)
 
         -- Each screen has its own tag table.
-        awful.tag({ "1" }, s, awful.layout.layouts[1])
+        tag({ "1" }, s, layout.layouts[1])
 
         -- Create the wibox
         s.mywibox = wibox({

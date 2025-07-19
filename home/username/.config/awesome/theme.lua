@@ -1,5 +1,5 @@
 local palette = require("mocha")
-local gears = require("gears")
+local shape = require("gears.shape")
 
 local theme = {}
 
@@ -11,9 +11,9 @@ theme.tasklist_bg_focus = palette.surface0.hex
 theme.tasklist_bg_normal = "#00000000"
 theme.tasklist_bg_urgent = palette.red.hex
 theme.tasklist_bg_minimize = "#00000000"
-theme.tasklist_shape_focus = gears.shape.rectangle
+theme.tasklist_shape_focus = shape.rectangle
 theme.tooltip_bg = palette.surface2.hex
 theme.tooltip_fg = palette.text.hex
 theme.tooltip_font = theme.font
-theme.tooltip_shape = gears.shape.rounded_bar
+theme.tooltip_shape = shape.rounded_bar
 return theme

@@ -1,12 +1,16 @@
-local gears = require("gears")
-local awful = require("awful")
+local table = require("gears.table")
 local scripts = require("scripts")
 local awesome = require("awesome")
+local screen = require("awful.screen")
+local key = require("awful.key")
+local spawn = require("awful.spawn")
+local button = require("awful.button")
+local mouse = require("awful.mouse")
 
 local keys = {}
 
 local function toggle_show_desktop()
-    local current_tag = awful.screen.focused().selected_tag
+    local current_tag = screen.focused().selected_tag
     local client_on_tag = current_tag:clients()
     if #client_on_tag > 0 then
         local is_show = false
@@ -47,92 +51,92 @@ function keys.init(vars)
 
     local switcher = require("awesome-switcher")
 
-    local globalkeys = gears.table.join( -- Brightness controls --
-        awful.key({}, "XF86MonBrightnessUp", function()
+    local globalkeys = table.join( -- Brightness controls --
+        key({}, "XF86MonBrightnessUp", function()
             scripts.change_brightness(1)
         end),
-        awful.key({}, "XF86MonBrightnessDown", function()
+        key({}, "XF86MonBrightnessDown", function()
             scripts.change_brightness(-1)
         end), -- Audio-volume controls --
-        awful.key({}, "XF86AudioRaiseVolume", function()
+        key({}, "XF86AudioRaiseVolume", function()
             scripts.get_volume_info(1, nil)
         end),
-        awful.key({}, "XF86AudioLowerVolume", function()
+        key({}, "XF86AudioLowerVolume", function()
             scripts.get_volume_info(-1, nil)
         end),
-        awful.key({}, "XF86AudioMute", function()
+        key({}, "XF86AudioMute", function()
             scripts.get_volume_info(0, nil)
         end),
-        awful.key({}, "XF86AudioPlay", function()
-            awful.spawn({ "playerctl", "play-pause" })
+        key({}, "XF86AudioPlay", function()
+            spawn({ "playerctl", "play-pause" })
         end),
-        awful.key({}, "XF86AudioNext", function()
-            awful.spawn({ "playerctl", "next" })
+        key({}, "XF86AudioNext", function()
+            spawn({ "playerctl", "next" })
         end),
-        awful.key({}, "XF86AudioPrev", function()
-            awful.spawn({ "playerctl", "previous" })
+        key({}, "XF86AudioPrev", function()
+            spawn({ "playerctl", "previous" })
         end),
-        awful.key({}, "XF86AudioStop", function()
-            awful.spawn({ "playerctl", "play-pause" })
+        key({}, "XF86AudioStop", function()
+            spawn({ "playerctl", "play-pause" })
         end),
-        awful.key({}, "XF86AudioPause", function()
-            awful.spawn({ "playerctl", "play-pause" })
+        key({}, "XF86AudioPause", function()
+            spawn({ "playerctl", "play-pause" })
         end), -- Window controls --
-        awful.key({ alt }, "Tab", function()
+        key({ alt }, "Tab", function()
             switcher.switch(1, alt, "Alt_L", shift, "Tab")
         end),
-        awful.key({ alt, shift }, "Tab", function()
+        key({ alt, shift }, "Tab", function()
             switcher.switch(-1, alt, "Alt_L", shift, "Tab")
         end), -- Menu controls --
-        awful.key({ super }, "Escape", function()
-            awful.spawn("wlogout")
+        key({ super }, "Escape", function()
+            spawn("wlogout")
         end),
-        awful.key({ alt }, "F2", function()
-            awful.spawn({ "env", "XMODIFIERS=@im=none", "rofi", "-no-lazy-grab", "-show", "drun" })
+        key({ alt }, "F2", function()
+            spawn({ "env", "XMODIFIERS=@im=none", "rofi", "-no-lazy-grab", "-show", "drun" })
         end), -- Screenshot controls --
-        awful.key({ ctrl }, "Print", function()
-            awful.spawn({ "flameshot", "gui" })
+        key({ ctrl }, "Print", function()
+            spawn({ "flameshot", "gui" })
         end),
-        awful.key({}, "Print", function()
-            awful.spawn({ "flameshot", "full" })
+        key({}, "Print", function()
+            spawn({ "flameshot", "full" })
         end), -- Applications --
-        awful.key({ super }, "e", function()
-            awful.spawn("thunar")
+        key({ super }, "e", function()
+            spawn("thunar")
         end),
-        awful.key({ super }, "l", function()
-            awful.spawn({ home .. "/.config/awesome/xss-lock-tsl.sh" })
+        key({ super }, "l", function()
+            spawn({ home .. "/.config/awesome/xss-lock-tsl.sh" })
         end),
-        awful.key({ ctrl, alt }, "t", function()
-            awful.spawn({ "wezterm" })
+        key({ ctrl, alt }, "t", function()
+            spawn({ "wezterm" })
         end),
-        awful.key({ ctrl, shift }, "Escape", function()
-            awful.spawn({ "wezterm", "-e", "btop" })
+        key({ ctrl, shift }, "Escape", function()
+            spawn({ "wezterm", "-e", "btop" })
         end), -- Awesome --
-        awful.key({ super, ctrl }, "r", awesome.restart),
-        awful.key({ super }, "d", toggle_show_desktop),
-        awful.key({ super }, "b", function()
-            awful.spawn("zen-browser")
+        key({ super, ctrl }, "r", awesome.restart),
+        key({ super }, "d", toggle_show_desktop),
+        key({ super }, "b", function()
+            spawn("zen-browser")
         end),
-        awful.key({ super }, "n", function()
-            awful.spawn("nvim-qt")
+        key({ super }, "n", function()
+            spawn("nvim-qt")
         end),
-        awful.key({ super }, "c", function()
-            awful.spawn("discord")
+        key({ super }, "c", function()
+            spawn("discord")
         end))
 
-    local clientkeys = gears.table.join(awful.key({ super, shift }, "Up", function(c)
+    local clientkeys = table.join(key({ super, shift }, "Up", function(c)
             c:relative_move(0, -10, 0, 0)
         end),
-        awful.key({ super, shift }, "Down", function(c)
+        key({ super, shift }, "Down", function(c)
             c:relative_move(0, 10, 0, 0)
         end),
-        awful.key({ super, shift }, "Left", function(c)
+        key({ super, shift }, "Left", function(c)
             c:relative_move(-10, 0, 0, 0)
         end),
-        awful.key({ super, shift }, "Right", function(c)
+        key({ super, shift }, "Right", function(c)
             c:relative_move(10, 0, 0, 0)
         end),
-        awful.key({ super }, "Up", function(c)
+        key({ super }, "Up", function(c)
             local wa = c.screen.workarea
             c:geometry {
                 x = wa.x + margin_left,
@@ -141,7 +145,7 @@ function keys.init(vars)
                 height = (wa.height - margin_top - margin_bottom - wibox_height - wibox_margin) / 2
             }
         end),
-        awful.key({ super }, "Down", function(c)
+        key({ super }, "Down", function(c)
             local wa = c.screen.workarea
             local height = (wa.height - margin_top - margin_bottom - wibox_height - wibox_margin) / 2
             c:geometry {
@@ -151,7 +155,7 @@ function keys.init(vars)
                 height = height
             }
         end),
-        awful.key({ super }, "Left", function(c)
+        key({ super }, "Left", function(c)
             local wa = c.screen.workarea
             c:geometry {
                 x = wa.x + margin_left,
@@ -160,7 +164,7 @@ function keys.init(vars)
                 height = wa.height - margin_top - margin_bottom - wibox_height - wibox_margin
             }
         end),
-        awful.key({ super }, "Right", function(c)
+        key({ super }, "Right", function(c)
             local wa = c.screen.workarea
             local width = (wa.width - margin_left - margin_right) / 2
             c:geometry {
@@ -170,34 +174,34 @@ function keys.init(vars)
                 height = wa.height - margin_top - margin_bottom - wibox_height - wibox_margin
             }
         end), -- Window controls --
-        awful.key({ alt }, "F4", function(c)
+        key({ alt }, "F4", function(c)
             c:kill()
         end),
-        awful.key({ super }, "f", function(c)
+        key({ super }, "f", function(c)
             c.fullscreen = not c.fullscreen
         end),
-        awful.key({ super }, "x", function(c)
+        key({ super }, "x", function(c)
             c.maximized = not c.maximized
         end),
-        awful.key({ super }, "z", function(c)
+        key({ super }, "z", function(c)
             c.minimized = true
             c:lower()
         end))
 
-    local clientbuttons = gears.table.join(awful.button({}, 1, function(c)
+    local clientbuttons = table.join(button({}, 1, function(c)
         c:emit_signal("request::activate", "mouse_click", {
             raise = true
         })
-    end), awful.button({ super }, 1, function(c)
+    end), button({ super }, 1, function(c)
         c:emit_signal("request::activate", "mouse_click", {
             raise = true
         })
-        awful.mouse.client.move(c)
-    end), awful.button({ super }, 3, function(c)
+        mouse.client.move(c)
+    end), button({ super }, 3, function(c)
         c:emit_signal("request::activate", "mouse_click", {
             raise = true
         })
-        awful.mouse.client.resize(c)
+        mouse.client.resize(c)
     end))
 
     return {

@@ -1,7 +1,14 @@
-local gears = require("gears")
-local wibox = require("wibox")
-local awful = require("awful")
+local table = require("gears.table")
+local shape = require("gears.shape")
 local timer = require("gears.timer")
+
+local wibox = require("wibox")
+
+local button = require("awful.button")
+local widget = require("awful.widget")
+local tooltip = require("awful.tooltip")
+local spawn = require("awful.spawn")
+
 local scripts = require("scripts")
 local palette = require("mocha")
 local client = require("client")
@@ -9,7 +16,7 @@ local client = require("client")
 local widgets = {}
 
 function widgets.create_tasklist(s)
-    local tasklist_buttons = gears.table.join(awful.button({}, 1, function(c)
+    local tasklist_buttons = table.join(button({}, 1, function(c)
         if c == client.focus then
             c.minimized = true
         else
@@ -19,14 +26,14 @@ function widgets.create_tasklist(s)
         end
     end))
 
-    local mytasklist = awful.widget.tasklist {
+    local mytasklist = widget.tasklist {
         screen = s,
-        filter = awful.widget.tasklist.filter.currenttags,
+        filter = widget.tasklist.filter.currenttags,
         buttons = tasklist_buttons,
         style = {
             shape_border_width = 1,
             shape_border_color = palette.sapphire.hex,
-            shape = gears.shape.rounded_rect
+            shape = shape.rounded_rect
         },
         layout = {
             spacing = 4,
@@ -54,7 +61,7 @@ function widgets.create_arch_logo()
     local arch_logo = wibox.widget {
         {
             {
-                markup = "",
+                markup = "",
                 align = "center",
                 valign = "center",
                 widget = wibox.widget.textbox,
@@ -68,7 +75,7 @@ function widgets.create_arch_logo()
         fg = "#434c5eff"
     }
 
-    awful.tooltip {
+    tooltip {
         objects = { arch_logo },
         text = "[L] Main Menu [R] Power Menu",
         mode = "outside"
@@ -76,9 +83,9 @@ function widgets.create_arch_logo()
 
     arch_logo:connect_signal("button::press", function(_, _, _, button)
         if button == 1 then
-            awful.spawn({ "env", "XMODIFIERS=@im=none", "rofi", "-no-lazy-grab", "-show", "drun" })
+            spawn({ "env", "XMODIFIERS=@im=none", "rofi", "-no-lazy-grab", "-show", "drun" })
         elseif button == 3 then
-            awful.spawn("wlogout")
+            spawn("wlogout")
         end
     end)
 
@@ -105,7 +112,7 @@ function widgets.create_systray()
 
     mysystray = wibox.container.background(mysystray)
     mysystray.bg = palette.surface0.hex
-    mysystray.shape = gears.shape.rounded_bar
+    mysystray.shape = shape.rounded_bar
     mysystray.shape_clip = true
 
     return mysystray
@@ -123,10 +130,10 @@ function widgets.create_window_name(s)
     window_name_container = wibox.container.background(window_name_container)
     window_name_container.bg = palette.surface0.hex
     window_name_container.fg = palette.text.hex
-    window_name_container.shape = gears.shape.rounded_bar
+    window_name_container.shape = shape.rounded_bar
     window_name_container.shape_clip = true
 
-    awful.tooltip {
+    tooltip {
         objects = { window_name_container },
         text = "Window Name",
         mode = "outside"
@@ -144,7 +151,7 @@ function widgets.create_window_name(s)
             else
                 name = "No focused window"
                 s.mywibox.visible = true
-                awful.spawn({ "dunstctl", "set-paused", "false" })
+                spawn({ "dunstctl", "set-paused", "false" })
             end
             local length = string.len(name)
             if length < 60 then
@@ -172,10 +179,10 @@ function widgets.create_battery()
     battery_icon_container = wibox.container.background(battery_icon_container)
     battery_icon_container.bg = palette.text.hex
     battery_icon_container.fg = palette.surface0.hex
-    battery_icon_container.shape = gears.shape.circle
+    battery_icon_container.shape = shape.circle
     battery_icon_container.shape_clip = true
 
-    awful.tooltip {
+    tooltip {
         objects = { battery_icon_container },
         text = "Battery Status",
         mode = "outside"
@@ -203,10 +210,10 @@ function widgets.create_battery()
     battery_percent_container = wibox.container.background(battery_percent_container)
     battery_percent_container.bg = palette.surface0.hex
     battery_percent_container.fg = palette.text.hex
-    battery_percent_container.shape = gears.shape.rounded_bar
+    battery_percent_container.shape = shape.rounded_bar
     battery_percent_container.shape_clip = true
 
-    awful.tooltip {
+    tooltip {
         objects = { battery_percent_container },
         text = "Battery percent",
         mode = "outside"
@@ -242,10 +249,10 @@ function widgets.create_network()
     network_icon_container = wibox.container.background(network_icon_container)
     network_icon_container.bg = palette.text.hex
     network_icon_container.fg = palette.surface0.hex
-    network_icon_container.shape = gears.shape.circle
+    network_icon_container.shape = shape.circle
     network_icon_container.shape_clip = true
 
-    awful.tooltip {
+    tooltip {
         objects = { network_icon_container },
         text = "Network Status",
         mode = "outside"
@@ -253,7 +260,7 @@ function widgets.create_network()
 
     network_icon_container:connect_signal("button::press", function(_, _, _, button)
         if button == 1 then
-            awful.spawn({ "wezterm", "-e", "nmcurse" })
+            spawn({ "wezterm", "-e", "nmcurse" })
         end
     end)
 
@@ -287,10 +294,10 @@ function widgets.create_network()
     network_status_container = wibox.container.background(network_status_container)
     network_status_container.bg = palette.surface0.hex
     network_status_container.fg = palette.text.hex
-    network_status_container.shape = gears.shape.rounded_bar
+    network_status_container.shape = shape.rounded_bar
     network_status_container.shape_clip = true
 
-    awful.tooltip {
+    tooltip {
         objects = { network_status_container },
         text = "SSID",
         mode = "outside"
@@ -322,10 +329,10 @@ function widgets.create_volume()
     volume_icon_container = wibox.container.background(volume_icon_container)
     volume_icon_container.bg = palette.text.hex
     volume_icon_container.fg = palette.surface0.hex
-    volume_icon_container.shape = gears.shape.circle
+    volume_icon_container.shape = shape.circle
     volume_icon_container.shape_clip = true
 
-    awful.tooltip {
+    tooltip {
         objects = { volume_icon_container },
         text = "[L] Toggle Audio Mute [S] Audio Volume +/-",
         mode = "outside"
@@ -371,10 +378,10 @@ function widgets.create_volume()
     volume_percent_container = wibox.container.background(volume_percent_container)
     volume_percent_container.bg = palette.surface0.hex
     volume_percent_container.fg = palette.text.hex
-    volume_percent_container.shape = gears.shape.rounded_bar
+    volume_percent_container.shape = shape.rounded_bar
     volume_percent_container.shape_clip = true
 
-    awful.tooltip {
+    tooltip {
         objects = { volume_percent_container },
         text = "[S] Audio Volume +/-",
         mode = "outside"
@@ -408,17 +415,17 @@ function widgets.create_calendar()
         font = "Material Bold 10",
         align = "center",
         valign = "center",
-        text = ""
+        text = ""
     }
 
     local calendar_icon_container = wibox.container.margin(calendar_icon, 5, 5, 0, 0)
     calendar_icon_container = wibox.container.background(calendar_icon_container)
     calendar_icon_container.bg = palette.text.hex
     calendar_icon_container.fg = palette.surface0.hex
-    calendar_icon_container.shape = gears.shape.circle
+    calendar_icon_container.shape = shape.circle
     calendar_icon_container.shape_clip = true
 
-    awful.tooltip {
+    tooltip {
         objects = { calendar_icon_container },
         text = "Calendar",
         mode = "outside"
@@ -426,7 +433,7 @@ function widgets.create_calendar()
 
     calendar_icon_container:connect_signal("button::press", function(_, _, _, button)
         if button == 1 then
-            awful.spawn("gsimplecal")
+            spawn("gsimplecal")
         end
     end)
 
@@ -449,10 +456,10 @@ function widgets.create_calendar()
     date_widget_container = wibox.container.background(date_widget_container)
     date_widget_container.bg = palette.surface0.hex
     date_widget_container.fg = palette.text.hex
-    date_widget_container.shape = gears.shape.rounded_bar
+    date_widget_container.shape = shape.rounded_bar
     date_widget_container.shape_clip = true
 
-    awful.tooltip {
+    tooltip {
         objects = { date_widget_container },
         text = "Date",
         mode = "outside"
@@ -463,7 +470,7 @@ function widgets.create_calendar()
         autostart = true,
         callnow = true,
         callback = function()
-            awful.spawn.easy_async({ "date", "+%Y年%m月%d日" }, function(stdout)
+            spawn.easy_async({ "date", "+%Y年%m月%d日" }, function(stdout)
                 date_widget.text = stdout:gsub("%s+$", "")
             end)
         end
@@ -480,10 +487,10 @@ function widgets.create_calendar()
     time_widget_container = wibox.container.background(time_widget_container)
     time_widget_container.bg = palette.surface0.hex
     time_widget_container.fg = palette.text.hex
-    time_widget_container.shape = gears.shape.rounded_bar
+    time_widget_container.shape = shape.rounded_bar
     time_widget_container.shape_clip = true
 
-    awful.tooltip {
+    tooltip {
         objects = { time_widget_container },
         text = "Time",
         mode = "outside"
@@ -494,7 +501,7 @@ function widgets.create_calendar()
         autostart = true,
         callnow = true,
         callback = function()
-            awful.spawn.easy_async({ "date", "+%H:%M:%S %p" }, function(stdout)
+            spawn.easy_async({ "date", "+%H:%M:%S %p" }, function(stdout)
                 time_widget.text = stdout:gsub("%s+$", "")
             end)
         end
@@ -505,7 +512,7 @@ end
 
 function widgets.create_separators()
     local sep_left = wibox.widget {
-        markup = "",
+        markup = "",
         align = "center",
         valign = "center",
         widget = wibox.widget.textbox,
@@ -513,7 +520,7 @@ function widgets.create_separators()
     }
 
     local sep_right = wibox.widget {
-        markup = '',
+        markup = '',
         align = "center",
         valign = "center",
         widget = wibox.widget.textbox,

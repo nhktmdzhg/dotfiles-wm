@@ -2,8 +2,8 @@
 -- Main configuration file
 
 -- Require core libraries
-local gears = require("gears")
-local awful = require("awful")
+local filesystem = require("gears.filesystem")
+local layout = require("awful.layout")
 local beautiful = require("beautiful")
 local root = require("root")
 require("awful.autofocus")
@@ -17,10 +17,10 @@ local wibar = require("config.wibar")
 local signals = require("config.signals")
 
 -- Initialize theme
-beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
+beautiful.init(filesystem.get_configuration_dir() .. "theme.lua")
 
 -- Set layout
-awful.layout.layouts = { awful.layout.suit.floating }
+layout.layouts = { layout.suit.floating }
 
 -- Initialize modules
 autostart.init()

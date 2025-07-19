@@ -1,4 +1,4 @@
-local awful = require("awful")
+local spawn = require("awful.spawn")
 local client = require("client")
 
 local signals = {}
@@ -25,9 +25,9 @@ function signals.init(vars)
                 width = math.min(wa.width - margin_left - margin_right, c.width),
                 height = math.min(wa.height - margin_top - margin_bottom - wibox_height - wibox_margin, c.height)
             }
-            awful.spawn({ "dunstctl", "set-paused", "false" })
+            spawn({ "dunstctl", "set-paused", "false" })
         else
-            awful.spawn({ "dunstctl", "set-paused", "true" })
+            spawn({ "dunstctl", "set-paused", "true" })
         end
     end)
 
@@ -35,10 +35,10 @@ function signals.init(vars)
         local screen = c.screen
         if c.fullscreen then
             screen.mywibox.visible = false
-            awful.spawn({ "dunstctl", "set-paused", "true" })
+            spawn({ "dunstctl", "set-paused", "true" })
         else
             screen.mywibox.visible = true
-            awful.spawn({ "dunstctl", "set-paused", "false" })
+            spawn({ "dunstctl", "set-paused", "false" })
         end
     end)
 
@@ -72,10 +72,10 @@ function signals.init(vars)
 
         if c.fullscreen then
             screen.mywibox.visible = false
-            awful.spawn({ "dunstctl", "set-paused", "true" })
+            spawn({ "dunstctl", "set-paused", "true" })
         else
             screen.mywibox.visible = true
-            awful.spawn({ "dunstctl", "set-paused", "false" })
+            spawn({ "dunstctl", "set-paused", "false" })
         end
     end)
 end

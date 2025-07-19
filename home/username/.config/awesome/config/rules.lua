@@ -1,19 +1,22 @@
-local awful = require("awful")
+local rules_module = require("awful.rules")
+local client = require("awful.client")
+local screen = require("awful.screen")
+local placement = require("awful.placement")
 
 local rules = {}
 
 function rules.init(keys)
-    awful.rules.rules = { {
+    rules_module.rules = { {
         rule = {},
         properties = {
             border_width = 0,
-            focus = awful.client.focus.filter,
+            focus = client.focus.filter,
             raise = true,
             keys = keys.clientkeys,
             buttons = keys.clientbuttons,
-            screen = awful.screen.preferred,
+            screen = screen.preferred,
             callback = function(c)
-                awful.placement.centered(c, nil)
+                placement.centered(c, nil)
             end
         }
     }, {
@@ -30,7 +33,7 @@ function rules.init(keys)
         properties = {
             skip_taskbar = true,
             callback = function(c)
-                awful.placement.centered(c, nil)
+                placement.centered(c, nil)
             end
         }
     }, {
@@ -39,9 +42,9 @@ function rules.init(keys)
         },
         properties = {
             skip_taskbar = true,
-            -- placement = awful.placement.resize_to_mouse
+            -- placement = placement.resize_to_mouse
             callback = function(c)
-                awful.placement.resize_to_mouse(c, nil)
+                placement.resize_to_mouse(c, nil)
             end
         }
     }, {
@@ -51,7 +54,7 @@ function rules.init(keys)
         properties = {
             skip_taskbar = true,
             callback = function(c)
-                awful.placement.resize_to_mouse(c, nil)
+                placement.resize_to_mouse(c, nil)
             end
         }
     } }
