@@ -3,7 +3,7 @@ betterlockscreen
 bluez
 bluez-utils
 brightnessctl
-btop
+bottom-nightly-bin
 darkly-qt5-git
 darkly-qt6-git
 dash
@@ -28,7 +28,7 @@ thunar-volman
 ttf-jetbrains-mono-nerd
 ttf-meslo-nerd
 upower
-wezterm-git
+wezterm-nightly-bin
 wireless_tools
 wlogout
 xss-lock

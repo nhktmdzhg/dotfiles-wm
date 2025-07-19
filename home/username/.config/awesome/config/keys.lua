@@ -110,7 +110,7 @@ function keys.init(vars)
             spawn({ "wezterm" })
         end),
         key({ ctrl, shift }, "Escape", function()
-            spawn({ "wezterm", "-e", "btop" })
+            spawn({ "wezterm", "-e", "btm" })
         end), -- Awesome --
         key({ super, ctrl }, "r", awesome.restart),
         key({ super }, "d", toggle_show_desktop),
