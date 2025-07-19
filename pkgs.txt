@@ -3,7 +3,7 @@ betterlockscreen
 bluez
 bluez-utils
 brightnessctl
-bottom-nightly-bin
+bottom-nightly-autocomplete
 darkly-qt5-git
 darkly-qt6-git
 dash

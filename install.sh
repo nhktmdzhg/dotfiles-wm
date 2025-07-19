@@ -1,16 +1,16 @@
 #!/bin/sh
 
 # Install AUR helper if not found
-AUR_HELPER=$(command -v yay || command -v paru)
+AUR_HELPER=$(command -v trizen || command -v yay || command -v paru || command -v pikaur)
 if [ -z "$AUR_HELPER" ]; then
-    echo "No AUR helper found. Installing paru..."
+    echo "No AUR helper found. Installing trizen as default."
     sudo pacman -S --needed --noconfirm base-devel git
-    git clone https://aur.archlinux.org/paru.git
-    cd paru
+    git clone https://aur.archlinux.org/trizen.git
+    cd trizen
     makepkg -si --noconfirm
     cd ..
-    rm -rf paru
-    AUR_HELPER=$(command -v paru)
+    rm -rf trizen
+    AUR_HELPER=$(command -v trizen)
 fi
 
 echo "Installing dependencies..."

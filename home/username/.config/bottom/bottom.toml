@@ -1,6 +1,5 @@
 [flags]
 rate = 250
-# group_processes = false
 process_memory_as_value = true
 tree = true
 network_use_binary_prefix = true
