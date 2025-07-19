@@ -61,7 +61,7 @@ function widgets.create_arch_logo()
     local arch_logo = wibox.widget {
         {
             {
-                markup = "",
+                markup = "",
                 align = "center",
                 valign = "center",
                 widget = wibox.widget.textbox,
@@ -415,7 +415,7 @@ function widgets.create_calendar()
         font = "Material Bold 10",
         align = "center",
         valign = "center",
-        text = ""
+        text = ""
     }
 
     local calendar_icon_container = wibox.container.margin(calendar_icon, 5, 5, 0, 0)
@@ -512,7 +512,7 @@ end
 
 function widgets.create_separators()
     local sep_left = wibox.widget {
-        markup = "",
+        markup = "",
         align = "center",
         valign = "center",
         widget = wibox.widget.textbox,
@@ -520,7 +520,7 @@ function widgets.create_separators()
     }
 
     local sep_right = wibox.widget {
-        markup = '',
+        markup = '',
         align = "center",
         valign = "center",
         widget = wibox.widget.textbox,
