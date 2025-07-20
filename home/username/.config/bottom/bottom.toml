@@ -3,6 +3,7 @@ rate = 250
 process_memory_as_value = true
 tree = true
 network_use_binary_prefix = true
+network_use_log = true
 [processes]
 columns = ["PID", "Name", "CPU%", "Mem", "User", "GMem%", "GPU%"]
 [styles.cpu]

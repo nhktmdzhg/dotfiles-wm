@@ -62,13 +62,13 @@ button {
 }
 
 * {
-  accent1:          #cdd6f4;
-  accent2:          #cdd6f4;
-  button-gradient:  linear-gradient(90, #cdd6f4, #cdd6f4);
-  background-alpha: #313244f7;
-  background:       #313244;
-  background-light: #45475a;
-  background-focus: #585b70;
+  accent1:          #74c7ec;
+  accent2:          #74c7ec;
+  button-gradient:  linear-gradient(90, #74c7ec, #89b4fa);
+  background-alpha: #1e1e2ef7;
+  background:       #1e1e2e;
+  background-light: #313244;
+  background-focus: #45475a;
   foreground:       #cdd6f4;
   foreground-list:  #cdd6f4;
   on:               #a6e3a1;
