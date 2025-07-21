@@ -66,7 +66,7 @@ _M.altTabIndex = 1
 
 _M.source = string.sub(debug.getinfo(1, 'S').source, 2)
 _M.path = string.sub(_M.source, 1, string.find(_M.source, "/[^/]*$"))
-_M.noicon = _M.path .. "noicon.png"
+_M.noicon = _M.path .. "noicon.svg"
 
 -- Optimized function for counting table size (use # operator when possible)
 function _M.tableLength(T)

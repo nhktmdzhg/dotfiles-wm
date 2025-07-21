@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background blends with catppuccin base -->
+  <rect x="0" y="0" width="48" height="48" fill="#1e1e2e"/>
+  
+  <!-- 3D Isometric Cube (larger) -->
+  <!-- Top face -->
+  <polygon points="24,8 38,16 24,24 10,16" fill="#45475a" stroke="#585b70" stroke-width="0.5"/>
+  
+  <!-- Left face -->
+  <polygon points="10,16 24,24 24,40 10,32" fill="#313244" stroke="#585b70" stroke-width="0.5"/>
+  
+  <!-- Right face -->
+  <polygon points="24,24 38,16 38,32 24,40" fill="#585b70" stroke="#6c7086" stroke-width="0.5"/>
+</svg>

@@ -14,8 +14,8 @@ local client = require("client")
 local filesystem = require("gears.filesystem")
 local surface = require("gears.surface")
 
--- Path to default icon
-local noicon_path = filesystem.get_configuration_dir() .. "awesome-switcher/noicon.png"
+-- Path to default SVG icon for better scaling
+local noicon_path = filesystem.get_configuration_dir() .. "awesome-switcher/noicon.svg"
 
 local widgets = {}
 
@@ -63,6 +63,7 @@ function widgets.create_tasklist(s)
                     if c and c.icon then
                         icon_widget.image = c.icon
                     else
+                        -- Load SVG with proper scaling
                         icon_widget.image = surface.load_uncached(noicon_path)
                     end
                 end
@@ -74,6 +75,7 @@ function widgets.create_tasklist(s)
                     if c and c.icon then
                         icon_widget.image = c.icon
                     else
+                        -- Load SVG with proper scaling
                         icon_widget.image = surface.load_uncached(noicon_path)
                     end
                 end
