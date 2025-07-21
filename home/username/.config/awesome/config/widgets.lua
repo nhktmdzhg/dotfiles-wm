@@ -100,7 +100,6 @@ function widgets.create_arch_logo()
             widget = wibox.container.margin
         },
         widget = wibox.container.background,
-        bg = palette.base.hex,
         fg = palette.mauve.hex
     }
 
@@ -139,9 +138,6 @@ function widgets.create_systray()
         widget = wibox.container.margin
     }
 
-    mysystray = wibox.container.background(mysystray)
-    mysystray.bg = palette.base.hex
-
     return mysystray
 end
 
@@ -155,7 +151,6 @@ function widgets.create_window_name(s)
 
     local window_name_container = wibox.container.margin(window_name, 8, 8, 6, 6)
     window_name_container = wibox.container.background(window_name_container)
-    window_name_container.bg = palette.base.hex
     window_name_container.fg = palette.text.hex
 
     tooltip {
@@ -202,7 +197,6 @@ function widgets.create_battery()
 
     local battery_icon_container = wibox.container.margin(battery_icon, 8, 8, 6, 6)
     battery_icon_container = wibox.container.background(battery_icon_container)
-    battery_icon_container.bg = palette.base.hex
     battery_icon_container.fg = palette.green.hex
 
     tooltip {
@@ -231,7 +225,6 @@ function widgets.create_battery()
 
     local battery_percent_container = wibox.container.margin(battery_percent, 8, 8, 6, 6)
     battery_percent_container = wibox.container.background(battery_percent_container)
-    battery_percent_container.bg = palette.base.hex
     battery_percent_container.fg = palette.text.hex
 
     tooltip {
@@ -268,7 +261,6 @@ function widgets.create_network()
 
     local network_icon_container = wibox.container.margin(network_icon, 8, 8, 6, 6)
     network_icon_container = wibox.container.background(network_icon_container)
-    network_icon_container.bg = palette.base.hex
     network_icon_container.fg = palette.blue.hex
 
     tooltip {
@@ -311,7 +303,6 @@ function widgets.create_network()
 
     local network_status_container = wibox.container.margin(network_status, 8, 8, 6, 6)
     network_status_container = wibox.container.background(network_status_container)
-    network_status_container.bg = palette.base.hex
     network_status_container.fg = palette.text.hex
 
     tooltip {
@@ -344,7 +335,6 @@ function widgets.create_volume()
 
     local volume_icon_container = wibox.container.margin(volume_icon, 8, 8, 6, 6)
     volume_icon_container = wibox.container.background(volume_icon_container)
-    volume_icon_container.bg = palette.base.hex
     volume_icon_container.fg = palette.peach.hex
 
     tooltip {
@@ -391,7 +381,6 @@ function widgets.create_volume()
 
     local volume_percent_container = wibox.container.margin(volume_percent, 8, 8, 6, 6)
     volume_percent_container = wibox.container.background(volume_percent_container)
-    volume_percent_container.bg = palette.base.hex
     volume_percent_container.fg = palette.text.hex
 
     tooltip {
@@ -433,7 +422,6 @@ function widgets.create_calendar()
 
     local calendar_icon_container = wibox.container.margin(calendar_icon, 8, 8, 6, 6)
     calendar_icon_container = wibox.container.background(calendar_icon_container)
-    calendar_icon_container.bg = palette.base.hex
     calendar_icon_container.fg = palette.red.hex
 
     tooltip {
@@ -465,7 +453,6 @@ function widgets.create_calendar()
 
     local date_widget_container = wibox.container.margin(date_widget, 8, 8, 6, 6)
     date_widget_container = wibox.container.background(date_widget_container)
-    date_widget_container.bg = palette.base.hex
     date_widget_container.fg = palette.text.hex
 
     tooltip {
@@ -494,7 +481,6 @@ function widgets.create_calendar()
 
     local time_widget_container = wibox.container.margin(time_widget, 8, 8, 6, 6)
     time_widget_container = wibox.container.background(time_widget_container)
-    time_widget_container.bg = palette.base.hex
     time_widget_container.fg = palette.text.hex
 
     tooltip {
@@ -527,7 +513,6 @@ function widgets.create_simple_separator()
     }
 
     local separator_container = wibox.container.background(separator)
-    separator_container.bg = palette.base.hex
     separator_container.fg = palette.overlay0.hex
 
     return separator_container
