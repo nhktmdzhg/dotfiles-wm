@@ -46,8 +46,6 @@ function keys.init(vars)
     local margin_bottom = vars.margin_bottom
     local margin_left = vars.margin_left
     local margin_right = vars.margin_right
-    local wibox_height = vars.wibox_height
-    local wibox_margin = vars.wibox_margin
 
     local switcher = require("awesome-switcher")
 
@@ -140,17 +138,17 @@ function keys.init(vars)
             local wa = c.screen.workarea
             c:geometry {
                 x = wa.x + margin_left,
-                y = wa.y + margin_top + wibox_height + wibox_margin,
+                y = wa.y + margin_top,
                 width = wa.width - margin_left - margin_right,
-                height = (wa.height - margin_top - margin_bottom - wibox_height - wibox_margin) / 2
+                height = (wa.height - margin_top - margin_bottom) / 2
             }
         end),
         key({ super }, "Down", function(c)
             local wa = c.screen.workarea
-            local height = (wa.height - margin_top - margin_bottom - wibox_height - wibox_margin) / 2
+            local height = (wa.height - margin_top - margin_bottom) / 2
             c:geometry {
                 x = wa.x + margin_left,
-                y = wa.y + margin_top + wibox_height + wibox_margin + height,
+                y = wa.y + margin_top + height,
                 width = wa.width - margin_left - margin_right,
                 height = height
             }
@@ -159,9 +157,9 @@ function keys.init(vars)
             local wa = c.screen.workarea
             c:geometry {
                 x = wa.x + margin_left,
-                y = wa.y + margin_top + wibox_height + wibox_margin,
+                y = wa.y + margin_top,
                 width = (wa.width - margin_left - margin_right) / 2,
-                height = wa.height - margin_top - margin_bottom - wibox_height - wibox_margin
+                height = wa.height - margin_top - margin_bottom
             }
         end),
         key({ super }, "Right", function(c)
@@ -169,9 +167,9 @@ function keys.init(vars)
             local width = (wa.width - margin_left - margin_right) / 2
             c:geometry {
                 x = wa.x + margin_left + width,
-                y = wa.y + margin_top + wibox_height + wibox_margin,
+                y = wa.y + margin_top,
                 width = width,
-                height = wa.height - margin_top - margin_bottom - wibox_height - wibox_margin
+                height = wa.height - margin_top - margin_bottom
             }
         end), -- Window controls --
         key({ alt }, "F4", function(c)

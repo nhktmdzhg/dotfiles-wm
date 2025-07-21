@@ -12,8 +12,6 @@ vars.margin_top = 10
 vars.margin_bottom = 10
 vars.margin_left = 10
 vars.margin_right = 10
-vars.wibox_height = 30
-vars.wibox_margin = 5
 
 -- Paths
 vars.home = os.getenv("HOME")

@@ -1,51 +1,63 @@
 ---@diagnostic disable: undefined-global, lowercase-global, deprecated
+
+-- Core libraries
 local cairo = require("lgi").cairo
-local mouse = mouse
-local screen = screen
 local wibox = require('wibox')
-local table = table
 local keygrabber = keygrabber
-local math = require('math')
 local awful = require('awful')
 local gears = require("gears")
-local timer = gears.timer
-local client = client
-awful.client = require('awful.client')
+local palette = require("mocha")
 
+-- Shortcuts for commonly used globals
+local mouse = mouse
+local screen = screen
+local client = client
+local table = table
+local math = require('math')
 local string = string
 local debug = debug
 local pairs = pairs
 local unpack = unpack or table.unpack
 
+-- Pre-compute frequently used values
+local timer = gears.timer
+awful.client = require('awful.client')
+
+-- Cache surface creation (these don't need to be recreated every time)
 local surface = cairo.ImageSurface(cairo.Format.RGB24, 20, 20)
 local cr = cairo.Context(surface)
 
-local _M = {}
-
--- settings
-
-_M.settings = {
-    preview_box = true,
-    preview_box_bg = "#ddddddaa",
-    preview_box_border = "#22222200",
-    preview_box_fps = 60,
-    preview_box_delay = 150,
-    preview_box_title_font = {"sans", "italic", "normal"},
-    preview_box_title_font_size_factor = 0.8,
-    preview_box_title_color = {0, 0, 0, 1},
-    cycle_all_clients = false
+-- Pre-compute colors for better performance
+local text_color_normalized = {
+    palette.text.rgb[1] / 255,
+    palette.text.rgb[2] / 255,
+    palette.text.rgb[3] / 255,
+    1
 }
 
--- Create a wibox to contain all the client-widgets
-_M.preview_wbox = wibox({
-    width = screen[mouse.screen].geometry.width
-})
-_M.preview_wbox.border_width = 0
-_M.preview_wbox.ontop = true
-_M.preview_wbox.visible = false
+local _M = {}
 
+-- Hard-coded optimized values (removed settings table for better performance)
+local PREVIEW_BOX_BG = palette.surface0.hex .. "ee"
+local PREVIEW_BOX_BORDER = palette.base.hex .. "00"
+local PREVIEW_BOX_FPS = 60
+local PREVIEW_BOX_DELAY = 150
+local PREVIEW_BOX_TITLE_FONT = { "sans", "italic", "normal" }
+local PREVIEW_BOX_TITLE_FONT_SIZE_FACTOR = 0.8
+local PREVIEW_BOX_TITLE_COLOR = text_color_normalized
+local CYCLE_ALL_CLIENTS = false
+
+-- Create wibox with optimized settings
+_M.preview_wbox = wibox({
+    width = screen[mouse.screen].geometry.width,
+    border_width = 0,
+    ontop = true,
+    visible = false
+})
+
+-- Use more efficient timer creation with hard-coded FPS
 _M.preview_live_timer = timer({
-    timeout = 1 / _M.settings.preview_box_fps
+    timeout = 1 / PREVIEW_BOX_FPS
 })
 _M.preview_widgets = {}
 
@@ -56,8 +68,15 @@ _M.source = string.sub(debug.getinfo(1, 'S').source, 2)
 _M.path = string.sub(_M.source, 1, string.find(_M.source, "/[^/]*$"))
 _M.noicon = _M.path .. "noicon.png"
 
--- simple function for counting the size of a table
+-- Optimized function for counting table size (use # operator when possible)
 function _M.tableLength(T)
+    -- For array-like tables, use the # operator which is much faster
+    local length = #T
+    if length > 0 then
+        return length
+    end
+
+    -- For hash tables, fall back to manual counting
     local count = 0
     for _ in pairs(T) do
         count = count + 1
@@ -65,56 +84,48 @@ function _M.tableLength(T)
     return count
 end
 
--- this function returns the list of clients to be shown.
+-- Optimized function to get clients list
 function _M.getClients()
     local clients = {}
+    local client_set = {} -- Hash table for O(1) lookup instead of O(n) array search
 
     -- Get focus history for current tag
-    local s = mouse.screen;
+    local s = mouse.screen
     local idx = 0
     local c = awful.client.focus.history.get(s, idx)
 
+    -- Add clients from focus history
     while c do
-        table.insert(clients, c)
+        clients[#clients + 1] = c -- Faster than table.insert
+        client_set[c] = true      -- Mark as added
 
         idx = idx + 1
         c = awful.client.focus.history.get(s, idx)
     end
 
-    -- Minimized clients will not appear in the focus history
-    -- Find them by cycling through all clients, and adding them to the list
-    -- if not already there.
-    -- This will preserve the history AND enable you to focus on minimized clients
-
+    -- Add minimized clients not in focus history
     local t = s.selected_tag
     local all = client.get(s)
 
     for i = 1, #all do
         c = all[i]
-        local ctags = c:tags();
 
-        -- check if the client is on the current tag
-        local isCurrentTag = false
-        for j = 1, #ctags do
-            if t == ctags[j] then
-                isCurrentTag = true
-                break
-            end
-        end
+        -- Skip if already added
+        if not client_set[c] then
+            local ctags = c:tags()
+            local isCurrentTag = false
 
-        if isCurrentTag or _M.settings.cycle_all_clients then
-            -- check if client is already in the history
-            -- if not, add it
-            local addToTable = true
-            for k = 1, #clients do
-                if clients[k] == c then
-                    addToTable = false
-                    break
+            -- Check if client is on current tag
+            for j = 1, #ctags do
+                if t == ctags[j] then
+                    isCurrentTag = true
+                    break -- Early exit when found
                 end
             end
 
-            if addToTable then
-                table.insert(clients, c)
+            if isCurrentTag or CYCLE_ALL_CLIENTS then
+                clients[#clients + 1] = c
+                client_set[c] = true
             end
         end
     end
@@ -122,30 +133,37 @@ function _M.getClients()
     return clients
 end
 
--- here we populate altTabTable using the list of clients taken from
--- _M.getClients(). In case we have altTabTable with some value, the list of the
--- old known clients is restored.
+-- Optimized function to populate alt-tab table
 function _M.populateAltTabTable()
     local clients = _M.getClients()
 
-    if _M.tableLength(_M.altTabTable) then
-        for ci = 1, #clients do
-            for ti = 1, #_M.altTabTable do
-                if _M.altTabTable[ti].client == clients[ci] then
-                    _M.altTabTable[ti].client.minimized = _M.altTabTable[ti].minimized
-                    break
-                end
+    -- If we have existing data, restore minimized states efficiently
+    if #_M.altTabTable > 0 then
+        -- Create hash map for O(1) lookup instead of nested loops
+        local old_client_states = {}
+        for i = 1, #_M.altTabTable do
+            local entry = _M.altTabTable[i]
+            old_client_states[entry.client] = entry.minimized
+        end
+
+        -- Restore states
+        for i = 1, #clients do
+            local c = clients[i]
+            local old_state = old_client_states[c]
+            if old_state ~= nil then
+                c.minimized = old_state
             end
         end
     end
 
+    -- Clear and rebuild table efficiently
     _M.altTabTable = {}
 
     for i = 1, #clients do
-        table.insert(_M.altTabTable, {
+        _M.altTabTable[i] = {
             client = clients[i],
             minimized = clients[i].minimized
-        })
+        }
     end
 end
 
@@ -188,28 +206,19 @@ function _M.cycle(dir)
     end
 
     _M.updatePreview()
-
     _M.altTabTable[_M.altTabIndex].client.minimized = false
-
-    if not _M.settings.preview_box then
-        client.focus = _M.altTabTable[_M.altTabIndex].client
-    end
 end
 
 function _M.preview()
-    if not _M.settings.preview_box then
-        return
-    end
-
-    -- Apply settings
-    _M.preview_wbox:set_bg(_M.settings.preview_box_bg)
-    _M.preview_wbox.border_color = _M.settings.preview_box_border
+    -- Apply hard-coded settings for better performance
+    _M.preview_wbox:set_bg(PREVIEW_BOX_BG)
+    _M.preview_wbox.border_color = PREVIEW_BOX_BORDER
 
     -- Make the wibox the right size, based on the number of clients
     local n = math.max(7, #_M.altTabTable)
     local W = screen[mouse.screen].geometry.width -- + 2 * _M.preview_wbox.border_width
-    local w = W / n -- widget width
-    local h = w * 0.75 -- widget height
+    local w = W / n                               -- widget width
+    local h = w * 0.75                            -- widget height
     local textboxHeight = w * 0.125
 
     local x = screen[mouse.screen].geometry.x - _M.preview_wbox.border_width
@@ -271,7 +280,7 @@ function _M.preview()
 
         bigFont = bigFont - 1
     end
-    local smallFont = bigFont * _M.settings.preview_box_title_font_size_factor
+    local smallFont = bigFont * PREVIEW_BOX_TITLE_FONT_SIZE_FACTOR
 
     _M.preview_widgets = {}
 
@@ -284,7 +293,6 @@ function _M.preview()
         local c = leftRightTab[i]
         _M.preview_widgets[i].draw = function(_, _, cairo_context, width, height)
             if width ~= 0 and height ~= 0 then
-
                 local a = 0.8
                 local overlay = 0.6
                 local fontSize = smallFont
@@ -308,7 +316,7 @@ function _M.preview()
                 local iconboxHeight = iconboxWidth
 
                 -- Titles
-                cairo_context:select_font_face(unpack(_M.settings.preview_box_title_font))
+                cairo_context:select_font_face(unpack(PREVIEW_BOX_TITLE_FONT))
                 cairo_context:set_font_face(cairo_context:get_font_face())
                 cairo_context:set_font_size(fontSize)
 
@@ -336,7 +344,7 @@ function _M.preview()
                 tx = tx + iconboxWidth
                 ty = h + (textboxHeight + textHeight) / 2
 
-                cairo_context:set_source_rgba(unpack(_M.settings.preview_box_title_color))
+                cairo_context:set_source_rgba(unpack(PREVIEW_BOX_TITLE_COLOR))
                 cairo_context:move_to(tx, ty)
                 cairo_context:show_text(text)
                 cairo_context:stroke()
@@ -399,7 +407,7 @@ end
 
 -- This starts the timer for updating and it shows the preview UI.
 function _M.showPreview()
-    _M.preview_live_timer.timeout = 1 / _M.settings.preview_box_fps
+    _M.preview_live_timer.timeout = 1 / PREVIEW_BOX_FPS
     _M.preview_live_timer:connect_signal("timeout", _M.updatePreview)
     _M.preview_live_timer:start()
 
@@ -422,7 +430,7 @@ function _M.switch(dir, mod_key1, release_key, mod_key2, key_switch)
     _M.altTabIndex = 1
 
     -- preview delay timer
-    local previewDelay = _M.settings.preview_box_delay / 1000
+    local previewDelay = PREVIEW_BOX_DELAY / 1000
     _M.previewDelayTimer = timer({
         timeout = previewDelay
     })
@@ -475,7 +483,6 @@ function _M.switch(dir, mod_key1, release_key, mod_key2, key_switch)
                 end
 
                 keygrabber.stop()
-
             elseif key == key_switch and event == "press" then
                 if gears.table.hasitem(mod, mod_key2) then
                     -- Move to previous client on Shift-Tab
@@ -490,10 +497,8 @@ function _M.switch(dir, mod_key1, release_key, mod_key2, key_switch)
 
     -- switch to next client
     _M.cycle(dir)
-
 end -- function altTab
 
 return {
-    switch = _M.switch,
-    settings = _M.settings
+    switch = _M.switch
 }

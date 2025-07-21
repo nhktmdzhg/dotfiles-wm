@@ -3,8 +3,10 @@ local awful_screen = require("awful.screen")
 local tag = require("awful.tag")
 local layout = require("awful.layout")
 local wibox = require("wibox")
+local awful_wibar = require("awful.wibar")
 local screen = require("screen")
 local widgets = require("config.widgets")
+local palette = require("mocha")
 
 local wibar = {}
 
@@ -25,23 +27,20 @@ function wibar.init(vars)
         -- Each screen has its own tag table.
         tag({ "1" }, s, layout.layouts[1])
 
-        -- Create the wibox
-        s.mywibox = wibox({
+        -- Create the wibar
+        s.mywibar = awful_wibar({
             position = "top",
             screen = s,
-            width = s.geometry.width - 10,
-            height = vars.wibox_height,
-            x = vars.wibox_margin,
-            y = vars.wibox_margin,
-            bg = "#00000000",
-            fg = "#ffffff",
-            ontop = true,
+            height = 30,
+            bg = palette.base.hex,
+            fg = palette.text.hex,
+            ontop = false,
             visible = true
         })
 
         -- Create widgets
         local constrained_tasklist = widgets.create_tasklist(s)
-        local sep_left, sep_right, seperator = widgets.create_separators()
+        local simple_separator = widgets.create_simple_separator()
         local arch_logo = widgets.create_arch_logo()
         local mysystray = widgets.create_systray()
         local window_name_container = widgets.create_window_name(s)
@@ -50,14 +49,14 @@ function wibar.init(vars)
         local volume_icon_container, volume_percent_container = widgets.create_volume()
         local calendar_icon_container, date_widget_container, time_widget_container = widgets.create_calendar()
 
-        -- Add widgets to the wibox
-        s.mywibox:setup {
+        -- Add widgets to the wibar
+        s.mywibar:setup {
             layout = wibox.layout.align.horizontal,
             { -- Left widgets
                 layout = wibox.layout.fixed.horizontal,
-                sep_left,
+                simple_separator,
                 arch_logo,
-                sep_right,
+                simple_separator,
                 mysystray
             },
             {
@@ -69,24 +68,25 @@ function wibar.init(vars)
             { -- Right widgets
                 layout = wibox.layout.fixed.horizontal,
                 window_name_container,
-                seperator,
+                simple_separator,
                 battery_icon_container,
-                seperator,
+                simple_separator,
                 battery_percent_container,
-                seperator,
+                simple_separator,
                 network_icon_container,
-                seperator,
+                simple_separator,
                 network_status_container,
-                seperator,
+                simple_separator,
                 volume_icon_container,
-                seperator,
+                simple_separator,
                 volume_percent_container,
-                seperator,
+                simple_separator,
                 calendar_icon_container,
-                seperator,
+                simple_separator,
                 date_widget_container,
-                seperator,
-                time_widget_container
+                simple_separator,
+                time_widget_container,
+                simple_separator
             }
         }
     end)

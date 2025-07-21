@@ -1,5 +1,4 @@
 local table = require("gears.table")
-local shape = require("gears.shape")
 local timer = require("gears.timer")
 
 local wibox = require("wibox")
@@ -12,6 +11,11 @@ local spawn = require("awful.spawn")
 local scripts = require("scripts")
 local palette = require("mocha")
 local client = require("client")
+local filesystem = require("gears.filesystem")
+local surface = require("gears.surface")
+
+-- Path to default icon
+local noicon_path = filesystem.get_configuration_dir() .. "awesome-switcher/noicon.png"
 
 local widgets = {}
 
@@ -31,9 +35,10 @@ function widgets.create_tasklist(s)
         filter = widget.tasklist.filter.currenttags,
         buttons = tasklist_buttons,
         style = {
-            shape_border_width = 1,
-            shape_border_color = palette.sapphire.hex,
-            shape = shape.rounded_rect
+            bg_normal = palette.base.hex,
+            bg_focus = palette.surface0.hex,
+            fg_normal = palette.text.hex,
+            fg_focus = palette.text.hex
         },
         layout = {
             spacing = 4,
@@ -50,7 +55,29 @@ function widgets.create_tasklist(s)
                 widget = wibox.container.margin
             },
             id = 'background_role',
-            widget = wibox.container.background
+            widget = wibox.container.background,
+            create_callback = function(self, c, _, _)
+                -- Set icon when widget is created
+                local icon_widget = self:get_children_by_id('icon_role')[1]
+                if icon_widget then
+                    if c and c.icon then
+                        icon_widget.image = c.icon
+                    else
+                        icon_widget.image = surface.load_uncached(noicon_path)
+                    end
+                end
+            end,
+            update_callback = function(self, c, _, _)
+                -- Update icon when client changes
+                local icon_widget = self:get_children_by_id('icon_role')[1]
+                if icon_widget then
+                    if c and c.icon then
+                        icon_widget.image = c.icon
+                    else
+                        icon_widget.image = surface.load_uncached(noicon_path)
+                    end
+                end
+            end
         }
     }
 
@@ -67,12 +94,12 @@ function widgets.create_arch_logo()
                 widget = wibox.widget.textbox,
                 font = "Iosevka 18"
             },
-            margins = 2,
+            margins = 8,
             widget = wibox.container.margin
         },
         widget = wibox.container.background,
-        bg = "#f9f9f9ee",
-        fg = "#434c5eff"
+        bg = palette.base.hex,
+        fg = palette.mauve.hex
     }
 
     tooltip {
@@ -90,11 +117,11 @@ function widgets.create_arch_logo()
     end)
 
     arch_logo:connect_signal("mouse::enter", function()
-        arch_logo.bg = "#f9f9f9cc"
+        arch_logo.fg = palette.pink.hex
     end)
 
     arch_logo:connect_signal("mouse::leave", function()
-        arch_logo.bg = "#f9f9f9ee"
+        arch_logo.fg = palette.mauve.hex
     end)
 
     return arch_logo
@@ -111,9 +138,7 @@ function widgets.create_systray()
     }
 
     mysystray = wibox.container.background(mysystray)
-    mysystray.bg = palette.surface0.hex
-    mysystray.shape = shape.rounded_bar
-    mysystray.shape_clip = true
+    mysystray.bg = palette.base.hex
 
     return mysystray
 end
@@ -126,12 +151,10 @@ function widgets.create_window_name(s)
         valign = "center"
     }
 
-    local window_name_container = wibox.container.margin(window_name, 5, 5, 0, 0)
+    local window_name_container = wibox.container.margin(window_name, 8, 8, 6, 6)
     window_name_container = wibox.container.background(window_name_container)
-    window_name_container.bg = palette.surface0.hex
+    window_name_container.bg = palette.base.hex
     window_name_container.fg = palette.text.hex
-    window_name_container.shape = shape.rounded_bar
-    window_name_container.shape_clip = true
 
     tooltip {
         objects = { window_name_container },
@@ -150,7 +173,7 @@ function widgets.create_window_name(s)
                 name = c.name
             else
                 name = "No focused window"
-                s.mywibox.visible = true
+                s.mywibar.visible = true
                 spawn({ "dunstctl", "set-paused", "false" })
             end
             local length = string.len(name)
@@ -175,12 +198,10 @@ function widgets.create_battery()
         valign = "center"
     }
 
-    local battery_icon_container = wibox.container.margin(battery_icon, 5, 5, 0, 0)
+    local battery_icon_container = wibox.container.margin(battery_icon, 8, 8, 6, 6)
     battery_icon_container = wibox.container.background(battery_icon_container)
-    battery_icon_container.bg = palette.text.hex
-    battery_icon_container.fg = palette.surface0.hex
-    battery_icon_container.shape = shape.circle
-    battery_icon_container.shape_clip = true
+    battery_icon_container.bg = palette.base.hex
+    battery_icon_container.fg = palette.green.hex
 
     tooltip {
         objects = { battery_icon_container },
@@ -206,12 +227,10 @@ function widgets.create_battery()
         valign = "center"
     }
 
-    local battery_percent_container = wibox.container.margin(battery_percent, 5, 5, 0, 0)
+    local battery_percent_container = wibox.container.margin(battery_percent, 8, 8, 6, 6)
     battery_percent_container = wibox.container.background(battery_percent_container)
-    battery_percent_container.bg = palette.surface0.hex
+    battery_percent_container.bg = palette.base.hex
     battery_percent_container.fg = palette.text.hex
-    battery_percent_container.shape = shape.rounded_bar
-    battery_percent_container.shape_clip = true
 
     tooltip {
         objects = { battery_percent_container },
@@ -245,12 +264,10 @@ function widgets.create_network()
         valign = "center"
     }
 
-    local network_icon_container = wibox.container.margin(network_icon, 5, 5, 0, 0)
+    local network_icon_container = wibox.container.margin(network_icon, 8, 8, 6, 6)
     network_icon_container = wibox.container.background(network_icon_container)
-    network_icon_container.bg = palette.text.hex
-    network_icon_container.fg = palette.surface0.hex
-    network_icon_container.shape = shape.circle
-    network_icon_container.shape_clip = true
+    network_icon_container.bg = palette.base.hex
+    network_icon_container.fg = palette.blue.hex
 
     tooltip {
         objects = { network_icon_container },
@@ -265,11 +282,11 @@ function widgets.create_network()
     end)
 
     network_icon_container:connect_signal("mouse::enter", function()
-        network_icon_container.bg = palette.text.hex .. "cc"
+        network_icon_container.fg = palette.sky.hex
     end)
 
     network_icon_container:connect_signal("mouse::leave", function()
-        network_icon_container.bg = palette.text.hex
+        network_icon_container.fg = palette.blue.hex
     end)
 
     timer {
@@ -290,12 +307,10 @@ function widgets.create_network()
         valign = "center"
     }
 
-    local network_status_container = wibox.container.margin(network_status, 5, 5, 0, 0)
+    local network_status_container = wibox.container.margin(network_status, 8, 8, 6, 6)
     network_status_container = wibox.container.background(network_status_container)
-    network_status_container.bg = palette.surface0.hex
+    network_status_container.bg = palette.base.hex
     network_status_container.fg = palette.text.hex
-    network_status_container.shape = shape.rounded_bar
-    network_status_container.shape_clip = true
 
     tooltip {
         objects = { network_status_container },
@@ -325,12 +340,10 @@ function widgets.create_volume()
         valign = "center"
     }
 
-    local volume_icon_container = wibox.container.margin(volume_icon, 5, 5, 0, 0)
+    local volume_icon_container = wibox.container.margin(volume_icon, 8, 8, 6, 6)
     volume_icon_container = wibox.container.background(volume_icon_container)
-    volume_icon_container.bg = palette.text.hex
-    volume_icon_container.fg = palette.surface0.hex
-    volume_icon_container.shape = shape.circle
-    volume_icon_container.shape_clip = true
+    volume_icon_container.bg = palette.base.hex
+    volume_icon_container.fg = palette.peach.hex
 
     tooltip {
         objects = { volume_icon_container },
@@ -360,11 +373,11 @@ function widgets.create_volume()
     end)
 
     volume_icon_container:connect_signal("mouse::enter", function()
-        volume_icon_container.bg = palette.text.hex .. "cc"
+        volume_icon_container.fg = palette.yellow.hex
     end)
 
     volume_icon_container:connect_signal("mouse::leave", function()
-        volume_icon_container.bg = palette.text.hex
+        volume_icon_container.fg = palette.peach.hex
     end)
 
     local volume_percent = wibox.widget {
@@ -374,12 +387,10 @@ function widgets.create_volume()
         valign = "center"
     }
 
-    local volume_percent_container = wibox.container.margin(volume_percent, 5, 5, 0, 0)
+    local volume_percent_container = wibox.container.margin(volume_percent, 8, 8, 6, 6)
     volume_percent_container = wibox.container.background(volume_percent_container)
-    volume_percent_container.bg = palette.surface0.hex
+    volume_percent_container.bg = palette.base.hex
     volume_percent_container.fg = palette.text.hex
-    volume_percent_container.shape = shape.rounded_bar
-    volume_percent_container.shape_clip = true
 
     tooltip {
         objects = { volume_percent_container },
@@ -418,12 +429,10 @@ function widgets.create_calendar()
         text = ""
     }
 
-    local calendar_icon_container = wibox.container.margin(calendar_icon, 5, 5, 0, 0)
+    local calendar_icon_container = wibox.container.margin(calendar_icon, 8, 8, 6, 6)
     calendar_icon_container = wibox.container.background(calendar_icon_container)
-    calendar_icon_container.bg = palette.text.hex
-    calendar_icon_container.fg = palette.surface0.hex
-    calendar_icon_container.shape = shape.circle
-    calendar_icon_container.shape_clip = true
+    calendar_icon_container.bg = palette.base.hex
+    calendar_icon_container.fg = palette.red.hex
 
     tooltip {
         objects = { calendar_icon_container },
@@ -438,11 +447,11 @@ function widgets.create_calendar()
     end)
 
     calendar_icon_container:connect_signal("mouse::enter", function()
-        calendar_icon_container.bg = palette.text.hex .. "cc"
+        calendar_icon_container.fg = palette.maroon.hex
     end)
 
     calendar_icon_container:connect_signal("mouse::leave", function()
-        calendar_icon_container.bg = palette.text.hex
+        calendar_icon_container.fg = palette.red.hex
     end)
 
     local date_widget = wibox.widget {
@@ -452,12 +461,10 @@ function widgets.create_calendar()
         valign = "center"
     }
 
-    local date_widget_container = wibox.container.margin(date_widget, 5, 5, 0, 0)
+    local date_widget_container = wibox.container.margin(date_widget, 8, 8, 6, 6)
     date_widget_container = wibox.container.background(date_widget_container)
-    date_widget_container.bg = palette.surface0.hex
+    date_widget_container.bg = palette.base.hex
     date_widget_container.fg = palette.text.hex
-    date_widget_container.shape = shape.rounded_bar
-    date_widget_container.shape_clip = true
 
     tooltip {
         objects = { date_widget_container },
@@ -483,12 +490,10 @@ function widgets.create_calendar()
         valign = "center"
     }
 
-    local time_widget_container = wibox.container.margin(time_widget, 5, 5, 0, 0)
+    local time_widget_container = wibox.container.margin(time_widget, 8, 8, 6, 6)
     time_widget_container = wibox.container.background(time_widget_container)
-    time_widget_container.bg = palette.surface0.hex
+    time_widget_container.bg = palette.base.hex
     time_widget_container.fg = palette.text.hex
-    time_widget_container.shape = shape.rounded_bar
-    time_widget_container.shape_clip = true
 
     tooltip {
         objects = { time_widget_container },
@@ -510,31 +515,20 @@ function widgets.create_calendar()
     return calendar_icon_container, date_widget_container, time_widget_container
 end
 
-function widgets.create_separators()
-    local sep_left = wibox.widget {
-        markup = "",
+function widgets.create_simple_separator()
+    local separator = wibox.widget {
+        markup = "|",
         align = "center",
         valign = "center",
         widget = wibox.widget.textbox,
-        font = "Iosevka 14"
+        font = "Kurinto Mono JP 15",
     }
 
-    local sep_right = wibox.widget {
-        markup = '',
-        align = "center",
-        valign = "center",
-        widget = wibox.widget.textbox,
-        font = "Iosevka 14"
-    }
+    local separator_container = wibox.container.background(separator)
+    separator_container.bg = palette.base.hex
+    separator_container.fg = palette.overlay0.hex
 
-    local seperator = wibox.widget {
-        widget = wibox.widget.separator,
-        orientation = "vertical",
-        forced_width = 6,
-        color = "#00000000"
-    }
-
-    return sep_left, sep_right, seperator
+    return separator_container
 end
 
 return widgets
