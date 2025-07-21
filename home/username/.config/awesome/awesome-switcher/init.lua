@@ -1,23 +1,22 @@
----@diagnostic disable: undefined-global, lowercase-global, deprecated
-
 -- Core libraries
 local cairo = require("lgi").cairo
 local wibox = require('wibox')
-local keygrabber = keygrabber
 local awful = require('awful')
 local gears = require("gears")
 local palette = require("mocha")
 
--- Shortcuts for commonly used globals
-local mouse = mouse
-local screen = screen
-local client = client
+-- Import keygrabber properly
+local keygrabber = awful.keygrabber
+
+-- Import globals properly
+local mouse = require("mouse")
+local screen = require("screen")
+local client = require("client")
 local table = table
 local math = require('math')
 local string = string
 local debug = debug
 local pairs = pairs
-local unpack = unpack or table.unpack
 
 -- Pre-compute frequently used values
 local timer = gears.timer
@@ -257,7 +256,7 @@ function _M.preview()
     local maxTextWidth = 0
     local maxTextHeight = 0
     local bigFont = textboxHeight / 2
-    cr:set_font_size(fontSize)
+    cr:set_font_size(bigFont)
     for i = 1, #leftRightTab do
         text = _M.createPreviewText(leftRightTab[i])
         textWidth = cr:text_extents(text).width
@@ -316,7 +315,8 @@ function _M.preview()
                 local iconboxHeight = iconboxWidth
 
                 -- Titles
-                cairo_context:select_font_face(unpack(PREVIEW_BOX_TITLE_FONT))
+                cairo_context:select_font_face(PREVIEW_BOX_TITLE_FONT[1], PREVIEW_BOX_TITLE_FONT[2],
+                    PREVIEW_BOX_TITLE_FONT[3])
                 cairo_context:set_font_face(cairo_context:get_font_face())
                 cairo_context:set_font_size(fontSize)
 
@@ -344,7 +344,8 @@ function _M.preview()
                 tx = tx + iconboxWidth
                 ty = h + (textboxHeight + textHeight) / 2
 
-                cairo_context:set_source_rgba(unpack(PREVIEW_BOX_TITLE_COLOR))
+                cairo_context:set_source_rgba(PREVIEW_BOX_TITLE_COLOR[1], PREVIEW_BOX_TITLE_COLOR[2],
+                    PREVIEW_BOX_TITLE_COLOR[3], PREVIEW_BOX_TITLE_COLOR[4])
                 cairo_context:move_to(tx, ty)
                 cairo_context:show_text(text)
                 cairo_context:stroke()
@@ -394,7 +395,7 @@ function _M.preview()
     end
 
     -- layout
-    preview_layout = wibox.layout.fixed.horizontal()
+    local preview_layout = wibox.layout.fixed.horizontal()
 
     preview_layout:add(spacer)
     for i = 1, #leftRightTab do
