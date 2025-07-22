@@ -125,7 +125,7 @@ function widgets.create_tasklist(s)
 
                                     -- Draw app name
                                     cairo_context:set_source_rgb(1, 1, 1)
-                                    cairo_context:select_font_face("JetBrainsMono Nerd Font", cairo.FontSlant.NORMAL,
+                                    cairo_context:select_font_face("Maple Mono NF CN", cairo.FontSlant.NORMAL,
                                         cairo.FontWeight.NORMAL)
                                     cairo_context:set_font_size(12)
                                     local text = current_preview_client.class or current_preview_client.instance or
@@ -242,7 +242,7 @@ end
 function widgets.create_window_name(s)
     local window_name = wibox.widget {
         widget = wibox.widget.textbox,
-        font = "JetBrainsMono Nerd Font 9",
+        font = "Maple Mono NF CN 9",
         align = "center",
         valign = "center"
     }
@@ -320,7 +320,7 @@ function widgets.create_battery()
 
     local battery_percent = wibox.widget {
         widget = wibox.widget.textbox,
-        font = "JetBrainsMono Nerd Font 9",
+        font = "Maple Mono NF CN 9",
         align = "center",
         valign = "center"
     }
@@ -476,7 +476,7 @@ function widgets.create_volume()
 
     local volume_percent = wibox.widget {
         widget = wibox.widget.textbox,
-        font = "JetBrainsMono Nerd Font 9",
+        font = "Maple Mono NF CN 9",
         align = "center",
         valign = "center"
     }
@@ -576,7 +576,7 @@ function widgets.create_calendar()
 
     local time_widget = wibox.widget {
         widget = wibox.widget.textbox,
-        font = "JetBrainsMono Nerd Font 9",
+        font = "Maple Mono NF CN 9",
         align = "center",
         valign = "center"
     }
@@ -611,7 +611,7 @@ function widgets.create_simple_separator()
         align = "center",
         valign = "center",
         widget = wibox.widget.textbox,
-        font = "JetBrainsMono Nerd Font 15",
+        font = "Maple Mono NF CN 15",
     }
 
     local separator_container = wibox.container.background(separator)

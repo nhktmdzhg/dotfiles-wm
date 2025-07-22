@@ -3,7 +3,7 @@ local shape = require("gears.shape")
 
 local theme = {}
 
-theme.font = "JetBrainsMono Nerd Font 10"
+theme.font = "Maple Mono NF CN 10"
 theme.bg_systray = palette.base.hex
 theme.icon_theme = "BeautyLine"
 theme.focus_follows_mouse = false

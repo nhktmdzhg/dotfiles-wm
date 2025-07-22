@@ -29,20 +29,20 @@ _Catppuccin Mocha themed desktop with minimal, elegant design_
 ### 🎨 **Visual Excellence**
 
 - **Theme**: Catppuccin Mocha color palette with carefully balanced contrast
-- **Compositor**: Picom with optimized animations and transparency effects
-- **Apocalyptic Window Animations**: Custom demonic window transitions with soul-crushing effects
+- **Compositor**: Picom with smooth animations and transparency effects
+- **Modern Window Animations**: Clean, professional window transitions with smooth scaling and fading
 - **Icons**: BeautyLine icon theme for consistent visual language
 - **Typography**: JetBrainsMono Nerd Font for crisp readability and icon support
 - **Notifications**: Custom Dunst configuration with elegant notifications
 
-### 👹 **Epic Animation System**
+### 🎬 **Smooth Animation System**
 
-- **Demonic Open**: Dark phantoms emerge from the void with reality-warping shake
-- **Apocalyptic Close**: Soul-crushing vanishment with brutal implosion into digital purgatory
-- **Ethereal Show/Hide**: Arcane fade effects with dimensional shifts
-- **Reality-Warping Geometry**: Spacetime continuum adjustments for window resizing
-- **Lightning-Fast Performance**: Sub-400ms animations optimized for responsiveness
-- **Cinematic Quality**: Hollywood-grade cubic-bezier curves for smooth transitions
+- **Elegant Open**: Smooth fade-in with gentle scale-up and subtle slide-down effect
+- **Natural Close**: Graceful fade-out with scale-down and gentle upward slide
+- **Seamless Show/Hide**: Simple fade transitions with minimal scale adjustments
+- **Fluid Geometry**: Smooth transitions for window resizing and repositioning
+- **Optimized Performance**: Sub-300ms animations for responsive user experience
+- **Professional Quality**: Cubic-bezier curves for natural, smooth motion
 
 ### ⚡ **Performance Optimized**
 
@@ -116,36 +116,36 @@ dotfiles/
 
 ---
 
-## 👹 Animation Configuration
+## 🎬 Animation Configuration
 
-### 🔥 **Demonic Window Transitions**
+### ✨ **Smooth Window Transitions**
 
-The picom configuration features custom apocalyptic animations:
+The picom configuration features professional, smooth animations:
 
 ```yaml
-# DEMONIC OPEN ANIMATIONS
-- Dark phantom emerges from the void (0.4s)
-- Violent eruption from microscopic size with reality-warping shake
-- Crash down from hellish heights like a fallen demon
-- Sinister sideways drift with haunting momentum
+# SMOOTH OPEN ANIMATIONS
+- Gentle fade-in with opacity transition (0.3s)
+- Subtle scale-up from 95% to 100% size
+- Light slide-down effect from 20px above
+- Natural cubic-bezier easing curves
 
-# APOCALYPTIC CLOSE ANIMATIONS  
-- Soul-crushing demonic vanishment (0.3s)
-- Brutal implosion into the void (scale to 0.05)
-- Ascension to digital purgatory (-80% height)
-- Final death throes with violent shake (+25px)
+# NATURAL CLOSE ANIMATIONS  
+- Graceful fade-out with smooth opacity transition (0.25s)
+- Gentle scale-down to 90% size
+- Subtle upward slide by 15px
+- Professional easing for natural motion
 
 # TRIGGERS
-- Alt+Tab: increase-opacity/decrease-opacity → Full demonic effects
-- Window show/hide: Ethereal manifestation with arcane fade
-- Geometry changes: Reality-warping spacetime adjustments
+- Window open/close: Smooth fade and scale transitions
+- Window show/hide: Simple fade effects with minimal scaling
+- Geometry changes: Fluid transitions for resizing and movement
 ```
 
 ### ⚡ **Performance Metrics**
 
-- **Open Animation**: 400ms total duration
-- **Close Animation**: 350ms total duration  
-- **Show/Hide**: 200-250ms for instant feedback
+- **Open Animation**: 300ms total duration
+- **Close Animation**: 250ms total duration  
+- **Show/Hide**: 150-200ms for instant feedback
 - **Geometry**: 150ms for responsive resizing
 - **Backend**: Hardware-accelerated GLX with damage tracking
 

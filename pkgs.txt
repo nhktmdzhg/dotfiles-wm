@@ -15,6 +15,7 @@ ksuperkey
 lxqt-policykit
 maplemono-nf-cn
 nmcurse-rs-git
+noto-fonts
 nvim
 nvim-qt
 pavucontrol

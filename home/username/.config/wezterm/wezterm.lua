@@ -6,7 +6,7 @@ config.enable_tab_bar = false
 config.window_padding = { left = 0, right = 0, top = 0, bottom = 0, }
 config.window_background_opacity = 0.9
 config.font_size = 10
-config.font = wezterm.font("JetBrainsMono Nerd Font Mono")
+config.font = wezterm.font("Maple Mono NF CN")
 config.use_ime = false
 config.disable_default_key_bindings = true
 config.automatically_reload_config = false

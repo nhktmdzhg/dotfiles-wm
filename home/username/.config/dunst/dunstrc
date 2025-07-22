@@ -18,9 +18,9 @@ separator_color = frame
 highlight = "#1e1e2e"
 idle_threshold = 120
 
-font = "JetBrainsMono Nerd Font 10"
+font = "Maple Mono NF CN 10"
 
-format = "<span size='x-large' font_desc='JetBrainsMono Nerd Font 9' weight='bold' foreground='#f9f9f9'>%s</span>\n%b"
+format = "<span size='x-large' font_desc='Maple Mono NF CN 9' weight='bold' foreground='#f9f9f9'>%s</span>\n%b"
 
 show_age_threshold = 60
 icon_position = left
