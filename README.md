@@ -53,7 +53,6 @@ _Catppuccin Mocha themed desktop with minimal, elegant design_
 - **Session Management**: Comprehensive logout/shutdown menu with wlogout
 - **Screen Locking**: betterlockscreen integration with automatic timeout
 - **Media Controls**: Full playerctl integration for multimedia management
-- **Network Management**: Bluetooth and WiFi controls with policy kit
 
 ---
 
