@@ -235,7 +235,12 @@ return {
 
 ### 🖼️ **Wallpaper**
 
-Place your wallpaper in `~/wallpaper/` and update the path in your display manager or xinitrc.
+Place your wallpaper in `~/wallpaper/` and update the path in `~/.config/awesome/config/wibar.lua`:
+
+```lua
+-- Edit wallpaper path in wibar configuration
+wallpaper.maximized(vars.home .. "/wallpaper/your-wallpaper.jpg", s, true)
+```
 
 ### ⚙️ **Applications**
 
