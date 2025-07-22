@@ -2,9 +2,9 @@
 
 <div align="center">
 
-![AwesomeWM](https://img.shields.io/badge/AwesomeWM-535d6c?style=for-the-badge&logo=lua&logoColor=white)
-![Arch Linux](https://img.shields.io/badge/Arch%20Linux-1793D1?style=for-the-badge&logo=arch-linux&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
+[![AwesomeWM](https://img.shields.io/badge/AwesomeWM-535d6c?style=for-the-badge&logo=lua&logoColor=white)](https://awesomewm.org/)
+[![Arch Linux](https://img.shields.io/badge/Arch%20Linux-1793D1?style=for-the-badge&logo=arch-linux&logoColor=white)](https://archlinux.org/)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 
 _A meticulously crafted, production-ready desktop environment featuring modern aesthetics, blazing performance, and seamless user experience._
 
