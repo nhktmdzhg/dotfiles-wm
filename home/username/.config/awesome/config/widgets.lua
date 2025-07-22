@@ -192,7 +192,7 @@ function widgets.create_arch_logo()
                 align = "center",
                 valign = "center",
                 widget = wibox.widget.textbox,
-                font = "MesloLGS Nerd Font Mono 20"
+                font = "JetBrainsMono Nerd Font Mono 20"
             },
             margins = 2,
             widget = wibox.container.margin
@@ -292,7 +292,7 @@ end
 function widgets.create_battery()
     local battery_icon = wibox.widget {
         widget = wibox.widget.textbox,
-        font = "MesloLGS Nerd Font Mono 14",
+        font = "JetBrainsMono Nerd Font Mono 16",
         align = "center",
         valign = "center"
     }
@@ -356,7 +356,7 @@ end
 function widgets.create_network()
     local network_icon = wibox.widget {
         widget = wibox.widget.textbox,
-        font = "MesloLGS Nerd Font Mono 14",
+        font = "JetBrainsMono Nerd Font Mono 16",
         align = "center",
         valign = "center"
     }
@@ -398,7 +398,7 @@ function widgets.create_network()
 
     local network_status = wibox.widget {
         widget = wibox.widget.textbox,
-        font = "Kurinto Mono JP 9",
+        font = "Maple Mono NF CN 9",
         align = "center",
         valign = "center"
     }
@@ -430,7 +430,7 @@ end
 function widgets.create_volume()
     local volume_icon = wibox.widget {
         widget = wibox.widget.textbox,
-        font = "MesloLGS Nerd Font Mono 14",
+        font = "JetBrainsMono Nerd Font Mono 16",
         align = "center",
         valign = "center"
     }
@@ -516,7 +516,7 @@ end
 function widgets.create_calendar()
     local calendar_icon = wibox.widget {
         widget = wibox.widget.textbox,
-        font = "MesloLGS Nerd Font Mono 14",
+        font = "JetBrainsMono Nerd Font Mono 16",
         align = "center",
         valign = "center",
         text = ""
@@ -548,7 +548,7 @@ function widgets.create_calendar()
 
     local date_widget = wibox.widget {
         widget = wibox.widget.textbox,
-        font = "Kurinto Mono JP 9",
+        font = "Maple Mono NF CN 9",
         align = "center",
         valign = "center"
     }

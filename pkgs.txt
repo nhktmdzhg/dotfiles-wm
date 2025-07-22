@@ -13,7 +13,8 @@ flameshot
 gsimplecal
 ksuperkey
 lxqt-policykit
-nmcurse-nhk-git
+maplemono-nf-cn
+nmcurse-rs-git
 nvim
 nvim-qt
 pavucontrol

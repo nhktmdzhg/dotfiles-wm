@@ -254,7 +254,6 @@ show_final_message() {
     echo -e "  1. ${CYAN}Log out and log back in${NC}"
     echo -e "  2. ${CYAN}Select 'AwesomeWM' from your display manager${NC}"
     echo -e "  3. ${CYAN}Add wallpapers to ~/wallpaper/ directory${NC}"
-    echo -e "  4. ${CYAN}Install Kurinto fonts for best experience${NC}"
     echo
     echo -e "${YELLOW}Useful commands:${NC}"
     echo -e "  • ${CYAN}Super${NC} - Open application launcher"

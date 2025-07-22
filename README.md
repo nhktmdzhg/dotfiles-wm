@@ -185,14 +185,10 @@ cat pkgs.txt | xargs sudo pacman -S --needed
 # 2. Copy configuration files
 cp -rf home/username/. ~/
 
-# 3. Install optional fonts (recommended)
-# Download Kurinto font family from https://www.kurinto.com/download.htm
-# Extract to ~/.local/share/fonts/ or /usr/share/fonts/
-
-# 4. Set executable permissions
+# 3. Set executable permissions
 chmod +x ~/.config/awesome/xss-lock-tsl.sh
 
-# 5. Reload font cache
+# 4. Reload font cache
 fc-cache -fv
 ```
 
@@ -305,7 +301,6 @@ end),
 | --------------- | -------------------- | ----------------------------------------------------------------- |
 | **Text Editor** | Neovim Configuration | [nhktmdzhg/nvim](https://github.com/nhktmdzhg/nvim)               |
 | **Browser**     | Zen Browser          | [nhktmdzhg/zen-browser](https://github.com/nhktmdzhg/zen-browser) |
-| **Fonts**       | Kurinto Font Family  | [kurinto.com](https://www.kurinto.com/download.htm)               |
 
 ---
 
