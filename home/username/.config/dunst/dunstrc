@@ -13,9 +13,9 @@ progress_bar_frame_width = 0
 transparency = 3
 horizontal_padding = 11
 frame_width = 6
-frame_color = "#89b4fa"
+frame_color = "#1e1e2e"
 separator_color = frame
-highlight = "#89b4fa"
+highlight = "#1e1e2e"
 idle_threshold = 120
 
 font = "JetBrainsMono Nerd Font 10"

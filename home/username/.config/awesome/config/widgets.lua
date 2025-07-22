@@ -94,9 +94,9 @@ function widgets.create_arch_logo()
                 align = "center",
                 valign = "center",
                 widget = wibox.widget.textbox,
-                font = "Iosevka 18"
+                font = "MesloLGS Nerd Font Mono 20"
             },
-            margins = 8,
+            margins = 2,
             widget = wibox.container.margin
         },
         widget = wibox.container.background,
@@ -131,8 +131,8 @@ end
 function widgets.create_systray()
     local mysystray = wibox.widget {
         wibox.widget.systray(),
-        left = 10,
-        right = 10,
+        left = 2,
+        right = 2,
         top = 2,
         bottom = 2,
         widget = wibox.container.margin
@@ -144,12 +144,12 @@ end
 function widgets.create_window_name(s)
     local window_name = wibox.widget {
         widget = wibox.widget.textbox,
-        font = "Kurinto Mono JP 9",
+        font = "JetBrainsMono Nerd Font 9",
         align = "center",
         valign = "center"
     }
 
-    local window_name_container = wibox.container.margin(window_name, 8, 8, 6, 6)
+    local window_name_container = wibox.container.margin(window_name, 2, 2, 6, 6)
     window_name_container = wibox.container.background(window_name_container)
     window_name_container.fg = palette.text.hex
 
@@ -174,12 +174,16 @@ function widgets.create_window_name(s)
                 spawn({ "dunstctl", "set-paused", "false" })
             end
             local length = string.len(name)
-            if length < 60 then
+            if length < 40 then
                 window_name.text = name
             else
                 local unix_time = os.time()
-                local i = unix_time % (length - 58)
-                window_name.text = string.sub(name, i, i + 59)
+                local start = (unix_time % (length - 38)) + 1
+                local end_pos = start + 38
+                if end_pos > length then
+                    end_pos = length
+                end
+                window_name.text = string.sub(name, start, end_pos)
             end
         end
     }
@@ -195,7 +199,7 @@ function widgets.create_battery()
         valign = "center"
     }
 
-    local battery_icon_container = wibox.container.margin(battery_icon, 8, 8, 6, 6)
+    local battery_icon_container = wibox.container.margin(battery_icon, 2, 2, 6, 6)
     battery_icon_container = wibox.container.background(battery_icon_container)
     battery_icon_container.fg = palette.green.hex
 
@@ -218,12 +222,12 @@ function widgets.create_battery()
 
     local battery_percent = wibox.widget {
         widget = wibox.widget.textbox,
-        font = "Kurinto Mono JP 9",
+        font = "JetBrainsMono Nerd Font 9",
         align = "center",
         valign = "center"
     }
 
-    local battery_percent_container = wibox.container.margin(battery_percent, 8, 8, 6, 6)
+    local battery_percent_container = wibox.container.margin(battery_percent, 2, 2, 6, 6)
     battery_percent_container = wibox.container.background(battery_percent_container)
     battery_percent_container.fg = palette.text.hex
 
@@ -254,12 +258,12 @@ end
 function widgets.create_network()
     local network_icon = wibox.widget {
         widget = wibox.widget.textbox,
-        font = "Material Bold 10",
+        font = "MesloLGS Nerd Font Mono 14",
         align = "center",
         valign = "center"
     }
 
-    local network_icon_container = wibox.container.margin(network_icon, 8, 8, 6, 6)
+    local network_icon_container = wibox.container.margin(network_icon, 2, 2, 6, 6)
     network_icon_container = wibox.container.background(network_icon_container)
     network_icon_container.fg = palette.blue.hex
 
@@ -301,7 +305,7 @@ function widgets.create_network()
         valign = "center"
     }
 
-    local network_status_container = wibox.container.margin(network_status, 8, 8, 6, 6)
+    local network_status_container = wibox.container.margin(network_status, 2, 2, 6, 6)
     network_status_container = wibox.container.background(network_status_container)
     network_status_container.fg = palette.text.hex
 
@@ -328,12 +332,12 @@ end
 function widgets.create_volume()
     local volume_icon = wibox.widget {
         widget = wibox.widget.textbox,
-        font = "Material Bold 10",
+        font = "MesloLGS Nerd Font Mono 14",
         align = "center",
         valign = "center"
     }
 
-    local volume_icon_container = wibox.container.margin(volume_icon, 8, 8, 6, 6)
+    local volume_icon_container = wibox.container.margin(volume_icon, 2, 2, 6, 6)
     volume_icon_container = wibox.container.background(volume_icon_container)
     volume_icon_container.fg = palette.peach.hex
 
@@ -374,12 +378,12 @@ function widgets.create_volume()
 
     local volume_percent = wibox.widget {
         widget = wibox.widget.textbox,
-        font = "Kurinto Mono JP 9",
+        font = "JetBrainsMono Nerd Font 9",
         align = "center",
         valign = "center"
     }
 
-    local volume_percent_container = wibox.container.margin(volume_percent, 8, 8, 6, 6)
+    local volume_percent_container = wibox.container.margin(volume_percent, 2, 2, 6, 6)
     volume_percent_container = wibox.container.background(volume_percent_container)
     volume_percent_container.fg = palette.text.hex
 
@@ -414,13 +418,13 @@ end
 function widgets.create_calendar()
     local calendar_icon = wibox.widget {
         widget = wibox.widget.textbox,
-        font = "Material Bold 10",
+        font = "MesloLGS Nerd Font Mono 14",
         align = "center",
         valign = "center",
-        text = ""
+        text = ""
     }
 
-    local calendar_icon_container = wibox.container.margin(calendar_icon, 8, 8, 6, 6)
+    local calendar_icon_container = wibox.container.margin(calendar_icon, 2, 2, 6, 6)
     calendar_icon_container = wibox.container.background(calendar_icon_container)
     calendar_icon_container.fg = palette.red.hex
 
@@ -451,7 +455,7 @@ function widgets.create_calendar()
         valign = "center"
     }
 
-    local date_widget_container = wibox.container.margin(date_widget, 8, 8, 6, 6)
+    local date_widget_container = wibox.container.margin(date_widget, 2, 2, 6, 6)
     date_widget_container = wibox.container.background(date_widget_container)
     date_widget_container.fg = palette.text.hex
 
@@ -474,12 +478,12 @@ function widgets.create_calendar()
 
     local time_widget = wibox.widget {
         widget = wibox.widget.textbox,
-        font = "Kurinto Mono 9",
+        font = "JetBrainsMono Nerd Font 9",
         align = "center",
         valign = "center"
     }
 
-    local time_widget_container = wibox.container.margin(time_widget, 8, 8, 6, 6)
+    local time_widget_container = wibox.container.margin(time_widget, 2, 2, 6, 6)
     time_widget_container = wibox.container.background(time_widget_container)
     time_widget_container.fg = palette.text.hex
 
@@ -509,7 +513,7 @@ function widgets.create_simple_separator()
         align = "center",
         valign = "center",
         widget = wibox.widget.textbox,
-        font = "Kurinto Mono JP 15",
+        font = "JetBrainsMono Nerd Font 15",
     }
 
     local separator_container = wibox.container.background(separator)

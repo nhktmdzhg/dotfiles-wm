@@ -34,7 +34,7 @@ function wibar.init(vars)
             height = 30,
             bg = palette.base.hex,
             fg = palette.text.hex,
-            ontop = false,
+            ontop = true,
             visible = true
         })
 

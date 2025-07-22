@@ -117,13 +117,13 @@ function scripts.get_network_info(arg, callback)
             local icon, stat
 
             if ip_ethernet ~= "" then
-                icon = ""
+                icon = "󰈀"
                 stat = "Wired connection"
             elseif essid ~= "" then
-                icon = ""
+                icon = "󰤨"
                 stat = essid
             else
-                icon = ""
+                icon = ""
                 stat = "No Ethernet or Wi-Fi connected"
             end
 
@@ -169,17 +169,17 @@ function scripts.get_volume_info(arg, callback)
             local icon, status
 
             if volume == 0 or muted then
-                icon = ""
+                icon = "󰖁"
                 status = "Muted"
             elseif volume < 30 then
-                icon = ""
+                icon = ""
             elseif volume < 70 then
-                icon = ""
+                icon = "󰖀"
             elseif volume <= 150 then
-                icon = ""
+                icon = "󰕾"
             else
                 spawn({ "pactl", "set-sink-volume", "@DEFAULT_SINK@", "150%" })
-                icon = ""
+                icon = "󰕾"
             end
 
             if arg == 2 then
