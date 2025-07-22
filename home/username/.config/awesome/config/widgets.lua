@@ -1,5 +1,6 @@
 local table = require("gears.table")
 local timer = require("gears.timer")
+local gears = require("gears")
 
 local wibox = require("wibox")
 
@@ -7,6 +8,8 @@ local button = require("awful.button")
 local widget = require("awful.widget")
 local tooltip = require("awful.tooltip")
 local spawn = require("awful.spawn")
+local cairo = require("lgi").cairo
+local mouse = require("mouse")
 
 local scripts = require("scripts")
 local palette = require("mocha")
@@ -16,6 +19,24 @@ local surface = require("gears.surface")
 
 -- Path to default SVG icon for better scaling
 local noicon_path = filesystem.get_configuration_dir() .. "awesome-switcher/noicon.svg"
+
+-- Preview wibox
+local preview_wibox = wibox {
+    ontop = true,
+    visible = false,
+    width = 300,
+    height = 200,
+    bg = palette.base.hex,
+    border_color = palette.surface1.hex,
+    border_width = 2
+}
+
+-- Preview update timer (60 FPS)
+local preview_timer = timer {
+    timeout = 1 / 60 -- 60 FPS
+}
+
+local current_preview_client = nil
 
 local widgets = {}
 
@@ -67,6 +88,83 @@ function widgets.create_tasklist(s)
                         icon_widget.image = surface.load_uncached(noicon_path)
                     end
                 end
+
+                -- Add hover signals for preview
+                self:connect_signal("mouse::enter", function()
+                    if c and c.valid and c.content then
+                        current_preview_client = c
+
+                        -- Create preview widget with custom draw function
+                        local preview_widget = wibox.widget.base.make_widget()
+                        preview_widget.fit = function(_, _, _)
+                            return 280, 180
+                        end
+                        preview_widget.draw = function(_, _, cairo_context, width, height)
+                            if current_preview_client and current_preview_client.valid and current_preview_client.content then
+                                -- Get client content as surface
+                                local surface = gears.surface(current_preview_client.content)
+                                if surface then
+                                    -- Calculate scaling to fit preview
+                                    local cg = current_preview_client:geometry()
+                                    local scale_x = 260 / cg.width
+                                    local scale_y = 140 / cg.height
+                                    local scale = math.min(scale_x, scale_y)
+
+                                    local scaled_w = cg.width * scale
+                                    local scaled_h = cg.height * scale
+                                    local offset_x = (width - scaled_w) / 2
+                                    local offset_y = (height - scaled_h) / 2
+
+                                    -- Draw the client content
+                                    cairo_context:translate(offset_x, offset_y)
+                                    cairo_context:scale(scale, scale)
+                                    cairo_context:set_source_surface(surface, 0, 0)
+                                    cairo_context:paint()
+                                    cairo_context:scale(1 / scale, 1 / scale)
+                                    cairo_context:translate(-offset_x, -offset_y)
+
+                                    -- Draw app name
+                                    cairo_context:set_source_rgb(1, 1, 1)
+                                    cairo_context:select_font_face("JetBrainsMono Nerd Font", cairo.FontSlant.NORMAL,
+                                        cairo.FontWeight.NORMAL)
+                                    cairo_context:set_font_size(12)
+                                    local text = current_preview_client.class or current_preview_client.instance or
+                                        "Unknown"
+                                    local text_extents = cairo_context:text_extents(text)
+                                    local text_x = (width - text_extents.width) / 2
+                                    cairo_context:move_to(text_x, height - 15)
+                                    cairo_context:show_text(text)
+
+                                    surface:finish()
+                                end
+                            end
+                        end
+
+                        preview_wibox:setup {
+                            preview_widget,
+                            widget = wibox.container.background
+                        }
+
+                        local coords = mouse.coords()
+                        preview_wibox.x = coords.x + 10
+                        preview_wibox.y = coords.y + 40
+                        preview_wibox.visible = true
+
+                        -- Start live preview timer
+                        preview_timer:connect_signal("timeout", function()
+                            if preview_widget then
+                                preview_widget:emit_signal("widget::updated")
+                            end
+                        end)
+                        preview_timer:start()
+                    end
+                end)
+
+                self:connect_signal("mouse::leave", function()
+                    preview_wibox.visible = false
+                    current_preview_client = nil
+                    preview_timer:stop()
+                end)
             end,
             update_callback = function(self, c, _, _)
                 -- Update icon when client changes
