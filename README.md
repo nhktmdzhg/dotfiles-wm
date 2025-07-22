@@ -30,9 +30,19 @@ _Catppuccin Mocha themed desktop with minimal, elegant design_
 
 - **Theme**: Catppuccin Mocha color palette with carefully balanced contrast
 - **Compositor**: Picom with optimized animations and transparency effects
+- **Apocalyptic Window Animations**: Custom demonic window transitions with soul-crushing effects
 - **Icons**: BeautyLine icon theme for consistent visual language
 - **Typography**: JetBrainsMono Nerd Font for crisp readability and icon support
 - **Notifications**: Custom Dunst configuration with elegant notifications
+
+### 👹 **Epic Animation System**
+
+- **Demonic Open**: Dark phantoms emerge from the void with reality-warping shake
+- **Apocalyptic Close**: Soul-crushing vanishment with brutal implosion into digital purgatory
+- **Ethereal Show/Hide**: Arcane fade effects with dimensional shifts
+- **Reality-Warping Geometry**: Spacetime continuum adjustments for window resizing
+- **Lightning-Fast Performance**: Sub-400ms animations optimized for responsiveness
+- **Cinematic Quality**: Hollywood-grade cubic-bezier curves for smooth transitions
 
 ### ⚡ **Performance Optimized**
 
@@ -103,6 +113,41 @@ dotfiles/
 | **Rofi**      | App Launcher   | `~/.config/rofi/config.rasi`       |
 | **WezTerm**   | Terminal       | `~/.config/wezterm/wezterm.lua`    |
 | **Fastfetch** | System Info    | `~/.config/fastfetch/config.jsonc` |
+
+---
+
+## 👹 Animation Configuration
+
+### 🔥 **Demonic Window Transitions**
+
+The picom configuration features custom apocalyptic animations:
+
+```yaml
+# DEMONIC OPEN ANIMATIONS
+- Dark phantom emerges from the void (0.4s)
+- Violent eruption from microscopic size with reality-warping shake
+- Crash down from hellish heights like a fallen demon
+- Sinister sideways drift with haunting momentum
+
+# APOCALYPTIC CLOSE ANIMATIONS  
+- Soul-crushing demonic vanishment (0.3s)
+- Brutal implosion into the void (scale to 0.05)
+- Ascension to digital purgatory (-80% height)
+- Final death throes with violent shake (+25px)
+
+# TRIGGERS
+- Alt+Tab: increase-opacity/decrease-opacity → Full demonic effects
+- Window show/hide: Ethereal manifestation with arcane fade
+- Geometry changes: Reality-warping spacetime adjustments
+```
+
+### ⚡ **Performance Metrics**
+
+- **Open Animation**: 400ms total duration
+- **Close Animation**: 350ms total duration  
+- **Show/Hide**: 200-250ms for instant feedback
+- **Geometry**: 150ms for responsive resizing
+- **Backend**: Hardware-accelerated GLX with damage tracking
 
 ---
 
