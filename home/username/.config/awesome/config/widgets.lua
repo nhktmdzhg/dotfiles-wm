@@ -19,6 +19,26 @@ local surface = require("gears.surface")
 
 -- Path to default SVG icon for better scaling
 local noicon_path = filesystem.get_configuration_dir() .. "awesome-switcher/noicon.svg"
+local icon_dir = os.getenv("HOME") .. "/.local/share/icons/BeautyLine/apps/scalable/"
+
+local function set_icon(c, icon_widget)
+    if icon_widget and c then
+        local icon_path = icon_dir .. string.lower(c.class) .. ".svg"
+        if filesystem.file_readable(icon_path) then
+            icon_widget.image = surface.load_uncached(icon_path)
+        elseif c.icon then
+            icon_widget.image = c.icon
+        else
+            if c.class == "legcord" then
+                icon_widget.image = surface.load_uncached(icon_dir .. "discord.svg")
+            elseif c.class == "Zalo" then
+                icon_widget.image = surface.load_uncached("/opt/zalo/icon.png")
+            else
+                icon_widget.image = surface.load_uncached(noicon_path)
+            end
+        end
+    end
+end
 
 -- Preview wibox
 local preview_wibox = wibox {
@@ -80,14 +100,7 @@ function widgets.create_tasklist(s)
             create_callback = function(self, c, _, _)
                 -- Set icon when widget is created
                 local icon_widget = self:get_children_by_id('icon_role')[1]
-                if icon_widget then
-                    if c and c.icon then
-                        icon_widget.image = c.icon
-                    else
-                        -- Load SVG with proper scaling
-                        icon_widget.image = surface.load_uncached(noicon_path)
-                    end
-                end
+                set_icon(c, icon_widget)
 
                 -- Add hover signals for preview
                 self:connect_signal("mouse::enter", function()
@@ -169,14 +182,7 @@ function widgets.create_tasklist(s)
             update_callback = function(self, c, _, _)
                 -- Update icon when client changes
                 local icon_widget = self:get_children_by_id('icon_role')[1]
-                if icon_widget then
-                    if c and c.icon then
-                        icon_widget.image = c.icon
-                    else
-                        -- Load SVG with proper scaling
-                        icon_widget.image = surface.load_uncached(noicon_path)
-                    end
-                end
+                set_icon(c, icon_widget)
             end
         }
     }
@@ -262,27 +268,28 @@ function widgets.create_window_name(s)
         autostart = true,
         callnow = true,
         callback = function()
-            local c = client.focus
-            local name = ""
-            if c then
-                name = c.name
-            else
-                name = "No focused window"
-                s.mywibar.visible = true
-                spawn({ "dunstctl", "set-paused", "false" })
-            end
-            local length = string.len(name)
-            if length < 40 then
-                window_name.text = name
-            else
-                local unix_time = os.time()
-                local start = (unix_time % (length - 38)) + 1
-                local end_pos = start + 38
-                if end_pos > length then
-                    end_pos = length
-                end
-                window_name.text = string.sub(name, start, end_pos)
-            end
+            -- local c = client.focus
+            -- local name = ""
+            -- if c then
+            --     name = c.name
+            -- else
+            --     name = "No focused window"
+            --     s.mywibar.visible = true
+            --     spawn({ "dunstctl", "set-paused", "false" })
+            -- end
+            -- local length = string.len(name)
+            -- if length < 40 then
+            --     window_name.text = name
+            -- else
+            --     local unix_time = os.time()
+            --     local start = (unix_time % (length - 38)) + 1
+            --     local end_pos = start + 38
+            --     if end_pos > length then
+            --         end_pos = length
+            --     end
+            --     window_name.text = string.sub(name, start, end_pos)
+            -- end
+            window_name.text = client.focus and string.lower(client.focus.class) or "No focused window"
         end
     }
 

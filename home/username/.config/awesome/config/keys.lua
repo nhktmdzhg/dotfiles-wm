@@ -119,7 +119,7 @@ function keys.init(vars)
             spawn("nvim-qt")
         end),
         key({ super }, "c", function()
-            spawn("discord")
+            spawn("legcord")
         end))
 
     local clientkeys = table.join(key({ super, shift }, "Up", function(c)

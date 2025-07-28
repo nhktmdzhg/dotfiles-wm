@@ -26,13 +26,9 @@ function autostart.init()
     spawn({ "xset", "-dpms" })
     spawn_once("thunderbird", "thunderbird")
     spawn_once("mcontrolcenter", "mcontrolcenter")
-    spawn_once("Discord",
-        { "env", "DISCORD_DISABLE_GPU_SANDBOX=1", "ELECTRON_OZONE_PLATFORM_HINT=auto", "/usr/bin/discord", "--no-sandbox",
-            "--enable-zero-copy", "--ignore-gpu-blocklist", "--enable-gpu-rasterization",
-            "--enable-native-gpu-memory-buffers",
-            "--enable-features=VaapiVideoDecoder", "--disable-features=UseChromeOSDirectVideoDecoder", "--use-gl=desktop" })
+    spawn_once("legcord", "legcord")
     -- Wayland version
-    -- spawn_once("Discord", {"env", "OZONE_PLATFORM=wayland", "XDG_SESSION_TYPE=wayland", "DISCORD_DISABLE_GPU_SANDBOX=1", "DISCORD_ENABLE_WAYLAND_PIPEWIRE=1", "ELECTRON_OZONE_PLATFORM_HINT=auto", "/usr/bin/discord", "--no-sandbox", "--enable-zero-copy", "--ignore-gpu-blocklist", "--enable-gpu-rasterization", "--enable-native-gpu-memory-buffers", "--enable-features=WebRTCPipeWireCapturer,UseOzonePlatform,VaapiVideoDecoder", "--disable-features=UseChromeOSDirectVideoDecoder", "--ozone-platform=wayland", "--use-gl=desktop"})
+    -- spawn_once("legcord", {"env", "OZONE_PLATFORM=wayland", "XDG_SESSION_TYPE=wayland", "DISCORD_DISABLE_GPU_SANDBOX=1", "DISCORD_ENABLE_WAYLAND_PIPEWIRE=1", "ELECTRON_OZONE_PLATFORM_HINT=auto", "legcord", "--no-sandbox", "--enable-zero-copy", "--ignore-gpu-blocklist", "--enable-gpu-rasterization", "--enable-native-gpu-memory-buffers", "--enable-features=WebRTCPipeWireCapturer,UseOzonePlatform,VaapiVideoDecoder", "--disable-features=UseChromeOSDirectVideoDecoder", "--ozone-platform=wayland", "--use-gl=desktop"})
     spawn_once("zalo", "zalo")
     spawn_once("fcitx5", "fcitx5")
     spawn.once({ "bluetoothctl", "power", "off" })
