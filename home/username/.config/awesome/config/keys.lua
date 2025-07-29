@@ -116,7 +116,7 @@ function keys.init(vars)
             spawn("zen-browser")
         end),
         key({ super }, "n", function()
-            spawn("nvim-qt")
+            spawn("goneovim")
         end),
         key({ super }, "c", function()
             spawn("legcord")

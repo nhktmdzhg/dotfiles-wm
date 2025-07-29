@@ -224,7 +224,7 @@ fc-cache -fv
 | `Ctrl + Alt + T`     | Terminal       | WezTerm               |
 | `Super + E`          | File Manager   | Thunar                |
 | `Super + B`          | Web Browser    | Zen Browser           |
-| `Super + N`          | Text Editor    | Neovim-Qt             |
+| `Super + N`          | Text Editor    | Goneovim              |
 | `Ctrl + Shift + Esc` | System Monitor | Bottom                |
 
 ### 📱 **System Controls**

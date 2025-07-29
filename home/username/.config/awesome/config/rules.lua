@@ -21,7 +21,7 @@ function rules.init(keys)
         }
     }, {
         rule_any = {
-            class = { "nvim-qt", "Code" }
+            class = { "Code" }
         },
         properties = {
             maximized = true

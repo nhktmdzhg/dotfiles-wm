@@ -17,7 +17,7 @@ maplemono-nf-cn
 nmcurse-rs-git
 noto-fonts
 nvim
-nvim-qt
+goneovim-bin
 pavucontrol
 picom
 playerctl
@@ -28,7 +28,6 @@ thunar
 thunar-archive-plugin
 thunar-volman
 ttf-jetbrains-mono-nerd
-ttf-meslo-nerd
 upower
 wezterm-nightly-bin
 wireless_tools
