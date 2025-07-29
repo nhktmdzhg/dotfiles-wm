@@ -268,28 +268,27 @@ function widgets.create_window_name(s)
         autostart = true,
         callnow = true,
         callback = function()
-            -- local c = client.focus
-            -- local name = ""
-            -- if c then
-            --     name = c.name
-            -- else
-            --     name = "No focused window"
-            --     s.mywibar.visible = true
-            --     spawn({ "dunstctl", "set-paused", "false" })
-            -- end
-            -- local length = string.len(name)
-            -- if length < 40 then
-            --     window_name.text = name
-            -- else
-            --     local unix_time = os.time()
-            --     local start = (unix_time % (length - 38)) + 1
-            --     local end_pos = start + 38
-            --     if end_pos > length then
-            --         end_pos = length
-            --     end
-            --     window_name.text = string.sub(name, start, end_pos)
-            -- end
-            window_name.text = client.focus and string.lower(client.focus.class) or "No focused window"
+            local c = client.focus
+            local name = ""
+            if c then
+                name = c.name
+            else
+                name = "No focused window"
+                s.mywibar.visible = true
+                spawn({ "dunstctl", "set-paused", "false" })
+            end
+            local length = string.len(name)
+            if length < 40 then
+                window_name.text = name
+            else
+                local unix_time = os.time()
+                local start = (unix_time % (length - 38)) + 1
+                local end_pos = start + 38
+                if end_pos > length then
+                    end_pos = length
+                end
+                window_name.text = string.sub(name, start, end_pos)
+            end
         end
     }
 
