@@ -1,11 +1,11 @@
-local palette = require("mocha")
-local shape = require("gears.shape")
+local palette = require('mocha')
+local shape = require('gears.shape')
 
 local theme = {}
 
-theme.font = "Maple Mono NF CN 10"
+theme.font = 'Maple Mono NF CN 10'
 theme.bg_systray = palette.base.hex
-theme.icon_theme = "BeautyLine"
+theme.icon_theme = 'BeautyLine'
 theme.focus_follows_mouse = false
 theme.tooltip_bg = palette.surface2.hex
 theme.tooltip_fg = palette.text.hex
