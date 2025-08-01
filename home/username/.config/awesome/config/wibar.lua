@@ -11,7 +11,8 @@ local widgets = require('config.widgets')
 local wibar = {}
 
 local function set_wallpaper(s, vars)
-	wallpaper.maximized(vars.home .. '/wallpaper/march 7th 4k.jpg', s, true)
+	-- wallpaper.maximized(vars.home .. '/wallpaper/march 7th 4k.jpg', s, true)
+	wallpaper.maximized(vars.home .. '/wallpaper/walls-catppuccin-mocha/cool.jpg', s, true)
 end
 
 function wibar.init(vars)
