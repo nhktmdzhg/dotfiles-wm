@@ -17,9 +17,10 @@ _A meticulously crafted, production-ready desktop environment featuring modern a
 <details>
 <summary><b>🖼️ Desktop Showcase</b></summary>
 
-![Desktop Preview](meo/screenshot.png)
+![Desktop Preview](meo/desktop.png)
 _Catppuccin Mocha themed desktop with minimal, elegant design_
-
+![Fastfetch](meo/screenshot2.png)
+_Fastfetch displaying system information with custom theme and anime girl logo_
 </details>
 
 ---
