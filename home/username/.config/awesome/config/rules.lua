@@ -1,7 +1,5 @@
 local client = require('awful.client')
 local client_ruled = require('ruled.client')
-local notification_ruled = require('ruled.notification')
-local palette = require('mocha')
 local placement = require('awful.placement')
 local screen = require('awful.screen')
 
@@ -54,54 +52,6 @@ function rules.init()
 			properties = {
 				skip_taskbar = true,
 				placement = placement.resize_to_mouse,
-			},
-		})
-	end)
-
-	notification_ruled.connect_signal('request::rules', function()
-		notification_ruled.append_rule({
-			rule = {},
-			properties = {
-				screen = screen.preferred,
-				position = 'top_right',
-				width = 444,
-				height = 130,
-				font = 'Maple Mono NF CN 10',
-				bg = palette.base.hex,
-				fg = palette.text.hex,
-				border_width = 6,
-				border_color = palette.base.hex,
-				icon_size = 48,
-				margin = 11,
-				opacity = 0.97,
-				timeout = 6,
-			},
-		})
-		notification_ruled.append_rule({
-			rule = { urgency = 'low' },
-			properties = {
-				timeout = 3,
-				bg = palette.base.hex,
-				fg = palette.text.hex,
-			},
-		})
-
-		notification_ruled.append_rule({
-			rule = { urgency = 'normal' },
-			properties = {
-				timeout = 6,
-				bg = palette.base.hex,
-				fg = palette.text.hex,
-			},
-		})
-
-		notification_ruled.append_rule({
-			rule = { urgency = 'critical' },
-			properties = {
-				timeout = 0,
-				bg = palette.base.hex,
-				fg = palette.text.hex,
-				border_color = palette.peach.hex,
 			},
 		})
 	end)
