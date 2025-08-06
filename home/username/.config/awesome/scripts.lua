@@ -1,4 +1,5 @@
 local spawn = require('awful.spawn')
+local string = require('gears.string')
 
 local scripts = {}
 
@@ -6,7 +7,7 @@ function scripts.get_battery_icon(callback)
 	spawn.easy_async({ 'upower', '-e' }, function(stdout)
 		local battery_device = nil
 
-		for line in stdout:gmatch('[^\n]+') do
+		for _, line in ipairs(string.split(stdout, '\n')) do
 			if line:match('BAT') then
 				battery_device = line
 				break
@@ -21,10 +22,10 @@ function scripts.get_battery_icon(callback)
 		spawn.easy_async({ 'upower', '-i', battery_device }, function(info_output)
 			local status, percentage
 
-			for line in info_output:gmatch('[^\n]+') do
-				if line:find('state:') then
+			for _, line in ipairs(string.split(info_output, '\n')) do
+				if string.startswith(line, '    state:') then
 					status = line:match('state:%s+(%S+)')
-				elseif line:find('percentage:') then
+				elseif string.startswith(line, '    percentage:') then
 					local percent_str = line:match('(%d+)%%')
 					if percent_str then
 						percentage = tonumber(percent_str)
@@ -72,7 +73,7 @@ function scripts.get_battery_percent(callback)
 	spawn.easy_async({ 'upower', '-e' }, function(stdout)
 		local battery_device = nil
 
-		for line in stdout:gmatch('[^\n]+') do
+		for _, line in ipairs(string.split(stdout, '\n')) do
 			if line:match('BAT') then
 				battery_device = line
 				break
@@ -85,8 +86,8 @@ function scripts.get_battery_percent(callback)
 		end
 
 		spawn.easy_async({ 'upower', '-i', battery_device }, function(info_output)
-			for line in info_output:gmatch('[^\n]+') do
-				if line:find('percentage:') then
+			for _, line in ipairs(string.split(info_output, '\n')) do
+				if string.startswith(line, '    percentage:') then
 					local percent_str = line:match('(%d+)%%')
 					if percent_str then
 						callback(tonumber(percent_str))
@@ -106,7 +107,7 @@ function scripts.get_network_info(arg, callback)
 	spawn.easy_async({ 'ip', 'addr', 'show', 'enp4s0' }, function(ethernet_output)
 		local ip_ethernet = ''
 
-		for line in ethernet_output:gmatch('[^\n]+') do
+		for _, line in ipairs(string.split(ethernet_output, '\n')) do
 			if line:find('inet ') then
 				ip_ethernet = line:match('inet (%d+%.%d+%.%d+%.%d+)')
 				break
@@ -149,7 +150,7 @@ function scripts.get_volume_info(arg, callback)
 
 	spawn.easy_async({ 'pactl', 'get-sink-volume', '@DEFAULT_SINK@' }, function(vol_raw)
 		local volume
-		for line in vol_raw:gmatch('[^\n]+') do
+		for _, line in ipairs(string.split(vol_raw, '\n')) do
 			local percent = line:match('(%d+)%%')
 			if percent then
 				volume = tonumber(percent) or 0
@@ -159,8 +160,8 @@ function scripts.get_volume_info(arg, callback)
 
 		spawn.easy_async({ 'pactl', 'get-sink-mute', '@DEFAULT_SINK@' }, function(mute_raw)
 			local muted = false
-			for line in mute_raw:gmatch('[^\n]+') do
-				if line:lower():find('mute:') then
+			for _, line in ipairs(string.split(mute_raw, '\n')) do
+				if string.startswith(line, 'Mute:') then
 					muted = line:find('yes') ~= nil
 					break
 				end
