@@ -3,8 +3,26 @@ local spawn = require('awful.spawn')
 
 local signals = {}
 
+local dunst_paused = false
+
 local function clamp(x, min, max)
 	return math.max(min, math.min(max, x))
+end
+
+function signals.toggle_dunst()
+	dunst_paused = not dunst_paused
+	if client.focus.fullscreen then
+		return
+	end
+	if dunst_paused then
+		spawn({ 'dunstctl', 'set-paused', 'true' })
+	else
+		spawn({ 'dunstctl', 'set-paused', 'false' })
+	end
+end
+
+function signals.is_dunst_paused()
+	return dunst_paused
 end
 
 function signals.init(vars)
@@ -23,7 +41,11 @@ function signals.init(vars)
 				width = math.min(wa.width - margin_left - margin_right, c.width),
 				height = math.min(wa.height - margin_top - margin_bottom, c.height),
 			})
-			spawn({ 'dunstctl', 'set-paused', 'false' })
+			if dunst_paused then
+				spawn({ 'dunstctl', 'set-paused', 'true' })
+			else
+				spawn({ 'dunstctl', 'set-paused', 'false' })
+			end
 		else
 			spawn({ 'dunstctl', 'set-paused', 'true' })
 		end
@@ -36,7 +58,11 @@ function signals.init(vars)
 			spawn({ 'dunstctl', 'set-paused', 'true' })
 		else
 			screen.mywibar.visible = true
-			spawn({ 'dunstctl', 'set-paused', 'false' })
+			if dunst_paused then
+				spawn({ 'dunstctl', 'set-paused', 'true' })
+			else
+				spawn({ 'dunstctl', 'set-paused', 'false' })
+			end
 		end
 	end)
 
@@ -73,7 +99,11 @@ function signals.init(vars)
 			spawn({ 'dunstctl', 'set-paused', 'true' })
 		else
 			screen.mywibar.visible = true
-			spawn({ 'dunstctl', 'set-paused', 'false' })
+			if dunst_paused then
+				spawn({ 'dunstctl', 'set-paused', 'true' })
+			else
+				spawn({ 'dunstctl', 'set-paused', 'false' })
+			end
 		end
 	end)
 end

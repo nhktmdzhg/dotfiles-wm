@@ -15,6 +15,7 @@ local client = require('client')
 local filesystem = require('gears.filesystem')
 local palette = require('mocha')
 local scripts = require('scripts')
+local signals = require('config.signals')
 local surface = require('gears.surface')
 
 -- Path to default SVG icon for better scaling
@@ -285,7 +286,11 @@ function widgets.create_window_name(s)
 			else
 				name = 'No focused window'
 				s.mywibar.visible = true
-				spawn({ 'dunstctl', 'set-paused', 'false' })
+				if signals.is_dunst_paused() then
+					spawn({ 'dunstctl', 'set-paused', 'true' })
+				else
+					spawn({ 'dunstctl', 'set-paused', 'false' })
+				end
 			end
 			local length = string.len(name)
 			if length < 40 then

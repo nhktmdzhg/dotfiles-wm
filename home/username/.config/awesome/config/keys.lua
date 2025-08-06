@@ -4,6 +4,7 @@ local key = require('awful.key')
 local mouse = require('awful.mouse')
 local screen = require('awful.screen')
 local scripts = require('scripts')
+local signals = require('config.signals')
 local spawn = require('awful.spawn')
 local table = require('gears.table')
 
@@ -120,6 +121,10 @@ function keys.init(vars)
 		end),
 		key({ super }, 'c', function()
 			spawn('legcord')
+		end),
+		-- Dunst toggle --
+		key({ super, ctrl }, 'n', function()
+			signals.toggle_dunst()
 		end)
 	)
 
