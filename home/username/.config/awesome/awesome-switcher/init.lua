@@ -9,6 +9,9 @@ local wibox = require('wibox')
 local keygrabber = awful.keygrabber
 
 -- Import globals properly
+local client = require('client')
+local mouse = require('mouse')
+local screen = require('screen')
 local table = table
 local math = require('math')
 local string = string
@@ -17,6 +20,7 @@ local pairs = pairs
 
 -- Pre-compute frequently used values
 local timer = gears.timer
+awful.client = require('awful.client')
 
 -- Cache surface creation (these don't need to be recreated every time)
 local surface = cairo.ImageSurface(cairo.Format.RGB24, 20, 20)
@@ -41,6 +45,7 @@ local PREVIEW_BOX_TITLE_FONT = { 'sans', 'italic', 'normal' }
 local PREVIEW_BOX_TITLE_FONT_SIZE_FACTOR = 0.8
 local PREVIEW_BOX_TITLE_COLOR = text_color_normalized
 local CYCLE_ALL_CLIENTS = false
+local icon_dir = os.getenv('HOME') .. '/.local/share/icons/BeautyLine/apps/scalable/'
 
 -- Create wibox with optimized settings
 _M.preview_wbox = wibox({
@@ -301,10 +306,19 @@ function _M.preview()
 
 				-- Icons
 				local icon
-				if c.icon == nil then
-					icon = gears.surface(gears.surface.load(_M.noicon))
-				else
+				local icon_path = icon_dir .. string.lower(c.class) .. '.svg'
+				if gears.filesystem.file_readable(icon_path) then
+					icon = gears.surface(gears.surface.load(icon_path))
+				elseif c.icon then
 					icon = gears.surface(c.icon)
+				else
+					if c.class == 'legcord' then
+						icon = gears.surface(gears.surface.load(icon_dir .. 'discord.svg'))
+					elseif c.class == 'Zalo' then
+						icon = gears.surface(gears.surface.load('/opt/zalo/icon.png'))
+					else
+						icon = gears.surface(gears.surface.load(_M.noicon))
+					end
 				end
 
 				local iconboxWidth = 0.9 * textboxHeight
@@ -324,7 +338,6 @@ function _M.preview()
 				textHeight = cairo_context:text_extents(text).height
 
 				local titleboxWidth = textWidth + iconboxWidth
-				local titleboxHeight = textboxHeight
 
 				-- Draw icons
 				tx = (w - titleboxWidth) / 2

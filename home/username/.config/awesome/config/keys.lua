@@ -1,9 +1,12 @@
+local awesome = require('awesome')
 local button = require('awful.button')
 local key = require('awful.key')
+local mouse = require('awful.mouse')
 local screen = require('awful.screen')
 local scripts = require('scripts')
 local signals = require('config.signals')
 local spawn = require('awful.spawn')
+local table = require('gears.table')
 
 local keys = {}
 
@@ -47,7 +50,7 @@ function keys.init(vars)
 
 	local switcher = require('awesome-switcher')
 
-	local globalkeys = { -- Brightness controls --
+	local globalkeys = table.join( -- Brightness controls --
 		key({}, 'XF86MonBrightnessUp', function()
 			scripts.change_brightness(1)
 		end),
@@ -122,10 +125,10 @@ function keys.init(vars)
 		-- Dunst toggle --
 		key({ super, ctrl }, 'n', function()
 			signals.toggle_dunst()
-		end),
-	}
+		end)
+	)
 
-	local clientkeys = {
+	local clientkeys = table.join(
 		key({ super, shift }, 'Up', function(c)
 			c:relative_move(0, -10, 0, 0)
 		end),
@@ -188,20 +191,28 @@ function keys.init(vars)
 		key({ super }, 'z', function(c)
 			c.minimized = true
 			c:lower()
-		end),
-	}
+		end)
+	)
 
-	local clientbuttons = {
+	local clientbuttons = table.join(
 		button({}, 1, function(c)
-			c:activate({ context = 'mouse_click' })
+			c:emit_signal('request::activate', 'mouse_click', {
+				raise = true,
+			})
 		end),
 		button({ super }, 1, function(c)
-			c:activate({ context = 'mouse_click', action = 'mouse_move' })
+			c:emit_signal('request::activate', 'mouse_click', {
+				raise = true,
+			})
+			mouse.client.move(c)
 		end),
 		button({ super }, 3, function(c)
-			c:activate({ context = 'mouse_click', action = 'mouse_resize' })
-		end),
-	}
+			c:emit_signal('request::activate', 'mouse_click', {
+				raise = true,
+			})
+			mouse.client.resize(c)
+		end)
+	)
 
 	return {
 		globalkeys = globalkeys,

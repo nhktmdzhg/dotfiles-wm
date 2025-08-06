@@ -1,13 +1,5 @@
-local awful = require('awful')
-local beautiful = require('beautiful')
-local keyboard = require('awful.keyboard')
-local mouse = require('awful.mouse')
-local naughty = require('naughty')
-local palette = require('mocha')
+local client = require('client')
 local spawn = require('awful.spawn')
-local table = require('gears.table')
-local wallpaper = require('awful.wallpaper')
-local wibox = require('wibox')
 
 local signals = {}
 
@@ -33,14 +25,14 @@ function signals.is_dunst_paused()
 	return dunst_paused
 end
 
-function signals.init(vars, keybindings)
+function signals.init(vars)
 	local margin_top = vars.margin_top
 	local margin_bottom = vars.margin_bottom
 	local margin_left = vars.margin_left
 	local margin_right = vars.margin_right
 
 	-- Signals
-	client.connect_signal('request::manage', function(c)
+	client.connect_signal('manage', function(c)
 		local wa = c.screen.workarea
 		if not c.fullscreen then
 			c:geometry({
@@ -113,32 +105,6 @@ function signals.init(vars, keybindings)
 				spawn({ 'dunstctl', 'set-paused', 'false' })
 			end
 		end
-	end)
-
-	client.connect_signal('request::default_mousebindings', function()
-		mouse.append_client_mousebindings(keybindings.clientbuttons)
-	end)
-
-	client.connect_signal('request::default_keybindings', function()
-		keyboard.append_client_keybindings(keybindings.clientkeys)
-	end)
-
-	screen.connect_signal('request::wallpaper', function(s)
-		wallpaper({
-			screen = s,
-			widget = {
-				{
-					image = beautiful.wallpaper,
-					upscale = true,
-					downscale = true,
-					widget = wibox.widget.imagebox,
-				},
-				valign = 'center',
-				halign = 'center',
-				tiled = false,
-				widget = wibox.container.tile,
-			},
-		})
 	end)
 end
 

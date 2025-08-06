@@ -207,6 +207,42 @@ function scripts.change_brightness(arg)
 		elseif arg == -1 then
 			spawn({ 'brightnessctl', 'set', '5%-', '-q' })
 		end
+		spawn.easy_async({ 'brightnessctl', 'm' }, function(max_output)
+			local max_brightness = tonumber(max_output:match('(%d+)'))
+
+			if not max_brightness then
+				return
+			end
+
+			local brightness = math.floor((brightness_val / max_brightness) * 100)
+			if arg == 1 then
+				brightness = math.min(brightness + 5, 100)
+			elseif arg == -1 then
+				brightness = math.max(brightness - 5, 0)
+			end
+
+			local icon
+			if brightness <= 10 then
+				icon = 'display-brightness-low'
+			elseif brightness <= 70 then
+				icon = 'display-brightness-medium'
+			else
+				icon = 'display-brightness-high'
+			end
+
+			spawn({
+				'dunstify',
+				tostring(brightness),
+				'-h',
+				'int:value:' .. brightness,
+				'-h',
+				'string:synchronous:display-brightness',
+				'-i',
+				icon,
+				'-t',
+				'1000',
+			})
+		end)
 	end)
 end
 

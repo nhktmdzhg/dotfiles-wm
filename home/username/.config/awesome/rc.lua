@@ -5,11 +5,11 @@
 local beautiful = require('beautiful')
 local filesystem = require('gears.filesystem')
 local layout = require('awful.layout')
+local root = require('root')
 require('awful.autofocus')
 
 -- Require custom modules
 local autostart = require('config.autostart')
-local keyboard = require('awful.keyboard')
 local keys = require('config.keys')
 local rules = require('config.rules')
 local signals = require('config.signals')
@@ -20,18 +20,14 @@ local wibar = require('config.wibar')
 beautiful.init(filesystem.get_configuration_dir() .. 'theme.lua')
 
 -- Set layout
-tag.connect_signal('request::default_layouts', function()
-	layout.append_default_layouts({
-		layout.suit.floating,
-	})
-end)
+layout.layouts = { layout.suit.floating }
 
 -- Initialize modules
 autostart.init()
 
 local keybindings = keys.init(vars)
-keyboard.append_global_keybindings(keybindings.globalkeys)
+root.keys(keybindings.globalkeys)
 
-rules.init()
+rules.init(keybindings)
 wibar.init(vars)
-signals.init(vars, keybindings)
+signals.init(vars)

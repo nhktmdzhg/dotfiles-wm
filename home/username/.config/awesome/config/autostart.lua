@@ -12,9 +12,10 @@ end
 
 function autostart.init()
 	local home = os.getenv('HOME')
-	package.loaded['naughty.dbus'] = nil
-	spawn_once('dunst', 'dunst')
+
+	package.loaded['naughty.dbus'] = {}
 	spawn_once('xsettingsd', 'xsettingsd')
+	spawn_once('dunst', 'dunst')
 	spawn({ 'pactl', 'set-source-volume', '@DEFAULT_SOURCE@', '150%' })
 	spawn({ 'ksuperkey', '-e', 'Super_L=Alt_L|F2' })
 	spawn({ 'ksuperkey', '-e', 'Super_R=Alt_L|F2' })

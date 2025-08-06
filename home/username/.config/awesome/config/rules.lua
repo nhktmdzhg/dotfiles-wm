@@ -1,60 +1,69 @@
 local client = require('awful.client')
-local client_ruled = require('ruled.client')
 local placement = require('awful.placement')
+local rules_module = require('awful.rules')
 local screen = require('awful.screen')
 
 local rules = {}
 
-function rules.init()
-	client_ruled.connect_signal('request::rules', function()
-		client_ruled.append_rule({
-			id = 'global',
+function rules.init(keys)
+	rules_module.rules = {
+		{
 			rule = {},
 			properties = {
 				border_width = 0,
 				focus = client.focus.filter,
 				raise = true,
+				keys = keys.clientkeys,
+				buttons = keys.clientbuttons,
 				screen = screen.preferred,
-				placement = placement.centered,
-				titlebars_enabled = false,
+				callback = function(c)
+					placement.centered(c, nil)
+				end,
 			},
-		})
-		client_ruled.append_rule({
+		},
+		{
 			rule_any = {
 				class = { 'Code' },
 			},
 			properties = {
 				maximized = true,
 			},
-		})
-		client_ruled.append_rule({
+		},
+		{
 			rule_any = {
 				type = { 'splash', 'dialog' },
 			},
 			properties = {
 				skip_taskbar = true,
-				placement = placement.centered,
+				callback = function(c)
+					placement.centered(c, nil)
+				end,
 			},
-		})
-		client_ruled.append_rule({
+		},
+		{
 			rule_any = {
 				type = { 'menu', 'popup_menu', 'dropdown_menu', 'combo' },
 			},
 			properties = {
 				skip_taskbar = true,
-				placement = placement.resize_to_mouse,
+				-- placement = placement.resize_to_mouse
+				callback = function(c)
+					placement.resize_to_mouse(c, nil)
+				end,
 			},
-		})
-		client_ruled.append_rule({
+		},
+		{
 			rule_any = {
 				class = { 'Gsimplecal', 'gsimplecal' },
 			},
 			properties = {
 				skip_taskbar = true,
-				placement = placement.resize_to_mouse,
+				callback = function(c)
+					placement.resize_to_mouse(c, nil)
+				end,
 			},
-		})
-	end)
+		},
+	}
 end
 
 return rules
