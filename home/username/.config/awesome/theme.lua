@@ -11,4 +11,6 @@ theme.tooltip_bg = palette.surface2.hex
 theme.tooltip_fg = palette.text.hex
 theme.tooltip_font = theme.font
 theme.tooltip_shape = shape.rounded_bar
+theme.wallpaper = os.getenv('HOME') .. '/wallpaper/evernight.jpg'
+
 return theme

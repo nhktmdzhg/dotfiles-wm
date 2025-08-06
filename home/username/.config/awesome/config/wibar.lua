@@ -1,29 +1,14 @@
-local awful_screen = require('awful.screen')
 local awful_wibar = require('awful.wibar')
 local layout = require('awful.layout')
 local palette = require('mocha')
-local screen = require('screen')
 local tag = require('awful.tag')
-local wallpaper = require('gears.wallpaper')
 local wibox = require('wibox')
 local widgets = require('config.widgets')
 
 local wibar = {}
 
-local function set_wallpaper(s, vars)
-	wallpaper.maximized(vars.home .. '/wallpaper/evernight.jpg', s, true)
-end
-
 function wibar.init(vars)
-	-- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
-	screen.connect_signal('property::geometry', function(s)
-		set_wallpaper(s, vars)
-	end)
-
-	awful_screen.connect_for_each_screen(function(s)
-		-- Wallpaper
-		set_wallpaper(s, vars)
-
+	screen.connect_signal('request::desktop_decoration', function(s)
 		-- Each screen has its own tag table.
 		tag({ '1' }, s, layout.layouts[1])
 

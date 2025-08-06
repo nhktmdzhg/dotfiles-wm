@@ -1,4 +1,4 @@
-awesome
+awesome-git
 betterlockscreen
 bluez
 bluez-utils
@@ -7,7 +7,6 @@ bottom-nightly-autocomplete
 darkly-qt5-git
 darkly-qt6-git
 dash
-dunst
 fastfetch
 flameshot
 gsimplecal

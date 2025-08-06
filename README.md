@@ -34,7 +34,7 @@ _Fastfetch displaying system information with custom theme and anime girl logo_
 - **Modern Window Animations**: Clean, professional window transitions with smooth scaling and fading
 - **Icons**: BeautyLine icon theme for consistent visual language
 - **Typography**: JetBrainsMono Nerd Font for crisp readability and icon support
-- **Notifications**: Custom Dunst configuration with elegant notifications
+- **Notifications**: Custom naughty configuration with elegant notifications
 
 ### 🎬 **Smooth Animation System**
 
@@ -90,7 +90,6 @@ dotfiles/
     │   │       ├── 📱 wibar.lua        # Status bar configuration
     │   │       ├── 📡 signals.lua      # Event handling
     │   │       └── 🔧 vars.lua         # Global variables
-    │   ├── 💬 dunst/       # Notification daemon
     │   ├── 🔍 rofi/        # Application launcher
     │   ├── 💻 wezterm/     # Terminal emulator
     │   ├── 🌸 picom.conf   # Compositor settings
@@ -110,7 +109,6 @@ dotfiles/
 | ------------- | -------------- | ---------------------------------- |
 | **AwesomeWM** | Window Manager | `~/.config/awesome/`               |
 | **Picom**     | Compositor     | `~/.config/picom.conf`             |
-| **Dunst**     | Notifications  | `~/.config/dunst/dunstrc`          |
 | **Rofi**      | App Launcher   | `~/.config/rofi/config.rasi`       |
 | **WezTerm**   | Terminal       | `~/.config/wezterm/wezterm.lua`    |
 | **Fastfetch** | System Info    | `~/.config/fastfetch/config.jsonc` |
