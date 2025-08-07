@@ -12,9 +12,15 @@ local dashboard_visible = false
 local avatar_path = os.getenv('HOME') .. '/.config/awesome/avatar.png'
 local launcher_list = {
 	{ name = 'Wezterm', icon = '', command = 'wezterm' },
-	{ name = 'Zen browser', icon = '󰖟', command = 'zen-browser' },
-	{ name = 'Thunar', icon = '', command = 'thunar' },
+	{ name = 'Zen browser', icon = '󰺕', command = 'zen-browser' },
+	{ name = 'PCManFM', icon = '', command = 'pcmanfm-qt' },
 	{ name = 'Neovim', icon = '', command = 'goneovim' },
+	{ name = 'Open config', icon = '', command = { 'sh', '-c', 'cd ~/.config/awesome && goneovim rc.lua' } },
+	{
+		name = 'HSR',
+		icon = '',
+		command = { 'env', 'MANGOHUD=1', 'bottles-cli', 'run', '-p', 'HSR Start', '-b', 'HoyoPlay' },
+	},
 }
 
 local function create_avatar_widget()

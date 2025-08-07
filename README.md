@@ -226,7 +226,7 @@ fc-cache -fv
 | -------------------- | -------------- | --------------------- |
 | `Super`              | App Launcher   | Rofi application menu |
 | `Ctrl + Alt + T`     | Terminal       | WezTerm               |
-| `Super + E`          | File Manager   | Thunar                |
+| `Super + E`          | File Manager   | PCManFM               |
 | `Super + B`          | Web Browser    | Zen Browser           |
 | `Super + N`          | Text Editor    | Goneovim              |
 | `Ctrl + Shift + Esc` | System Monitor | Bottom                |

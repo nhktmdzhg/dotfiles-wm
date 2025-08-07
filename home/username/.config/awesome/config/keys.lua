@@ -101,7 +101,7 @@ function keys.init(vars)
 			spawn({ 'flameshot', 'full' })
 		end), -- Applications --
 		key({ super }, 'e', function()
-			spawn('thunar')
+			spawn('pcmanfm-qt')
 		end),
 		key({ super }, 'l', function()
 			spawn({ home .. '/.config/awesome/xss-lock-tsl.sh' })

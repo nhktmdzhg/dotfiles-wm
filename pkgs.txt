@@ -19,14 +19,12 @@ noto-fonts
 nvim
 goneovim-bin
 pavucontrol
+pcmanfm-qt
 picom
 playerctl
 qt5ct
 qt6ct
 rofi
-thunar
-thunar-archive-plugin
-thunar-volman
 ttf-jetbrains-mono-nerd
 upower
 wezterm-nightly-bin
