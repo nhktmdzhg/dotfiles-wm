@@ -220,15 +220,13 @@ function widgets.create_arch_logo()
 
 	tooltip({
 		objects = { arch_logo },
-		text = '[L] Main Menu [R] Power Menu',
+		text = '[L] Main Menu',
 		mode = 'outside',
 	})
 
 	arch_logo:connect_signal('button::press', function(_, _, _, button)
 		if button == 1 then
 			spawn({ 'env', 'XMODIFIERS=@im=none', 'rofi', '-no-lazy-grab', '-show', 'drun' })
-		elseif button == 3 then
-			spawn('wlogout')
 		end
 	end)
 
@@ -639,6 +637,43 @@ function widgets.create_simple_separator()
 	separator_container.fg = palette.overlay0.hex
 
 	return separator_container
+end
+
+function widgets.create_dashboard_toggle()
+	local dashboard_icon = wibox.widget({
+		widget = wibox.widget.textbox,
+		text = '󰕮',
+		font = 'JetBrainsMono Nerd Font Mono 16',
+		align = 'center',
+		valign = 'center',
+	})
+
+	local dashboard_icon_container = wibox.container.margin(dashboard_icon, 2, 2, 6, 6)
+	dashboard_icon_container = wibox.container.background(dashboard_icon_container)
+	dashboard_icon_container.fg = palette.lavender.hex
+
+	tooltip({
+		objects = { dashboard_icon_container },
+		text = 'Toggle Dashboard',
+		mode = 'outside',
+	})
+
+	dashboard_icon_container:connect_signal('button::press', function(_, _, _, button)
+		if button == 1 then
+			local dashboard = require('config.dashboard')
+			dashboard.toggle()
+		end
+	end)
+
+	dashboard_icon_container:connect_signal('mouse::enter', function()
+		dashboard_icon_container.fg = palette.mauve.hex
+	end)
+
+	dashboard_icon_container:connect_signal('mouse::leave', function()
+		dashboard_icon_container.fg = palette.lavender.hex
+	end)
+
+	return dashboard_icon_container
 end
 
 return widgets

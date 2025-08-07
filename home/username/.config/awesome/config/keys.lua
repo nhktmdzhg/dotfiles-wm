@@ -1,5 +1,6 @@
 local awesome = require('awesome')
 local button = require('awful.button')
+local dashboard = require('config.dashboard')
 local key = require('awful.key')
 local mouse = require('awful.mouse')
 local screen = require('awful.screen')
@@ -88,7 +89,7 @@ function keys.init(vars)
 			switcher.switch(-1, alt, 'Alt_L', shift, 'Tab')
 		end), -- Menu controls --
 		key({ super }, 'Escape', function()
-			spawn('wlogout')
+			dashboard.toggle()
 		end),
 		key({ alt }, 'F2', function()
 			spawn({ 'env', 'XMODIFIERS=@im=none', 'rofi', '-no-lazy-grab', '-show', 'drun' })

@@ -1,5 +1,6 @@
 local awful_screen = require('awful.screen')
 local awful_wibar = require('awful.wibar')
+local dashboard = require('config.dashboard')
 local layout = require('awful.layout')
 local palette = require('mocha')
 local screen = require('screen')
@@ -48,6 +49,8 @@ function wibar.init(vars)
 		local network_icon_container, network_status_container = widgets.create_network()
 		local volume_icon_container, volume_percent_container = widgets.create_volume()
 		local calendar_icon_container, date_widget_container, time_widget_container = widgets.create_calendar()
+		local dashboard_toggle_container = widgets.create_dashboard_toggle()
+		dashboard.create()
 
 		-- Add widgets to the wibar
 		s.mywibar:setup({
@@ -86,6 +89,8 @@ function wibar.init(vars)
 				date_widget_container,
 				simple_separator,
 				time_widget_container,
+				simple_separator,
+				dashboard_toggle_container,
 				simple_separator,
 			},
 		})

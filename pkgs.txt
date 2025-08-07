@@ -31,5 +31,4 @@ ttf-jetbrains-mono-nerd
 upower
 wezterm-nightly-bin
 wireless_tools
-wlogout
 xss-lock

@@ -17,10 +17,13 @@ _A meticulously crafted, production-ready desktop environment featuring modern a
 <details>
 <summary><b>🖼️ Desktop Showcase</b></summary>
 
-![Desktop Preview](meo/desktop.png)
+![Desktop Preview](meo/desktop2.png)
 _Catppuccin Mocha themed desktop with minimal, elegant design_
-![Fastfetch](meo/screenshot2.png)
+![Fastfetch](meo/fastfetch.png)
 _Fastfetch displaying system information with custom theme and anime girl logo_
+![Dashboard](meo/dashboard.png)
+_Custom dashboard with media controls, application launcher, and power menu_
+
 </details>
 
 ---
@@ -61,7 +64,7 @@ _Fastfetch displaying system information with custom theme and anime girl logo_
 
 ### 🔧 **System Integration**
 
-- **Session Management**: Comprehensive logout/shutdown menu with wlogout
+- **Session Management**: Comprehensive logout/shutdown menu with my own dashboard
 - **Screen Locking**: betterlockscreen integration with automatic timeout
 - **Media Controls**: Full playerctl integration for multimedia management
 
@@ -130,7 +133,7 @@ The picom configuration features professional, smooth animations:
 - Light slide-down effect from 20px above
 - Natural cubic-bezier easing curves
 
-# NATURAL CLOSE ANIMATIONS  
+# NATURAL CLOSE ANIMATIONS
 - Graceful fade-out with smooth opacity transition (0.25s)
 - Gentle scale-down to 90% size
 - Subtle upward slide by 15px
@@ -145,7 +148,7 @@ The picom configuration features professional, smooth animations:
 ### ⚡ **Performance Metrics**
 
 - **Open Animation**: 300ms total duration
-- **Close Animation**: 250ms total duration  
+- **Close Animation**: 250ms total duration
 - **Show/Hide**: 150-200ms for instant feedback
 - **Geometry**: 150ms for responsive resizing
 - **Backend**: Hardware-accelerated GLX with damage tracking
@@ -230,11 +233,11 @@ fc-cache -fv
 
 ### 📱 **System Controls**
 
-| Shortcut           | Action       | Description          |
-| ------------------ | ------------ | -------------------- |
-| `Super + L`        | Screen Lock  | betterlockscreen     |
-| `Super + Esc`      | Session Menu | Logout/shutdown menu |
-| `Super + Ctrl + R` | Reload WM    | Restart AwesomeWM    |
+| Shortcut           | Action           | Description         |
+| ------------------ | ---------------- | ------------------- |
+| `Super + L`        | Screen Lock      | betterlockscreen    |
+| `Super + Esc`      | Dashboard Toggle | Open dashboard menu |
+| `Super + Ctrl + R` | Reload WM        | Restart AwesomeWM   |
 
 ### 📸 **Media & Screenshots**
 
