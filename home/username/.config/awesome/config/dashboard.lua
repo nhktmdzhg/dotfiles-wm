@@ -11,7 +11,7 @@ local dashboard_visible = false
 
 local avatar_path = os.getenv('HOME') .. '/.config/awesome/avatar.png'
 local launcher_list = {
-	{ name = 'Wezterm', icon = '', command = 'wezterm' },
+	{ name = 'Kitty', icon = '', command = 'kitty' },
 	{ name = 'Zen browser', icon = '󰺕', command = 'zen-browser' },
 	{ name = 'PCManFM', icon = '', command = 'pcmanfm-qt' },
 	{ name = 'Neovim', icon = '', command = 'goneovim' },
@@ -19,7 +19,7 @@ local launcher_list = {
 	{
 		name = 'HSR',
 		icon = '',
-		command = { 'env', 'MANGOHUD=1', 'bottles-cli', 'run', '-p', 'HSR Start', '-b', 'HoyoPlay' },
+		command = { 'env', 'MANGOHUD=1', 'XMODIFIERS=@im=none', 'bottles-cli', 'run', '-p', 'HSR Start', '-b', 'HoyoPlay' },
 	},
 }
 

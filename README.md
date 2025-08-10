@@ -95,7 +95,7 @@ dotfiles/
     │   │       └── 🔧 vars.lua         # Global variables
     │   ├── 💬 dunst/       # Notification daemon
     │   ├── 🔍 rofi/        # Application launcher
-    │   ├── 💻 wezterm/     # Terminal emulator
+    │   ├── 💻 kitty/       # Terminal emulator
     │   ├── 🌸 picom.conf   # Compositor settings
     │   ├── 🚀 fastfetch/   # System info display
     │   ├── 🔒 betterlockscreen/    # Screen locker
@@ -115,7 +115,7 @@ dotfiles/
 | **Picom**     | Compositor     | `~/.config/picom.conf`             |
 | **Dunst**     | Notifications  | `~/.config/dunst/dunstrc`          |
 | **Rofi**      | App Launcher   | `~/.config/rofi/config.rasi`       |
-| **WezTerm**   | Terminal       | `~/.config/wezterm/wezterm.lua`    |
+| **Kitty**     | Terminal       | `~/.config/kitty/kitty.conf`       |
 | **Fastfetch** | System Info    | `~/.config/fastfetch/config.jsonc` |
 
 ---
@@ -225,7 +225,7 @@ fc-cache -fv
 | Shortcut             | Action         | Default Application   |
 | -------------------- | -------------- | --------------------- |
 | `Super`              | App Launcher   | Rofi application menu |
-| `Ctrl + Alt + T`     | Terminal       | WezTerm               |
+| `Ctrl + Alt + T`     | Terminal       | Kitty                 |
 | `Super + E`          | File Manager   | PCManFM               |
 | `Super + B`          | Web Browser    | Zen Browser           |
 | `Super + N`          | Text Editor    | Goneovim              |

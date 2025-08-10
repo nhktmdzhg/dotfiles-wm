@@ -11,6 +11,7 @@ dunst
 fastfetch
 flameshot
 gsimplecal
+kitty
 ksuperkey
 lxqt-policykit
 maplemono-nf-cn
@@ -27,6 +28,5 @@ qt6ct
 rofi
 ttf-jetbrains-mono-nerd
 upower
-wezterm-nightly-bin
 wireless_tools
 xss-lock

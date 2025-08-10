@@ -392,7 +392,7 @@ function widgets.create_network()
 
 	network_icon_container:connect_signal('button::press', function(_, _, _, button)
 		if button == 1 then
-			spawn({ 'wezterm', '-e', 'nmcurse' })
+			spawn({ 'kitty', '-e', 'nmcurse' })
 		end
 	end)
 

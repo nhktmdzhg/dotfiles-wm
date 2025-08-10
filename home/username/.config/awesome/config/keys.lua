@@ -107,10 +107,10 @@ function keys.init(vars)
 			spawn({ home .. '/.config/awesome/xss-lock-tsl.sh' })
 		end),
 		key({ ctrl, alt }, 't', function()
-			spawn({ 'wezterm' })
+			spawn({ 'kitty' })
 		end),
 		key({ ctrl, shift }, 'Escape', function()
-			spawn({ 'wezterm', '-e', 'btm' })
+			spawn({ 'kitty', '-e', 'btm' })
 		end), -- Awesome --
 		key({ super, ctrl }, 'r', awesome.restart),
 		key({ super }, 'd', toggle_show_desktop),

@@ -87,7 +87,7 @@ create_backup() {
         ".config/picom.conf"
         ".config/dunst"
         ".config/rofi"
-        ".config/wezterm"
+        ".config/kitty"
         ".xinitrc"
         ".Xresources"
         ".gtkrc-2.0"
