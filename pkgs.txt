@@ -9,9 +9,9 @@ darkly-qt6-git
 dash
 dunst
 fastfetch
-flameshot
 gsimplecal
 kitty
+ksnip
 ksuperkey
 lxqt-policykit
 maplemono-nf-cn

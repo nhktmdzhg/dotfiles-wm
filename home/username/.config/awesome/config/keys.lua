@@ -95,10 +95,10 @@ function keys.init(vars)
 			spawn({ 'env', 'XMODIFIERS=@im=none', 'rofi', '-no-lazy-grab', '-show', 'drun' })
 		end), -- Screenshot controls --
 		key({ ctrl }, 'Print', function()
-			spawn({ 'flameshot', 'gui' })
+			spawn({ 'ksnip', '-r' })
 		end),
 		key({}, 'Print', function()
-			spawn({ 'flameshot', 'full' })
+			spawn('ksnip')
 		end), -- Applications --
 		key({ super }, 'e', function()
 			spawn('pcmanfm-qt')

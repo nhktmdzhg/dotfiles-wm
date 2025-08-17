@@ -19,7 +19,7 @@ local launcher_list = {
 	{
 		name = 'HSR',
 		icon = '',
-		command = { 'env', 'MANGOHUD=1', 'XMODIFIERS=@im=none', 'bottles-cli', 'run', '-p', 'HSR Start', '-b', 'HoyoPlay' },
+		command = { 'env', 'MANGOHUD=1', 'XMODIFIERS=@im=none', 'bottles-cli', 'run', '-p', 'HSR', '-b', 'michos' },
 	},
 }
 

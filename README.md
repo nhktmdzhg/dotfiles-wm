@@ -241,15 +241,15 @@ fc-cache -fv
 
 ### 📸 **Media & Screenshots**
 
-| Shortcut               | Action           | Description              |
-| ---------------------- | ---------------- | ------------------------ |
-| `Print`                | Full Screenshot  | Capture entire screen    |
-| `Ctrl + Print`         | Area Screenshot  | Select region to capture |
-| `XF86AudioPlay`        | Play/Pause       | Media playback control   |
-| `XF86AudioNext/Prev`   | Track Navigation | Skip tracks              |
-| `XF86AudioRaiseVolume` | Volume Up        | Increase system volume   |
-| `XF86AudioLowerVolume` | Volume Down      | Decrease system volume   |
-| `XF86AudioMute`        | Mute Toggle      | Toggle audio mute        |
+| Shortcut               | Action             | Description              |
+| ---------------------- | ------------------ | ------------------------ |
+| `Print`                | Screenshot toolbar | Open ksnip               |
+| `Ctrl + Print`         | Area Screenshot    | Select region to capture |
+| `XF86AudioPlay`        | Play/Pause         | Media playback control   |
+| `XF86AudioNext/Prev`   | Track Navigation   | Skip tracks              |
+| `XF86AudioRaiseVolume` | Volume Up          | Increase system volume   |
+| `XF86AudioLowerVolume` | Volume Down        | Decrease system volume   |
+| `XF86AudioMute`        | Mute Toggle        | Toggle audio mute        |
 
 ### 💡 **Display Controls**
 
