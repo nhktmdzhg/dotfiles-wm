@@ -10,17 +10,17 @@
 }
 
 .text-button:checked {
-  background: #373E4D;
+  background: #1e1e2e;
   border-radius: 6px;
 }
 
 .text-button:hover {
-  color: #CF8EF4;
+  color: #cba6f7;
   transition: 0.3s;
 }
 
 .image-button {
-  color: #63C5EA;
+  color: #89b4fa;
   margin-left: 4px;
   margin-right: 4px;
   padding-left: 1px;
@@ -30,17 +30,17 @@
 }
 
 .image-button:hover {
-  background: #56687E;
+  background: #45475a;
   transition: 0.3s;
 }
 
 .image-button:checked {
-  color: #F9F9F9;
-  background: #373E4D;
+  color: #cdd6f4;
+  background: #1e1e2e;
 }
 
 .image-button:disabled {
-  color: #56687E;
+  color: #45475a;
 }
 
 .titlebar {
@@ -53,7 +53,7 @@
 }
 
 .thunar #location-toolbar {
-  border-bottom: 1px solid rgba(0,0,0,0);
+  border-bottom: 1px solid rgba(17, 17, 27, 0);
 }
 
 .thunar .standard-view.frame {
@@ -61,11 +61,11 @@
 }
 
 .thunar .sidebar {
-  background-image:url("../gtk-assets/thunar-sidebar.png");
+  background-image: url('../gtk-assets/thunar-sidebar.png');
 }
 
 .thunar .sidebar .view {
-  color: #F9F9F9;
+  color: #cdd6f4;
   background: transparent;
 }
 
@@ -76,5 +76,5 @@
 .thunar statusbar {
   margin: 0 -10px;
   padding: 0 4px;
-  border-top: 1px solid rgba(0,0,0,0);
+  border-top: 1px solid rgba(17, 17, 27, 0);
 }
