@@ -19,7 +19,7 @@ _A meticulously crafted, production-ready AwesomeWM desktop environment featurin
 
 |        Desktop Overview        |        System Information        |             Dashboard             |
 | :----------------------------: | :------------------------------: | :-------------------------------: |
-|  ![Desktop](meo/desktop2.png)  | ![Fastfetch](meo/fastfetch.png)  |  ![Dashboard](meo/dashboard.png)  |
+|  ![Desktop](meo/desktop2.png)  | ![Fastfetch](meo/fastfetch2.png) |  ![Dashboard](meo/dashboard.png)  |
 | _Clean Catppuccin Mocha theme_ | _Custom fastfetch configuration_ | _Integrated dashboard & controls_ |
 
 </div>
