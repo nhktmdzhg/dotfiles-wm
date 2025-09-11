@@ -9,6 +9,7 @@ darkly-qt6-git
 dash
 dunst
 fastfetch
+gd
 gsimplecal
 harfbuzz
 imlib2
