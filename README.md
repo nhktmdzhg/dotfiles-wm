@@ -65,7 +65,6 @@ _A meticulously crafted, production-ready AwesomeWM desktop environment featurin
 | -------------------- | -------------- | ----------------------------- | ----------------------------------------------- |
 | **AwesomeWM**        | Window Manager | `~/.config/awesome/`          | Lua-based tiling WM with custom widgets         |
 | **Picom**            | Compositor     | `~/.config/picom.conf`        | Hardware-accelerated compositor with animations |
-| **Kitty**            | Terminal       | `~/.config/kitty/`            | GPU-accelerated terminal with Catppuccin theme  |
 | **Rofi**             | Launcher       | `~/.config/rofi/`             | Application launcher with custom styling        |
 | **Dunst**            | Notifications  | `~/.config/dunst/`            | Lightweight notification daemon                 |
 | **Fastfetch**        | System Info    | `~/.config/fastfetch/`        | Modern system information display               |
@@ -81,7 +80,7 @@ The configuration includes **32 carefully selected packages** optimized for perf
 
 - `awesome-luajit` - High-performance AwesomeWM with LuaJIT
 - `picom` - Lightweight compositor with animation support
-- `kitty` - GPU-accelerated terminal emulator
+- `st` - Simple lightweight and customizable terminal emulator
 
 ### 🎨 **Theming & Appearance**
 
@@ -192,7 +191,7 @@ After installation, complete the setup:
 | Shortcut         | Action               | Application      |
 | ---------------- | -------------------- | ---------------- |
 | `Super`          | Application Launcher | Rofi             |
-| `Ctrl + Alt + T` | Terminal             | Kitty            |
+| `Ctrl + Alt + T` | Terminal             | St               |
 | `Super + E`      | File Manager         | PCManFM-Qt       |
 | `Super + B`      | Web Browser          | Default Browser  |
 | `Super + N`      | Text Editor          | Goneovim         |

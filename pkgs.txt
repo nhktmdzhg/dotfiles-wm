@@ -10,9 +10,11 @@ dash
 dunst
 fastfetch
 gsimplecal
-kitty
+harfbuzz
+imlib2
 ksnip
 ksuperkey
+libxft
 lxqt-policykit
 maplemono-nf-cn
 nmcurse-rs-git

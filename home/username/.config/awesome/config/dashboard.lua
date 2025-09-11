@@ -11,7 +11,7 @@ local dashboard_visible = false
 
 local avatar_path = os.getenv('HOME') .. '/.config/awesome/avatar.png'
 local launcher_list = {
-	{ name = 'Kitty', icon = '', command = 'kitty' },
+	{ name = 'St', icon = '', command = 'st' },
 	{ name = 'Zen browser', icon = '󰺕', command = 'zen-browser' },
 	{ name = 'PCManFM', icon = '', command = 'pcmanfm-qt' },
 	{ name = 'Neovim', icon = '', command = 'goneovim' },

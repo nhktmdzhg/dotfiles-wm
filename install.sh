@@ -87,7 +87,6 @@ create_backup() {
         ".config/picom.conf"
         ".config/dunst"
         ".config/rofi"
-        ".config/kitty"
         ".xinitrc"
         ".Xresources"
         ".gtkrc-2.0"
@@ -197,6 +196,16 @@ install_packages() {
     fi
 }
 
+install_st() {
+    echo "Installing st..."
+    git clone https://github.com/nhktmdzhg/st-config.git
+    cd st-config
+    make clean && make
+    sudo make install
+    cd ..
+    rm -rf st-config
+}
+
 # Copy configuration files
 install_configs() {
     print_step "Installing configuration files..."
@@ -294,6 +303,7 @@ main() {
     local aur_helper
     aur_helper=$(install_aur_helper)
     install_packages "$aur_helper"
+    install_st
     install_configs
     post_install
     show_final_message
