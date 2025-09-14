@@ -33,7 +33,6 @@ _A meticulously crafted, production-ready AwesomeWM desktop environment featurin
 - **🌙 Catppuccin Mocha Theme** - Carefully balanced dark color palette
 - **🎭 BeautyLine Icons** - Consistent, modern icon theme throughout the system
 - **🔤 JetBrains Mono Nerd Font** - Programming-focused typography with icon support
-- **💫 Smooth Animations** - Professional window transitions with Picom compositor
 - **🔔 Elegant Notifications** - Custom Dunst configuration with themed styling
 
 ### ⚡ **Performance & Efficiency**
@@ -61,14 +60,13 @@ _A meticulously crafted, production-ready AwesomeWM desktop environment featurin
 
 ## 🧩 Core Components
 
-| Component            | Purpose        | Configuration Path            | Description                                     |
-| -------------------- | -------------- | ----------------------------- | ----------------------------------------------- |
-| **AwesomeWM**        | Window Manager | `~/.config/awesome/`          | Lua-based tiling WM with custom widgets         |
-| **Picom**            | Compositor     | `~/.config/picom.conf`        | Hardware-accelerated compositor with animations |
-| **Rofi**             | Launcher       | `~/.config/rofi/`             | Application launcher with custom styling        |
-| **Dunst**            | Notifications  | `~/.config/dunst/`            | Lightweight notification daemon                 |
-| **Fastfetch**        | System Info    | `~/.config/fastfetch/`        | Modern system information display               |
-| **betterlockscreen** | Screen Lock    | `~/.config/betterlockscreen/` | Customizable screen locker with blur effects    |
+| Component            | Purpose        | Configuration Path            | Description                                  |
+| -------------------- | -------------- | ----------------------------- | -------------------------------------------- |
+| **AwesomeWM**        | Window Manager | `~/.config/awesome/`          | Lua-based tiling WM with custom widgets      |
+| **Rofi**             | Launcher       | `~/.config/rofi/`             | Application launcher with custom styling     |
+| **Dunst**            | Notifications  | `~/.config/dunst/`            | Lightweight notification daemon              |
+| **Fastfetch**        | System Info    | `~/.config/fastfetch/`        | Modern system information display            |
+| **betterlockscreen** | Screen Lock    | `~/.config/betterlockscreen/` | Customizable screen locker with blur effects |
 
 ---
 
@@ -79,7 +77,7 @@ The configuration includes **32 carefully selected packages** optimized for perf
 ### 🏗️ **Core System**
 
 - `awesome-luajit` - High-performance AwesomeWM with LuaJIT
-- `picom` - Lightweight compositor with animation support
+- `fastcompr` - Lightweight compositor for X11
 - `st` - Simple lightweight and customizable terminal emulator
 
 ### 🎨 **Theming & Appearance**

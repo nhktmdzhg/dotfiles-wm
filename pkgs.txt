@@ -8,6 +8,7 @@ darkly-qt5-git
 darkly-qt6-git
 dash
 dunst
+fastcompmgr-git
 fastfetch
 gd
 gsimplecal
@@ -24,7 +25,6 @@ nvim
 goneovim-bin
 pavucontrol
 pcmanfm-qt
-picom
 playerctl
 qt5ct
 qt6ct

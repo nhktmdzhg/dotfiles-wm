@@ -1,4 +1,5 @@
 local client = require('client')
+local gears = require('gears')
 local spawn = require('awful.spawn')
 
 local signals = {}
@@ -48,6 +49,9 @@ function signals.init(vars)
 			end
 		else
 			spawn({ 'dunstctl', 'set-paused', 'true' })
+		end
+		c.shape = function(cr, w, h)
+			gears.shape.rounded_rect(cr, w, h, 11)
 		end
 	end)
 
