@@ -1,5 +1,4 @@
 awesome-luajit
-betterlockscreen
 bluez
 bluez-utils
 brightnessctl
@@ -17,6 +16,7 @@ imlib2
 ksnip
 ksuperkey
 libxft
+lua-pam-git
 lxqt-policykit
 maplemono-nf-cn
 nmcurse-rs-git

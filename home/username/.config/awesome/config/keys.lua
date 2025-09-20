@@ -11,6 +11,8 @@ local table = require('gears.table')
 
 local keys = {}
 
+local lockscreen = require('modules.lockscreen')
+
 local function toggle_show_desktop()
 	local current_tag = screen.focused().selected_tag
 	local client_on_tag = current_tag:clients()
@@ -104,7 +106,7 @@ function keys.init(vars)
 			spawn('pcmanfm-qt')
 		end),
 		key({ super }, 'l', function()
-			spawn({ home .. '/.config/awesome/xss-lock-tsl.sh' })
+			lockscreen.show()
 		end),
 		key({ ctrl, alt }, 't', function()
 			spawn({ 'st' })

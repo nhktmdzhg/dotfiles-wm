@@ -2,8 +2,16 @@ local spawn = require('awful.spawn')
 
 local autostart = {}
 
-local function spawn_once(cmd_name, cmd_full)
-	spawn.easy_async({ 'pgrep', '-u', os.getenv('USER'), '-x', cmd_name }, function(_, _, _, exitcode)
+local function spawn_once(cmd_name, cmd_full, use_full_cmd)
+	local pgrep_args = { 'pgrep', '-u', os.getenv('USER') }
+	if use_full_cmd then
+		table.insert(pgrep_args, '-f')
+	else
+		table.insert(pgrep_args, '-x')
+	end
+	table.insert(pgrep_args, cmd_name)
+
+	spawn.easy_async(pgrep_args, function(_, _, _, exitcode)
 		if exitcode ~= 0 then
 			spawn(cmd_full)
 		end
@@ -11,8 +19,6 @@ local function spawn_once(cmd_name, cmd_full)
 end
 
 function autostart.init()
-	local home = os.getenv('HOME')
-
 	package.loaded['naughty.dbus'] = {}
 	spawn_once('xsettingsd', 'xsettingsd')
 	spawn_once('dunst', 'dunst')
@@ -21,12 +27,12 @@ function autostart.init()
 	spawn({ 'ksuperkey', '-e', 'Super_R=Alt_L|F2' })
 	spawn_once('fastcompmgr', { 'fastcompmgr', '-r', '0', '-o', '0', '-l', '0', '-t', '0', '-C' })
 	spawn_once('lxqt-policykit-', 'lxqt-policykit-agent')
-	spawn_once('xss-lock', { 'xss-lock', '-q', '-l', home .. '/.config/awesome/xss-lock-tsl.sh' })
+	spawn_once('xss-lock', { 'xss-lock', '-q', '-l', os.getenv('HOME') .. '/.config/awesome/lock.sh' })
 	spawn({ 'xset', 's', 'off' })
 	spawn({ 'xset', '-dpms' })
 	spawn_once('thunderbird', 'thunderbird')
 	spawn_once('mcontrolcenter', 'mcontrolcenter')
-	spawn_once('legcord', 'legcord')
+	spawn_once('legcord/app.asar', 'legcord', true)
 	-- Wayland version
 	-- spawn_once("legcord", {"env", "OZONE_PLATFORM=wayland", "XDG_SESSION_TYPE=wayland", "DISCORD_DISABLE_GPU_SANDBOX=1", "DISCORD_ENABLE_WAYLAND_PIPEWIRE=1", "ELECTRON_OZONE_PLATFORM_HINT=auto", "legcord", "--no-sandbox", "--enable-zero-copy", "--ignore-gpu-blocklist", "--enable-gpu-rasterization", "--enable-native-gpu-memory-buffers", "--enable-features=WebRTCPipeWireCapturer,UseOzonePlatform,VaapiVideoDecoder", "--disable-features=UseChromeOSDirectVideoDecoder", "--ozone-platform=wayland", "--use-gl=desktop"})
 	spawn_once('zalo', 'zalo')

@@ -477,7 +477,7 @@ local function create_power_grid()
 	})
 
 	local btn_lists = {
-		create_round_button('', os.getenv('HOME') .. '/.config/awesome/xss-lock-tsl.sh'),
+		create_round_button('', os.getenv('HOME') .. '/.config/awesome/lock.sh'),
 		create_round_button(''),
 		create_round_button('󰒲', { 'systemctl', '--no-ask-password', 'suspend' }),
 		create_round_button(

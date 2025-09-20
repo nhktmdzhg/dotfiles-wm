@@ -45,7 +45,7 @@ _A meticulously crafted, production-ready AwesomeWM desktop environment featurin
 ### 🛠️ **Functionality**
 
 - **📱 Custom Dashboard** - Integrated system controls and application launcher
-- **🔒 Screen Locking** - betterlockscreen with automatic timeout and blur effects
+- **🔒 Screen Locking** - custom lockscreen using awesome UI component and lua-pam
 - **🎵 Media Integration** - Full playerctl support for multimedia control
 - **🖥️ Multi-monitor Ready** - Adaptive configuration for various display setups
 - **⌨️ Intuitive Keybindings** - Logical shortcuts for efficient workflow
@@ -60,13 +60,12 @@ _A meticulously crafted, production-ready AwesomeWM desktop environment featurin
 
 ## 🧩 Core Components
 
-| Component            | Purpose        | Configuration Path            | Description                                  |
-| -------------------- | -------------- | ----------------------------- | -------------------------------------------- |
-| **AwesomeWM**        | Window Manager | `~/.config/awesome/`          | Lua-based tiling WM with custom widgets      |
-| **Rofi**             | Launcher       | `~/.config/rofi/`             | Application launcher with custom styling     |
-| **Dunst**            | Notifications  | `~/.config/dunst/`            | Lightweight notification daemon              |
-| **Fastfetch**        | System Info    | `~/.config/fastfetch/`        | Modern system information display            |
-| **betterlockscreen** | Screen Lock    | `~/.config/betterlockscreen/` | Customizable screen locker with blur effects |
+| Component     | Purpose        | Configuration Path     | Description                              |
+| ------------- | -------------- | ---------------------- | ---------------------------------------- |
+| **AwesomeWM** | Window Manager | `~/.config/awesome/`   | Lua-based tiling WM with custom widgets  |
+| **Rofi**      | Launcher       | `~/.config/rofi/`      | Application launcher with custom styling |
+| **Dunst**     | Notifications  | `~/.config/dunst/`     | Lightweight notification daemon          |
+| **Fastfetch** | System Info    | `~/.config/fastfetch/` | Modern system information display        |
 
 ---
 
@@ -92,7 +91,6 @@ The configuration includes **32 carefully selected packages** optimized for perf
 - `rofi` - Application launcher and window switcher
 - `dunst` - Notification daemon
 - `fastfetch` - Modern system information display
-- `betterlockscreen` - Customizable screen locker
 - `playerctl` - Media player control
 - `brightnessctl` - Backlight control
 - `ksnip` - Screenshot tool
@@ -159,7 +157,7 @@ paru -S --needed $(cat ~/dotfiles/pkgs.txt | tr '\n' ' ')
 cp -rf ~/dotfiles/home/username/. ~/
 
 # 4. Set permissions
-chmod +x ~/.config/awesome/xss-lock-tsl.sh
+chmod +x ~/.config/awesome/lock.sh
 chmod +x ~/.xinitrc
 
 # 5. Update font cache
@@ -186,15 +184,15 @@ After installation, complete the setup:
 
 ### 🚀 **Essential Shortcuts**
 
-| Shortcut         | Action               | Application      |
-| ---------------- | -------------------- | ---------------- |
-| `Super`          | Application Launcher | Rofi             |
-| `Ctrl + Alt + T` | Terminal             | St               |
-| `Super + E`      | File Manager         | PCManFM-Qt       |
-| `Super + B`      | Web Browser          | Default Browser  |
-| `Super + N`      | Text Editor          | Goneovim         |
-| `Super + Esc`    | Dashboard            | Custom Dashboard |
-| `Super + L`      | Lock Screen          | betterlockscreen |
+| Shortcut         | Action               | Application       |
+| ---------------- | -------------------- | ----------------- |
+| `Super`          | Application Launcher | Rofi              |
+| `Ctrl + Alt + T` | Terminal             | St                |
+| `Super + E`      | File Manager         | PCManFM-Qt        |
+| `Super + B`      | Web Browser          | Default Browser   |
+| `Super + N`      | Text Editor          | Goneovim          |
+| `Super + Esc`    | Dashboard            | Custom Dashboard  |
+| `Super + L`      | Lock Screen          | Custom Lockscreen |
 
 ### 🪟 **Window Management**
 
@@ -367,15 +365,6 @@ awesome -k ~/.config/awesome/rc.lua
 journalctl -u display-manager -f
 ```
 
-**Screen Lock Issues**
-
-```bash
-# Reconfigure betterlockscreen
-betterlockscreen -u ~/wallpaper/
-# Test lock functionality
-betterlockscreen -l
-```
-
 </details>
 
 <details>
@@ -383,7 +372,7 @@ betterlockscreen -l
 
 ```bash
 # Fix script permissions
-chmod +x ~/.config/awesome/xss-lock-tsl.sh
+chmod +x ~/.config/awesome/lock.sh
 chmod +x ~/.xinitrc
 
 # Fix ownership issues

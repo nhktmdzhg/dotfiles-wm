@@ -225,10 +225,18 @@ install_configs() {
         print_error "Failed to copy configuration files"
         return 1
     fi
+
+    print_info "Copying PAM configuration file..."
+    if sudo cp "$SCRIPT_DIR/etc/pam.d/awesome" "/etc/pam.d"
+        print_success "PAM Configuration file copied successfully"
+    else
+        print_error "Failed to copy PAM configuration file"
+        return 1
+    fi
     
     # Set proper permissions
     print_info "Setting proper permissions..."
-    chmod +x "$HOME/.config/awesome/xss-lock-tsl.sh" 2>/dev/null || true
+    chmod +x "$HOME/.config/awesome/lock.sh" 2>/dev/null || true
     chmod +x "$HOME/.xinitrc" 2>/dev/null || true
     
     print_success "Permissions set successfully"

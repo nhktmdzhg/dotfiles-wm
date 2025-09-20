@@ -1,0 +1,2 @@
+# # PAM configuration for AwesomeWM lockscreen
+auth include system-local-login
