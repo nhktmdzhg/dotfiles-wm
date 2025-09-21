@@ -46,6 +46,7 @@ _A meticulously crafted, production-ready AwesomeWM desktop environment featurin
 
 - **📱 Custom Dashboard** - Integrated system controls and application launcher
 - **🔒 Screen Locking** - custom lockscreen using awesome UI component and lua-pam
+- **🛡️ Security Features** - physlock integration for absolute TTY protection during lock
 - **🎵 Media Integration** - Full playerctl support for multimedia control
 - **🖥️ Multi-monitor Ready** - Adaptive configuration for various display setups
 - **⌨️ Intuitive Keybindings** - Logical shortcuts for efficient workflow
@@ -180,7 +181,54 @@ After installation, complete the setup:
 
 ---
 
-## ⌨️ Keybindings Reference
+## 🔐 Security Features
+
+### 🛡️ **Advanced Screen Locking**
+
+This configuration implements multiple layers of security for screen locking:
+
+#### **Primary Layer: Custom AwesomeWM Lockscreen**
+
+- **PAM Authentication** - Uses `lua-pam` for secure password verification
+- **Beautiful UI** - Catppuccin Mocha themed lockscreen with wallpaper background
+- **Hidden Password Input** - No password length indicators for security
+- **Interactive Indicator** - Color-changing lock icon during typing
+
+#### **Secondary Layer: Physlock TTY Protection**
+
+- **Absolute TTY Blocking** - Prevents all TTY access when screen is locked
+- **Kernel-level Security** - Bypasses user session entirely during lock
+- **No Bypass Methods** - Completely blocks Ctrl+Alt+F1-F12 and other TTY switching
+- **System-wide Protection** - Protects against physical access to terminals
+
+#### **Integration Architecture**
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   AwesomeWM     │    │     physlock     │    │      PAM        │
+│   Lockscreen    │───▶│  TTY Protection  │───▶│ Authentication  │
+│ (lua-pam)       │    │  (kernel level)  │    │ (system auth)   │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+```
+
+**Usage:**
+
+```bash
+# Lock screen with both UI and TTY protection
+~/.config/awesome/lock.sh
+
+# Or use the keybinding: Super + L
+```
+
+**Security Benefits:**
+
+- ✅ **No TTY Access** - Physical console access completely blocked
+- ✅ **PAM Integration** - Uses system authentication framework
+- ✅ **Visual Feedback** - Beautiful lockscreen with security indicators
+- ✅ **Session Protection** - Prevents unauthorized session access
+- ✅ **Multi-layer Defense** - UI lock + TTY lock + PAM auth
+
+## 🔐 Security Features
 
 ### 🚀 **Essential Shortcuts**
 

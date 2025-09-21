@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-field
 local awful = require('awful')
 local gears = require('gears')
 local mocha = require('mocha')
@@ -20,8 +21,7 @@ local lockscreen = {
 	visible = false,
 	screen_lock = nil,
 	password_widget = nil,
-	attempts = 0,
-	max_attempts = 3,
+	keygrabber = nil,
 }
 
 local mocha_colors = {
@@ -218,7 +218,6 @@ function lockscreen.show()
 	end
 
 	lockscreen.visible = true
-	lockscreen.attempts = 0
 
 	-- Store current screen
 	local current_screen = awful.screen.focused()
@@ -227,6 +226,7 @@ function lockscreen.show()
 	lockscreen.screens = {}
 	lockscreen.password = ''
 
+	---@diagnostic disable-next-line: undefined-global
 	for s in screen do
 		local lock_ui, indicator_widget, status_widget = create_lockscreen_ui(s)
 		lock_ui.visible = true
@@ -257,60 +257,65 @@ function lockscreen.show()
 	end
 
 	local function update_indicator()
-		local random_color = mocha_colors[math.random(#mocha_colors)]
-
 		for _, screen_lock in ipairs(lockscreen.screens) do
 			if screen_lock.indicator_widget then
+				local random_color = mocha_colors[math.random(#mocha_colors)]
+				while random_color == screen_lock.indicator_widget.fg do
+					random_color = mocha_colors[math.random(#mocha_colors)]
+				end
 				screen_lock.indicator_widget.fg = random_color
 			end
 		end
 	end
 
 	local function try_unlock()
+		update_status('Unlocking btw...', false)
 		if authenticate(lockscreen.password) then
 			lockscreen.hide()
 		else
-			lockscreen.attempts = lockscreen.attempts + 1
 			lockscreen.password = ''
 			update_indicator()
-
-			if lockscreen.attempts >= lockscreen.max_attempts then
-				update_status('Waiting 5s for btw again', true)
-				awful.spawn('sleep 5')
-				lockscreen.attempts = 0
-			else
-				update_status('Failure! You are not btw', true)
-			end
+			update_status('Failure! You are not btw.', true)
 		end
 	end
 
 	update_indicator()
 
-	lockscreen.keygrabber = awful.keygrabber({
-		autostart = true,
-		keypressed_callback = function(self, _, key, _)
-			if key == 'Return' or key == 'KP_Enter' then
-				try_unlock()
-			elseif key == 'BackSpace' then
-				if #lockscreen.password > 0 then
-					lockscreen.password = lockscreen.password:sub(1, -2)
+	if not lockscreen.keygrabber then
+		lockscreen.keygrabber = awful.keygrabber({
+			autostart = false,
+			keypressed_callback = function(_, _, key, _)
+				if key == 'BackSpace' then
+					if #lockscreen.password > 0 then
+						lockscreen.password = lockscreen.password:sub(1, -2)
+						update_indicator()
+					end
+				elseif #key == 1 then
+					lockscreen.password = lockscreen.password .. key
 					update_indicator()
 				end
-			elseif #key == 1 then
-				lockscreen.password = lockscreen.password .. key
-				update_indicator()
-			end
-		end,
-		stop_callback = function()
-			awful.spawn({
-				'dunstify',
-				'Session Manager',
-				'Welcome back ' .. os.getenv('USER'),
-				'-i',
-				os.getenv('HOME') .. '/.local/share/icons/BeautyLine/actions/scalable/im-user-online.svg',
-			})
-		end,
-	})
+			end,
+			keyreleased_callback = function(_, _, key, _)
+				if key == 'Return' or key == 'KP_Enter' then
+					try_unlock()
+				end
+			end,
+			stop_callback = function()
+				awful.spawn({
+					'dunstify',
+					'Session Manager',
+					'Welcome back ' .. os.getenv('USER'),
+					'-i',
+					os.getenv('HOME') .. '/.local/share/icons/BeautyLine/actions/scalable/im-user-online.svg',
+				})
+				awful.spawn({ 'physlock', '-L' })
+			end,
+			start_callback = function()
+				awful.spawn({ 'physlock', '-l' })
+			end,
+		})
+	end
+	lockscreen.keygrabber:start()
 end
 
 function lockscreen.hide()
@@ -332,14 +337,6 @@ function lockscreen.hide()
 
 	lockscreen.screens = nil
 	lockscreen.password = ''
-end
-
-function lockscreen.toggle()
-	if lockscreen.visible then
-		lockscreen.hide()
-	else
-		lockscreen.show()
-	end
 end
 
 return lockscreen

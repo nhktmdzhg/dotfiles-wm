@@ -25,6 +25,7 @@ nvim
 goneovim-bin
 pavucontrol
 pcmanfm-qt
+physlock
 playerctl
 qt5ct
 qt6ct
