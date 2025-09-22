@@ -19,7 +19,7 @@ _A meticulously crafted, production-ready AwesomeWM desktop environment featurin
 
 |        Desktop Overview        |        System Information        |             Dashboard             |            Lock screen            |
 | :----------------------------: | :------------------------------: | :-------------------------------: | :-------------------------------: |
-|  ![Desktop](meo/desktop2.png)  | ![Fastfetch](meo/fastfetch2.png) |  ![Dashboard](meo/dashboard.png)  | ![Lockscreen](meo/lockscreen.png) |
+|  ![Desktop](meo/desktop2.png)  | ![Fastfetch](meo/fastfetch2.png) | ![Dashboard](meo/dashboard2.png)  | ![Lockscreen](meo/lockscreen.png) |
 | _Clean Catppuccin Mocha theme_ | _Custom fastfetch configuration_ | _Integrated dashboard & controls_ |     _Integrated lock screen_      |
 
 </div>
