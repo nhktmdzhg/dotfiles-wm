@@ -10,12 +10,12 @@ local function clamp(x, min, max)
 	return math.max(min, math.min(max, x))
 end
 
-local function pause_popups()
-	spawn({ 'notify-send.py', 'a', '--hint', 'boolean:deadd-notification-center:true', 'string:type:pausePopups' })
+function signals.pause_popups()
+	spawn({ 'notify-send', 'a', '-h', 'boolean:deadd-notification-center:true', '-h', 'string:type:pausePopups' })
 end
 
-local function unpause_popups()
-	spawn({ 'notify-send.py', 'a', '--hint', 'boolean:deadd-notification-center:true', 'string:type:unpausePopups' })
+function signals.unpause_popups()
+	spawn({ 'notify-send', 'a', '-h', 'boolean:deadd-notification-center:true', '-h', 'string:type:unpausePopups' })
 end
 
 function signals.toggle_deadd()
@@ -24,9 +24,9 @@ function signals.toggle_deadd()
 		return
 	end
 	if deadd_paused then
-		pause_popups()
+		signals.pause_popups()
 	else
-		unpause_popups()
+		signals.unpause_popups()
 	end
 end
 
@@ -51,12 +51,12 @@ function signals.init(vars)
 				height = math.min(wa.height - margin_top - margin_bottom, c.height),
 			})
 			if deadd_paused then
-				pause_popups()
+				signals.pause_popups()
 			else
-				unpause_popups()
+				signals.unpause_popups()
 			end
 		else
-			pause_popups()
+			signals.pause_popups()
 		end
 		c.shape = function(cr, w, h)
 			gears.shape.rounded_rect(cr, w, h, 11)
@@ -67,13 +67,13 @@ function signals.init(vars)
 		local screen = c.screen
 		if c.fullscreen then
 			screen.mywibar.visible = false
-			pause_popups()
+			signals.pause_popups()
 		else
 			screen.mywibar.visible = true
 			if deadd_paused then
-				pause_popups()
+				signals.pause_popups()
 			else
-				unpause_popups()
+				signals.unpause_popups()
 			end
 		end
 	end)
@@ -108,13 +108,13 @@ function signals.init(vars)
 
 		if c.fullscreen then
 			screen.mywibar.visible = false
-			pause_popups()
+			signals.pause_popups()
 		else
 			screen.mywibar.visible = true
 			if deadd_paused then
-				pause_popups()
+				signals.pause_popups()
 			else
-				unpause_popups()
+				signals.unpause_popups()
 			end
 		end
 	end)

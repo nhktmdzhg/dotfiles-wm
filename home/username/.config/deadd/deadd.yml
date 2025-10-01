@@ -204,7 +204,7 @@ notification:
 
     ### Margin above/right/between notifications
     margin-top: 60
-    margin-right: 60
+    margin-right: 10
     margin-between: 20
 
     ### Defines after how many lines of text the body will be truncated. 

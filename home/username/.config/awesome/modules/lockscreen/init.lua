@@ -194,7 +194,7 @@ end
 
 local function authenticate(password)
 	if not pam then
-		awful.spawn({ 'notify-send.py', 'Cannot load PAM module', '-u', 'critical' })
+		awful.spawn({ 'notify-send', 'Cannot load PAM module', '-u', 'critical' })
 		return true
 	end
 
@@ -204,7 +204,7 @@ local function authenticate(password)
 		end)
 
 		if not ok then
-			awful.spawn({ 'notify-send.py', 'PAM Error', '-u', 'critical' })
+			awful.spawn({ 'notify-send', 'PAM Error', '-u', 'critical' })
 			return false
 		end
 
@@ -302,11 +302,11 @@ function lockscreen.show()
 			end,
 			stop_callback = function()
 				awful.spawn({
-					'notify-send.py',
+					'notify-send',
+					'-i',
+					'im-user-online',
 					'Session Manager',
 					'Welcome back ' .. os.getenv('USER'),
-					'-i',
-					os.getenv('HOME') .. '/.local/share/icons/BeautyLine/actions/scalable/im-user-online.svg',
 				})
 				awful.spawn({ 'physlock', '-L' })
 			end,

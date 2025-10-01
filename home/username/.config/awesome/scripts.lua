@@ -231,7 +231,7 @@ function scripts.change_brightness(arg)
 			end
 
 			spawn({
-				'notify-send.py',
+				'notify-send',
 				tostring(brightness),
 				'--hint',
 				'int:value:' .. brightness,

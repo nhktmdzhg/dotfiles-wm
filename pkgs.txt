@@ -20,7 +20,6 @@ lua-pam-git
 lxqt-policykit
 maplemono-nf-cn
 nmcurse-rs-git
-notify-send-py
 noto-fonts
 nvim
 goneovim-bin

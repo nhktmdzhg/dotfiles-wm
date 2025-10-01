@@ -285,21 +285,9 @@ function widgets.create_window_name(s)
 				name = 'No focused window'
 				s.mywibar.visible = true
 				if signals.is_deadd_paused() then
-					spawn({
-						'notify-send.py',
-						'a',
-						'--hint',
-						'boolean:deadd-notification-center:true',
-						'string:type:pausePopups',
-					})
+					signals.pause_popups()
 				else
-					spawn({
-						'notify-send.py',
-						'a',
-						'--hint',
-						'boolean:deadd-notification-center:true',
-						'string:type:unpausePopups',
-					})
+					signals.unpause_popups()
 				end
 			end
 			local length = string.len(name)
