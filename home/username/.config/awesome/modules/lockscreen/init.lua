@@ -194,7 +194,7 @@ end
 
 local function authenticate(password)
 	if not pam then
-		awful.spawn({ 'dunstify', '-u', 'critical', 'Cannot load PAM module' })
+		awful.spawn({ 'notify-send.py', 'Cannot load PAM module', '-u', 'critical' })
 		return true
 	end
 
@@ -204,7 +204,7 @@ local function authenticate(password)
 		end)
 
 		if not ok then
-			awful.spawn({ 'dunstify', '-u', 'critical', 'PAM Error' })
+			awful.spawn({ 'notify-send.py', 'PAM Error', '-u', 'critical' })
 			return false
 		end
 
@@ -302,7 +302,7 @@ function lockscreen.show()
 			end,
 			stop_callback = function()
 				awful.spawn({
-					'dunstify',
+					'notify-send.py',
 					'Session Manager',
 					'Welcome back ' .. os.getenv('USER'),
 					'-i',

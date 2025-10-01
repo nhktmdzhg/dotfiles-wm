@@ -6,7 +6,7 @@ bottom-nightly-autocomplete
 darkly-qt5-git
 darkly-qt6-git
 dash
-dunst
+deadd-notification-center
 fastcompmgr-git
 fastfetch
 gd
@@ -20,6 +20,7 @@ lua-pam-git
 lxqt-policykit
 maplemono-nf-cn
 nmcurse-rs-git
+notify-send-py
 noto-fonts
 nvim
 goneovim-bin

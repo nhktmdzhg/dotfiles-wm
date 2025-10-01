@@ -4,26 +4,34 @@ local spawn = require('awful.spawn')
 
 local signals = {}
 
-local dunst_paused = false
+local deadd_paused = false
 
 local function clamp(x, min, max)
 	return math.max(min, math.min(max, x))
 end
 
-function signals.toggle_dunst()
-	dunst_paused = not dunst_paused
+local function pause_popups()
+	spawn({ 'notify-send.py', 'a', '--hint', 'boolean:deadd-notification-center:true', 'string:type:pausePopups' })
+end
+
+local function unpause_popups()
+	spawn({ 'notify-send.py', 'a', '--hint', 'boolean:deadd-notification-center:true', 'string:type:unpausePopups' })
+end
+
+function signals.toggle_deadd()
+	deadd_paused = not deadd_paused
 	if client.focus.fullscreen then
 		return
 	end
-	if dunst_paused then
-		spawn({ 'dunstctl', 'set-paused', 'true' })
+	if deadd_paused then
+		pause_popups()
 	else
-		spawn({ 'dunstctl', 'set-paused', 'false' })
+		unpause_popups()
 	end
 end
 
-function signals.is_dunst_paused()
-	return dunst_paused
+function signals.is_deadd_paused()
+	return deadd_paused
 end
 
 function signals.init(vars)
@@ -42,13 +50,13 @@ function signals.init(vars)
 				width = math.min(wa.width - margin_left - margin_right, c.width),
 				height = math.min(wa.height - margin_top - margin_bottom, c.height),
 			})
-			if dunst_paused then
-				spawn({ 'dunstctl', 'set-paused', 'true' })
+			if deadd_paused then
+				pause_popups()
 			else
-				spawn({ 'dunstctl', 'set-paused', 'false' })
+				unpause_popups()
 			end
 		else
-			spawn({ 'dunstctl', 'set-paused', 'true' })
+			pause_popups()
 		end
 		c.shape = function(cr, w, h)
 			gears.shape.rounded_rect(cr, w, h, 11)
@@ -59,13 +67,13 @@ function signals.init(vars)
 		local screen = c.screen
 		if c.fullscreen then
 			screen.mywibar.visible = false
-			spawn({ 'dunstctl', 'set-paused', 'true' })
+			pause_popups()
 		else
 			screen.mywibar.visible = true
-			if dunst_paused then
-				spawn({ 'dunstctl', 'set-paused', 'true' })
+			if deadd_paused then
+				pause_popups()
 			else
-				spawn({ 'dunstctl', 'set-paused', 'false' })
+				unpause_popups()
 			end
 		end
 	end)
@@ -100,13 +108,13 @@ function signals.init(vars)
 
 		if c.fullscreen then
 			screen.mywibar.visible = false
-			spawn({ 'dunstctl', 'set-paused', 'true' })
+			pause_popups()
 		else
 			screen.mywibar.visible = true
-			if dunst_paused then
-				spawn({ 'dunstctl', 'set-paused', 'true' })
+			if deadd_paused then
+				pause_popups()
 			else
-				spawn({ 'dunstctl', 'set-paused', 'false' })
+				unpause_popups()
 			end
 		end
 	end)

@@ -21,7 +21,6 @@ end
 function autostart.init()
 	package.loaded['naughty.dbus'] = {}
 	spawn_once('xsettingsd', 'xsettingsd')
-	spawn_once('dunst', 'dunst')
 	spawn({ 'pactl', 'set-source-volume', '@DEFAULT_SOURCE@', '150%' })
 	spawn({ 'ksuperkey', '-e', 'Super_L=Alt_L|F2' })
 	spawn({ 'ksuperkey', '-e', 'Super_R=Alt_L|F2' })
@@ -32,12 +31,13 @@ function autostart.init()
 	spawn({ 'xset', '-dpms' })
 	spawn_once('thunderbird', 'thunderbird')
 	spawn_once('mcontrolcenter', 'mcontrolcenter')
-	spawn_once('legcord/app.asar', 'legcord', true)
+	spawn_once('goofcord/app.asar', 'goofcord', true)
 	-- Wayland version
-	-- spawn_once("legcord", {"env", "OZONE_PLATFORM=wayland", "XDG_SESSION_TYPE=wayland", "DISCORD_DISABLE_GPU_SANDBOX=1", "DISCORD_ENABLE_WAYLAND_PIPEWIRE=1", "ELECTRON_OZONE_PLATFORM_HINT=auto", "legcord", "--no-sandbox", "--enable-zero-copy", "--ignore-gpu-blocklist", "--enable-gpu-rasterization", "--enable-native-gpu-memory-buffers", "--enable-features=WebRTCPipeWireCapturer,UseOzonePlatform,VaapiVideoDecoder", "--disable-features=UseChromeOSDirectVideoDecoder", "--ozone-platform=wayland", "--use-gl=desktop"})
+	-- spawn_once("goofcord/app.asar", {"env", "OZONE_PLATFORM=wayland", "XDG_SESSION_TYPE=wayland", "DISCORD_DISABLE_GPU_SANDBOX=1", "DISCORD_ENABLE_WAYLAND_PIPEWIRE=1", "ELECTRON_OZONE_PLATFORM_HINT=auto", "legcord", "--no-sandbox", "--enable-zero-copy", "--ignore-gpu-blocklist", "--enable-gpu-rasterization", "--enable-native-gpu-memory-buffers", "--enable-features=WebRTCPipeWireCapturer,UseOzonePlatform,VaapiVideoDecoder", "--disable-features=UseChromeOSDirectVideoDecoder", "--ozone-platform=wayland", "--use-gl=desktop"}, true)
 	spawn_once('zalo', 'zalo')
 	spawn_once('fcitx5', 'fcitx5')
 	spawn.once({ 'bluetoothctl', 'power', 'off' })
+	spawn_once('xmousepastebloc', 'xmousepasteblock')
 end
 
 return autostart

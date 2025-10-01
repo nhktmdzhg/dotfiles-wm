@@ -231,11 +231,11 @@ function scripts.change_brightness(arg)
 			end
 
 			spawn({
-				'dunstify',
+				'notify-send.py',
 				tostring(brightness),
-				'-h',
+				'--hint',
 				'int:value:' .. brightness,
-				'-h',
+				'--hint',
 				'string:synchronous:display-brightness',
 				'-i',
 				icon,

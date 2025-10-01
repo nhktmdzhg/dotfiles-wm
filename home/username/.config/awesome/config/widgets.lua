@@ -284,10 +284,22 @@ function widgets.create_window_name(s)
 			else
 				name = 'No focused window'
 				s.mywibar.visible = true
-				if signals.is_dunst_paused() then
-					spawn({ 'dunstctl', 'set-paused', 'true' })
+				if signals.is_deadd_paused() then
+					spawn({
+						'notify-send.py',
+						'a',
+						'--hint',
+						'boolean:deadd-notification-center:true',
+						'string:type:pausePopups',
+					})
 				else
-					spawn({ 'dunstctl', 'set-paused', 'false' })
+					spawn({
+						'notify-send.py',
+						'a',
+						'--hint',
+						'boolean:deadd-notification-center:true',
+						'string:type:unpausePopups',
+					})
 				end
 			end
 			local length = string.len(name)

@@ -1,0 +1,242 @@
+/* ===== NOTIFICATION CENTER BACKGROUND ===== */
+.blurredBG,
+#main_window,
+.blurredBG.low,
+.blurredBG.normal {
+  background: rgba(30, 30, 46, 0.95);
+}
+
+.blurredBG.critical {
+  background: rgba(250, 179, 135, 0.2);
+}
+
+/* ===== NOTIFICATION CENTER TIME/DATE ===== */
+.noti-center.time {
+  font-size: 32px;
+  color: #cdd6f4;
+  font-family: 'Maple Mono NF CN', monospace;
+}
+
+label.deadd-noti-center.noti-center.time {
+  color: #cdd6f4;
+  font-weight: bold;
+}
+
+label.deadd-noti-center.noti-center.date {
+  color: #bac2de;
+  font-size: 14px;
+}
+
+/* ===== NOTIFICATIONS POPUP ===== */
+.blurredBG.notification {
+  background: rgba(30, 30, 46, 0.95);
+  border: 6px solid #1e1e2e;
+  border-radius: 12px;
+  padding: 11px;
+  margin: 20px;
+}
+
+.blurredBG.notification.critical {
+  background: rgba(30, 30, 46, 0.95);
+  border-color: #fab387;
+}
+
+.notification.content {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+/* ===== NOTIFICATIONS IN CENTER ===== */
+.notificationInCenter {
+  background: rgba(49, 50, 68, 0.8);
+  border: 2px solid #45475a;
+  border-radius: 8px;
+  margin: 5px;
+  padding: 10px;
+}
+
+.notificationInCenter:hover {
+  background: rgba(69, 71, 90, 0.8);
+  border-color: #585b70;
+}
+
+.notificationInCenter.critical {
+  background: rgba(250, 179, 135, 0.1);
+  border-color: #fab387;
+}
+
+/* ===== LABELS - GENERAL ===== */
+label {
+  color: #cdd6f4;
+  font-family: 'Maple Mono NF CN', monospace;
+}
+
+label.notification {
+  color: #cdd6f4;
+}
+
+label.critical {
+  color: #cdd6f4;
+}
+
+.notificationInCenter label.critical {
+  color: #cdd6f4;
+}
+
+/* ===== LABELS - NOTIFICATION ELEMENTS ===== */
+.title,
+label.deadd-noti-center.notification.title,
+label.deadd-noti-center.in-center.title {
+  font-weight: bold;
+  font-size: 16px;
+  color: #cdd6f4;
+}
+
+.appname,
+label.deadd-noti-center.notification.appname,
+label.deadd-noti-center.in-center.appname {
+  font-size: 12px;
+  color: #7f849c;
+  font-style: italic;
+}
+
+.time,
+label.deadd-noti-center.in-center.time {
+  font-size: 12px;
+  color: #6c7086;
+}
+
+label.deadd-noti-center.notification.body,
+label.deadd-noti-center.in-center.body {
+  color: #bac2de;
+  font-size: 13px;
+}
+
+/* ===== BUTTONS - GENERAL ===== */
+button {
+  background: transparent;
+  color: #cdd6f4;
+  border-radius: 6px;
+  border: 1px solid #45475a;
+  background-position: 0px 0px;
+  text-shadow: none;
+  padding: 5px 10px;
+  transition: all 200ms ease;
+}
+
+button:hover {
+  background: rgba(69, 71, 90, 0.5);
+  border-color: #89b4fa;
+  color: #89b4fa;
+}
+
+/* ===== CLOSE BUTTONS ===== */
+button.deadd-noti-center.in-center.button-close {
+  background: transparent;
+  color: #7f849c;
+  border: none;
+  border-radius: 4px;
+  min-width: 20px;
+  min-height: 20px;
+  padding: 2px;
+}
+
+button.deadd-noti-center.in-center.button-close:hover {
+  background: rgba(69, 71, 90, 0.5);
+  color: #f38ba8;
+}
+
+/* ===== ACTION BUTTONS ===== */
+button.deadd-noti-center.notification.actionbutton,
+button.deadd-noti-center.in-center.actionbutton {
+  background: rgba(49, 50, 68, 0.8);
+  color: #cdd6f4;
+  border: 1px solid #45475a;
+  margin: 3px;
+}
+
+button.deadd-noti-center.notification.actionbutton:hover,
+button.deadd-noti-center.in-center.actionbutton:hover {
+  background: rgba(69, 71, 90, 0.8);
+  border-color: #89b4fa;
+  color: #89b4fa;
+}
+
+/* ===== DELETE ALL BUTTON ===== */
+label.deadd-noti-center.noti-center.delete-all {
+  color: #cdd6f4;
+  font-weight: bold;
+}
+
+button:hover label.deadd-noti-center.noti-center.delete-all {
+  color: #f38ba8;
+}
+
+/* ===== CUSTOM USER BUTTONS ===== */
+.userbutton,
+button.deadd-noti-center.noti-center.userbutton {
+  background: rgba(49, 50, 68, 0.6);
+  border: 2px solid #45475a;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 5px;
+}
+
+.userbuttonlabel {
+  color: #cdd6f4;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.userbutton:hover,
+button.deadd-noti-center.noti-center.userbutton:hover {
+  background: rgba(69, 71, 90, 0.6);
+  border-color: #89b4fa;
+}
+
+.userbuttonlabel:hover {
+  color: #89b4fa;
+}
+
+/* Button states */
+button.buttonState1,
+button.deadd-noti-center.noti-center.userbutton.buttonState1 {
+  background: rgba(137, 180, 250, 0.3);
+  border-color: #89b4fa;
+}
+
+.userbuttonlabel.buttonState1 {
+  color: #89b4fa;
+}
+
+button.buttonState1:hover {
+  background: rgba(137, 180, 250, 0.4);
+}
+
+button.buttonState2,
+button.deadd-noti-center.noti-center.userbutton.buttonState2 {
+  background: rgba(166, 227, 161, 0.3);
+  border-color: #a6e3a1;
+}
+
+.userbuttonlabel.buttonState2 {
+  color: #a6e3a1;
+}
+
+button.buttonState2:hover {
+  background: rgba(166, 227, 161, 0.4);
+}
+
+/* ===== IMAGES ===== */
+image.deadd-noti-center.notification.image,
+image.deadd-noti-center.in-center.image {
+  margin-left: 15px;
+  margin-right: 10px;
+  border-radius: 6px;
+}
+
+image.deadd-noti-center.notification.icon,
+image.deadd-noti-center.in-center.icon {
+  margin-right: 10px;
+  border-radius: 4px;
+}

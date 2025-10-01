@@ -123,11 +123,15 @@ function keys.init(vars)
 			spawn('goneovim')
 		end),
 		key({ super }, 'c', function()
-			spawn('legcord')
+			spawn('goofcord')
 		end),
-		-- Dunst toggle --
+		-- Deadd toggle --
 		key({ super, ctrl }, 'n', function()
-			signals.toggle_dunst()
+			signals.toggle_deadd()
+		end),
+		-- Deadd notification center toggle --
+		key({ super, shift }, 'n', function()
+			spawn({ 'sh', '-c', 'kill -s USR1 $(pidof deadd-notification-center)' })
 		end)
 	)
 
