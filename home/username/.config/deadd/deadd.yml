@@ -24,12 +24,12 @@ notification-center:
   ### Margin at the top/right/bottom of the notification center in
   ### pixels. This can be used to avoid overlap between the notification
   ### center and bars such as polybar or i3blocks.
-  # margin-top: 0
-  # margin-right: 0
-  # margin-bottom: 0
+  margin-top: 0
+  margin-right: 0
+  margin-bottom: 0
 
   ### Width of the notification center in pixels.
-  # width: 500
+  width: 500
 
   ### Monitor on which the notification center will be printed. If
   ### "follow-mouse" is set true, this does nothing.
@@ -40,7 +40,7 @@ notification-center:
   follow-mouse: true
 
   ### Notification center closes when the mouse leaves it
-  hide-on-mouse-leave: true
+  hide-on-mouse-leave: false
 
   ### If newFirst is set to true, newest notifications appear on the top
   ### of the notification center. Else, notifications stack, from top to
@@ -204,7 +204,7 @@ notification:
 
     ### Margin above/right/between notifications
     margin-top: 60
-    margin-right: 0
+    margin-right: 60
     margin-between: 20
 
     ### Defines after how many lines of text the body will be truncated. 
