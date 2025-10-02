@@ -123,7 +123,7 @@ function keys.init(vars)
 			spawn('goneovim')
 		end),
 		key({ super }, 'c', function()
-			spawn('goofcord')
+			spawn('legcord')
 		end),
 		-- Deadd toggle --
 		key({ super, ctrl }, 'n', function()
