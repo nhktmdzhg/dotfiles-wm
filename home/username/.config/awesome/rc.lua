@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 -- AwesomeWM Configuration
 -- Main configuration file
 
@@ -5,7 +6,6 @@
 local beautiful = require('beautiful')
 local filesystem = require('gears.filesystem')
 local layout = require('awful.layout')
--- local root = require('root')
 require('awful.autofocus')
 
 -- Require custom modules

@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 local gears = require('gears')
 local table = require('gears.table')
 local timer = require('gears.timer')
@@ -9,9 +10,7 @@ local spawn = require('awful.spawn')
 local tooltip = require('awful.tooltip')
 local widget = require('awful.widget')
 local cairo = require('lgi').cairo
--- local mouse = require('mouse')
 
--- local client = require('client')
 local filesystem = require('gears.filesystem')
 local palette = require('mocha')
 local scripts = require('scripts')

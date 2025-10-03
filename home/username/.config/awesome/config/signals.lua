@@ -1,4 +1,4 @@
--- local client = require('client')
+---@diagnostic disable: undefined-global
 local gears = require('gears')
 local spawn = require('awful.spawn')
 

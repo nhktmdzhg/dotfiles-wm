@@ -1,9 +1,9 @@
+---@diagnostic disable: undefined-global
 local awful_screen = require('awful.screen')
 local awful_wibar = require('awful.wibar')
 local dashboard = require('config.dashboard')
 local layout = require('awful.layout')
 local palette = require('mocha')
--- local screen = require('screen')
 local tag = require('awful.tag')
 local wallpaper = require('gears.wallpaper')
 local wibox = require('wibox')

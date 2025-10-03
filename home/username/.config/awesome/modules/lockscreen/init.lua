@@ -2,20 +2,9 @@
 local awful = require('awful')
 local gears = require('gears')
 local mocha = require('mocha')
+local pam = require('liblua_pam')
 local vars = require('config.vars')
 local wibox = require('wibox')
-
-local function load_pam()
-	local ok, result = pcall(function()
-		return package.loadlib('/usr/lib/lua-pam/liblua_pam.so', 'luaopen_liblua_pam')()
-	end)
-	if ok then
-		return result
-	end
-	return nil
-end
-
-local pam = load_pam()
 
 local lockscreen = {
 	visible = false,

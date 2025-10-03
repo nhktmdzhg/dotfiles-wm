@@ -1,4 +1,4 @@
--- local awesome = require('awesome')
+---@diagnostic disable: undefined-global
 local button = require('awful.button')
 local dashboard = require('config.dashboard')
 local key = require('awful.key')
