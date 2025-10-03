@@ -1,7 +1,7 @@
 local awful = require('awful')
 local gears = require('gears')
 local palette = require('mocha')
-local screen = require('screen')
+-- local screen = require('screen')
 local wibox = require('wibox')
 
 local dashboard = {}

@@ -5,7 +5,7 @@
 local beautiful = require('beautiful')
 local filesystem = require('gears.filesystem')
 local layout = require('awful.layout')
-local root = require('root')
+-- local root = require('root')
 require('awful.autofocus')
 
 -- Require custom modules
@@ -15,6 +15,7 @@ local rules = require('config.rules')
 local signals = require('config.signals')
 local vars = require('config.vars')
 local wibar = require('config.wibar')
+local gears = require('gears')
 
 -- Initialize theme
 beautiful.init(filesystem.get_configuration_dir() .. 'theme.lua')
@@ -31,3 +32,11 @@ root.keys(keybindings.globalkeys)
 rules.init(keybindings)
 wibar.init(vars)
 signals.init(vars)
+
+gears.timer {
+    timeout   = 300,
+    autostart = true,
+    callback  = function()
+        collectgarbage('collect')
+    end
+}

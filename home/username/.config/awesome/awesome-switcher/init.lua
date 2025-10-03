@@ -9,9 +9,9 @@ local wibox = require('wibox')
 local keygrabber = awful.keygrabber
 
 -- Import globals properly
-local client = require('client')
-local mouse = require('mouse')
-local screen = require('screen')
+-- local client = require('client')
+-- local mouse = require('mouse')
+-- local screen = require('screen')
 local table = table
 local math = require('math')
 local string = string

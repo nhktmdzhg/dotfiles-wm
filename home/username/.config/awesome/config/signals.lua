@@ -1,4 +1,4 @@
-local client = require('client')
+-- local client = require('client')
 local gears = require('gears')
 local spawn = require('awful.spawn')
 
