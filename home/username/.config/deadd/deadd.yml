@@ -45,6 +45,7 @@ notification:
       app-icon: "discord"
   - match:
       app-name: "notify-send"
+      app-icon: ""
     modify:
       app-icon: "notification"
 

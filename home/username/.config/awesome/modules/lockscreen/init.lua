@@ -320,12 +320,17 @@ function lockscreen.hide()
 	if lockscreen.screens then
 		for _, screen_lock in ipairs(lockscreen.screens) do
 			screen_lock.ui.visible = false
-			screen_lock.ui:disconnect()
+			screen_lock.ui:disconnect_signal()
+			screen_lock.ui = nil
 		end
+		lockscreen.screens = {}
+		lockscreen.screens = nil
 	end
 
-	lockscreen.screens = nil
 	lockscreen.password = ''
+	lockscreen.main_screen = nil
+
+	collectgarbage('collect')
 end
 
 return lockscreen
