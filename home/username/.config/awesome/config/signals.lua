@@ -55,11 +55,11 @@ function signals.init(vars)
 			else
 				signals.unpause_popups()
 			end
+			c.shape = function(cr, w, h)
+				gears.shape.rounded_rect(cr, w, h, 11)
+			end
 		else
 			signals.pause_popups()
-		end
-		c.shape = function(cr, w, h)
-			gears.shape.rounded_rect(cr, w, h, 11)
 		end
 	end)
 

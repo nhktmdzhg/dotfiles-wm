@@ -2,7 +2,7 @@ awesome
 bluez
 bluez-utils
 brightnessctl
-bottom-nightly-autocomplete
+bottom
 darkly-qt5-git
 darkly-qt6-git
 dash
