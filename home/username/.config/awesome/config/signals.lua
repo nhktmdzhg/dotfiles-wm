@@ -109,12 +109,18 @@ function signals.init(vars)
 		if c.fullscreen then
 			screen.mywibar.visible = false
 			signals.pause_popups()
+			c.shape = function(cr, w, h)
+				gears.shape.rectangle(cr, w, h)
+			end
 		else
 			screen.mywibar.visible = true
 			if deadd_paused then
 				signals.pause_popups()
 			else
 				signals.unpause_popups()
+			end
+			c.shape = function(cr, w, h)
+				gears.shape.rounded_rect(cr, w, h, 11)
 			end
 		end
 	end)

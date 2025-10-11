@@ -15,7 +15,7 @@ function scripts.get_battery_icon(callback)
 		end
 
 		if not battery_device then
-			callback(nil)
+			callback('')
 			return
 		end
 
@@ -34,7 +34,7 @@ function scripts.get_battery_icon(callback)
 			end
 
 			if not status or not percentage then
-				callback(nil)
+				callback('')
 				return
 			end
 
@@ -81,7 +81,7 @@ function scripts.get_battery_percent(callback)
 		end
 
 		if not battery_device then
-			callback(nil)
+			callback('AC')
 			return
 		end
 
@@ -93,49 +93,106 @@ function scripts.get_battery_percent(callback)
 						callback(tonumber(percent_str))
 						return
 					else
-						callback(nil)
+						callback('AC')
 						return
 					end
 				end
 			end
-			callback(nil)
+			callback('AC')
 		end)
 	end)
 end
 
 function scripts.get_network_info(arg, callback)
-	spawn.easy_async({ 'ip', 'addr', 'show', 'enp4s0' }, function(ethernet_output)
-		local ip_ethernet = ''
+	spawn.easy_async({ 'ip', 'link', 'show' }, function(link_output)
+		local ethernet_interfaces = {}
 
-		for _, line in ipairs(string.split(ethernet_output, '\n')) do
-			if line:find('inet ') then
-				ip_ethernet = line:match('inet (%d+%.%d+%.%d+%.%d+)')
-				break
+		for _, line in ipairs(string.split(link_output, '\n')) do
+			if line:match('^%d+:') then
+				local iface = line:match('^%d+:%s*([^:@]+)')
+				if iface and not iface:match('^lo$') and not iface:match('^wl') then
+					table.insert(ethernet_interfaces, iface)
+				end
 			end
 		end
 
-		spawn.easy_async({ 'iwgetid', '-r' }, function(essid)
-			local icon, stat
+		local function check_ethernet(interfaces, index)
+			if index > #interfaces then
+				spawn.easy_async({ 'iwgetid', '-r' }, function(essid)
+					essid = essid:gsub('^%s*(.-)%s*$', '%1')
 
-			if ip_ethernet ~= '' then
-				icon = '󰈀'
-				stat = 'Wired connection'
-			elseif essid ~= '' then
-				icon = '󰤨'
-				stat = essid
-			else
-				icon = ''
-				stat = 'No Ethernet or Wi-Fi connected'
+					local icon, stat
+					if essid ~= '' then
+						icon = '󰤨'
+						stat = essid
+					else
+						icon = ''
+						stat = 'No connection'
+					end
+
+					if arg == 0 then
+						callback(icon)
+					elseif arg == 1 then
+						callback(stat)
+					else
+						callback(nil)
+					end
+				end)
+				return
 			end
 
-			if arg == 0 then
-				callback(icon)
-			elseif arg == 1 then
-				callback(stat)
-			else
-				callback(nil)
-			end
-		end)
+			local iface = interfaces[index]
+			spawn.easy_async({ 'ip', 'addr', 'show', iface }, function(addr_output)
+				local ip_ethernet = ''
+
+				for _, line in ipairs(string.split(addr_output, '\n')) do
+					if line:find('inet ') and line:find('scope global') then
+						ip_ethernet = line:match('inet (%d+%.%d+%.%d+%.%d+)')
+						break
+					end
+				end
+
+				if ip_ethernet ~= '' then
+					local icon = '󰈀'
+					local stat = 'Wired connection'
+
+					if arg == 0 then
+						callback(icon)
+					elseif arg == 1 then
+						callback(stat)
+					else
+						callback(nil)
+					end
+				else
+					check_ethernet(interfaces, index + 1)
+				end
+			end)
+		end
+
+		if #ethernet_interfaces > 0 then
+			check_ethernet(ethernet_interfaces, 1)
+		else
+			spawn.easy_async({ 'iwgetid', '-r' }, function(essid)
+				essid = essid:gsub('^%s*(.-)%s*$', '%1')
+
+				local icon, stat
+				if essid ~= '' then
+					icon = '󰤨'
+					stat = essid
+				else
+					icon = ''
+					stat = 'No connection'
+				end
+
+				if arg == 0 then
+					callback(icon)
+				elseif arg == 1 then
+					callback(stat)
+				else
+					callback(nil)
+				end
+			end)
+		end
 	end)
 end
 

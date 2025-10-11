@@ -76,7 +76,7 @@ The configuration includes **32 carefully selected packages** optimized for perf
 
 ### 🏗️ **Core System**
 
-- `awesome-luajit` - High-performance AwesomeWM with LuaJIT
+- `awesome` - High-performance AwesomeWM with Lua
 - `fastcompr` - Lightweight compositor for X11
 - `st` - Simple lightweight and customizable terminal emulator
 

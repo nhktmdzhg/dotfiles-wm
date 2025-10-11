@@ -23,7 +23,7 @@ nmcurse-rs-git
 noto-fonts
 nvim
 goneovim-bin
-pavucontrol
+pavucontrol-qt
 pcmanfm-qt
 physlock
 playerctl
