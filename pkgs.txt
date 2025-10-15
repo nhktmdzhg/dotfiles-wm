@@ -3,12 +3,12 @@ bluez
 bluez-utils
 brightnessctl
 bottom
-darkly-qt5-git
-darkly-qt6-git
+darkly-bin
 dash
 deadd-notification-center
 fastcompmgr-git
 fastfetch
+frameworkintegration
 gd
 gsimplecal
 harfbuzz
@@ -23,7 +23,6 @@ nmcurse-rs-git
 noto-fonts
 nvim
 goneovim-bin
-pavucontrol-qt
 pcmanfm-qt
 physlock
 playerctl

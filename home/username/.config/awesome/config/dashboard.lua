@@ -274,18 +274,15 @@ local function create_volume_control()
 	end
 
 	local update_volume_slider = function()
-		awful.spawn.easy_async({ 'pactl', 'get-sink-volume', '@DEFAULT_SINK@' }, function(stdout)
-			local volume = tonumber(stdout:match('(%d+)%%'))
-			if volume then
+		awful.spawn.easy_async({ 'wpctl', 'get-volume', '@DEFAULT_AUDIO_SINK@' }, function(stdout)
+			local vol_str = stdout:match("Volume: ([%d%.]+)")
+			if vol_str then
+				local volume = math.floor(tonumber(vol_str) * 100)
 				current_volume = volume
 				volume_slider.value = volume
 				update_volume_icon(volume)
 			end
-		end)
-
-		-- Check mute status
-		awful.spawn.easy_async({ 'pactl', 'get-sink-mute', '@DEFAULT_SINK@' }, function(stdout)
-			is_muted = stdout:match('yes') ~= nil
+			is_muted = stdout:find("%[MUTED%]") ~= nil
 			update_volume_icon(current_volume)
 		end)
 	end
@@ -297,17 +294,17 @@ local function create_volume_control()
 		callback = update_volume_slider,
 	})
 
-	-- Set volume using pactl
+	-- Set volume using wpctl
 	volume_slider:connect_signal('property::value', function(slider)
 		local volume_level = math.floor(slider.value)
-		awful.spawn({ 'pactl', 'set-sink-volume', '@DEFAULT_SINK@', volume_level .. '%' })
+		awful.spawn({ 'wpctl', 'set-volume', '@DEFAULT_AUDIO_SINK@', volume_level .. '%' })
 		current_volume = volume_level
 		update_volume_icon(volume_level)
 	end)
 
 	-- Toggle mute function
 	local function toggle_mute()
-		awful.spawn.easy_async({ 'pactl', 'set-sink-mute', '@DEFAULT_SINK@', 'toggle' }, function()
+		awful.spawn.easy_async({ 'wpctl', 'set-mute', '@DEFAULT_AUDIO_SINK@', 'toggle' }, function()
 			is_muted = not is_muted
 			update_volume_icon(current_volume)
 		end)

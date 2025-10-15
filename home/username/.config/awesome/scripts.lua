@@ -198,56 +198,41 @@ end
 
 function scripts.get_volume_info(arg, callback)
 	if arg == 1 then
-		spawn({ 'pactl', 'set-sink-volume', '@DEFAULT_SINK@', '+5%' })
+		spawn({ 'wpctl', 'set-volume', '@DEFAULT_AUDIO_SINK@', '5%+' })
 	elseif arg == -1 then
-		spawn({ 'pactl', 'set-sink-volume', '@DEFAULT_SINK@', '-5%' })
+		spawn({ 'wpctl', 'set-volume', '@DEFAULT_AUDIO_SINK@', '5%-' })
 	elseif arg == 0 then
-		spawn({ 'pactl', 'set-sink-mute', '@DEFAULT_SINK@', 'toggle' })
+		spawn({ 'wpctl', 'set-mute', '@DEFAULT_AUDIO_SINK@', 'toggle' })
 	end
 
-	spawn.easy_async({ 'pactl', 'get-sink-volume', '@DEFAULT_SINK@' }, function(vol_raw)
-		local volume
-		for _, line in ipairs(string.split(vol_raw, '\n')) do
-			local percent = line:match('(%d+)%%')
-			if percent then
-				volume = tonumber(percent) or 0
-				break
-			end
+	spawn.easy_async({ 'wpctl', 'get-volume', '@DEFAULT_AUDIO_SINK@' }, function(stdout)
+		local vol_str = stdout:match("Volume: ([%d%.]+)")
+		local volume = vol_str and math.floor(tonumber(vol_str) * 100) or 0
+		local muted = stdout:find("%[MUTED%]") ~= nil
+
+		local icon, status
+
+		if volume == 0 or muted then
+			icon = '󰖁'
+			status = 'Muted'
+		elseif volume < 30 then
+			icon = ''
+		elseif volume < 70 then
+			icon = '󰖀'
+		elseif volume <= 150 then
+			icon = '󰕾'
+		else
+			spawn({ 'wpctl', 'set-volume', '@DEFAULT_AUDIO_SINK@', '150%' })
+			icon = '󰕾'
 		end
 
-		spawn.easy_async({ 'pactl', 'get-sink-mute', '@DEFAULT_SINK@' }, function(mute_raw)
-			local muted = false
-			for _, line in ipairs(string.split(mute_raw, '\n')) do
-				if string.startswith(line, 'Mute:') then
-					muted = line:find('yes') ~= nil
-					break
-				end
-			end
-
-			local icon, status
-
-			if volume == 0 or muted then
-				icon = '󰖁'
-				status = 'Muted'
-			elseif volume < 30 then
-				icon = ''
-			elseif volume < 70 then
-				icon = '󰖀'
-			elseif volume <= 150 then
-				icon = '󰕾'
-			else
-				spawn({ 'pactl', 'set-sink-volume', '@DEFAULT_SINK@', '150%' })
-				icon = '󰕾'
-			end
-
-			if arg == 2 then
-				callback(icon)
-			elseif arg == 3 then
-				callback(status or tostring(volume))
-			else
-				callback(nil)
-			end
-		end)
+		if arg == 2 then
+			callback(icon)
+		elseif arg == 3 then
+			callback(status or tostring(volume))
+		else
+			callback(nil)
+		end
 	end)
 end
 
