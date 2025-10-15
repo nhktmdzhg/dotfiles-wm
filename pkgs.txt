@@ -3,12 +3,10 @@ bluez
 bluez-utils
 brightnessctl
 bottom
-darkly-bin
 dash
 deadd-notification-center
 fastcompmgr-git
 fastfetch
-frameworkintegration
 gd
 gsimplecal
 harfbuzz
@@ -22,6 +20,8 @@ maplemono-nf-cn
 nmcurse-rs-git
 noto-fonts
 nvim
+oxygen
+oxygen5
 goneovim-bin
 pcmanfm-qt
 physlock
