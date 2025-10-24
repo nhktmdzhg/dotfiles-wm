@@ -275,14 +275,14 @@ local function create_volume_control()
 
 	local update_volume_slider = function()
 		awful.spawn.easy_async({ 'wpctl', 'get-volume', '@DEFAULT_AUDIO_SINK@' }, function(stdout)
-			local vol_str = stdout:match("Volume: ([%d%.]+)")
+			local vol_str = stdout:match('Volume: ([%d%.]+)')
 			if vol_str then
 				local volume = math.floor(tonumber(vol_str) * 100)
 				current_volume = volume
 				volume_slider.value = volume
 				update_volume_icon(volume)
 			end
-			is_muted = stdout:find("%[MUTED%]") ~= nil
+			is_muted = stdout:find('%[MUTED%]') ~= nil
 			update_volume_icon(current_volume)
 		end)
 	end
