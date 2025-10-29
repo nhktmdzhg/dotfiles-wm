@@ -84,9 +84,13 @@ create_backup() {
     local backup_needed=false
     local configs_to_backup=(
         ".config/awesome"
-        ".config/picom.conf"
-        ".config/dunst"
         ".config/rofi"
+        ".config/fastfetch"
+        ".config/gtk-2.0"
+        ".config/gtk-3.0"
+        ".config/gtk-4.0"
+        ".config/qt5ct"
+        ".config/qt6ct"
         ".xinitrc"
         ".Xresources"
         ".gtkrc-2.0"
@@ -225,9 +229,9 @@ install_configs() {
         print_error "Failed to copy configuration files"
         return 1
     fi
-
+    
     print_info "Copying PAM configuration file..."
-    if sudo cp "$SCRIPT_DIR/etc/pam.d/awesome" "/etc/pam.d"
+    if sudo cp "$SCRIPT_DIR/etc/pam.d/awesome" "/etc/pam.d"; then
         print_success "PAM Configuration file copied successfully"
     else
         print_error "Failed to copy PAM configuration file"
@@ -253,10 +257,6 @@ post_install() {
         print_success "Font cache updated"
     fi
     
-    # Create wallpaper directory
-    mkdir -p "$HOME/wallpaper"
-    print_info "Created wallpaper directory: ~/wallpaper"
-    
     print_success "Post-installation tasks completed"
 }
 
@@ -270,7 +270,6 @@ show_final_message() {
     echo -e "${YELLOW}Next steps:${NC}"
     echo -e "  1. ${CYAN}Log out and log back in${NC}"
     echo -e "  2. ${CYAN}Select 'AwesomeWM' from your display manager${NC}"
-    echo -e "  3. ${CYAN}Add wallpapers to ~/wallpaper/ directory${NC}"
     echo
     echo -e "${YELLOW}Useful commands:${NC}"
     echo -e "  • ${CYAN}Super${NC} - Open application launcher"
