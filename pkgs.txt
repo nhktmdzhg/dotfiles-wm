@@ -16,7 +16,7 @@ ksuperkey
 libxft
 lua53-pam-git
 lxqt-policykit
-maplemono-nf-cn
+maple-mono-nf-cn-unhinted
 nmcurse-rs-git
 noto-fonts
 nvim
