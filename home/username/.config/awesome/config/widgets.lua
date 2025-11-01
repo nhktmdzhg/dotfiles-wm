@@ -263,7 +263,11 @@ function widgets.create_window_name(s)
 		valign = 'center',
 	})
 
-	local window_name_container = wibox.container.margin(window_name, 2, 2, 6, 6)
+	local scroll_container = wibox.container.scroll.horizontal(window_name, 2, 50, 0)
+	scroll_container:set_max_size(300)
+	scroll_container:set_step_function(wibox.container.scroll.step_functions.linear_back_and_forth)
+
+	local window_name_container = wibox.container.margin(scroll_container, 2, 2, 6, 6)
 	window_name_container = wibox.container.background(window_name_container)
 	window_name_container.fg = palette.text.hex
 
@@ -291,18 +295,7 @@ function widgets.create_window_name(s)
 					signals.unpause_popups()
 				end
 			end
-			local length = string.len(name)
-			if length < 40 then
-				window_name.text = name
-			else
-				local unix_time = os.time()
-				local start = (unix_time % (length - 38)) + 1
-				local end_pos = start + 38
-				if end_pos > length then
-					end_pos = length
-				end
-				window_name.text = string.sub(name, start, end_pos)
-			end
+			window_name.text = name
 		end,
 	})
 

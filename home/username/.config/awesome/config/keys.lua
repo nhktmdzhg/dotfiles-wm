@@ -130,7 +130,9 @@ function keys.init(vars)
 		end),
 		-- Deadd notification center toggle --
 		key({ super, shift }, 'n', function()
-			spawn({ 'sh', '-c', 'kill -s USR1 $(pidof deadd-notification-center)' })
+			spawn.easy_async({ 'pidof', 'deadd-notification-center' }, function(stdout)
+				spawn({ 'kill', '-s', 'USR1', string.sub(stdout, 1, #stdout - 1) })
+			end)
 		end),
 	}
 

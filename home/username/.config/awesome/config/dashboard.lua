@@ -132,13 +132,17 @@ end
 local function create_current_playing()
 	local current_widget = wibox.widget({
 		{
-			text = '',
 			font = 'Maple Mono NF CN 12',
 			widget = wibox.widget.textbox,
 		},
 		fg = palette.text.hex,
 		widget = wibox.container.background,
 	})
+
+	local scroll_container = wibox.container.scroll.horizontal(current_widget, 2, 50, 0)
+
+	scroll_container:set_max_size(400)
+	scroll_container:set_step_function(wibox.container.scroll.step_functions.linear_back_and_forth)
 
 	gears.timer({
 		timeout = 1,
@@ -154,23 +158,12 @@ local function create_current_playing()
 					else
 						current_song = 'Now Playing: ' .. current_song
 					end
-					local length = string.len(current_song)
-					if length < 45 then
-						current_widget.widget.text = current_song
-					else
-						local unix_time = os.time()
-						local start = (unix_time % (length - 43)) + 1
-						local end_pos = start + 43
-						if end_pos > length then
-							end_pos = length
-						end
-						current_widget.widget.text = current_song:sub(start, end_pos)
-					end
+					current_widget.widget.text = current_song
 				end
 			)
 		end,
 	})
-	return current_widget
+	return scroll_container
 end
 
 local function create_media_button(id, icon, command)

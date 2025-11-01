@@ -68,13 +68,13 @@ end)
 wibar.init(vars)
 signals.init(vars)
 
--- collectgarbage('setpause', 110)
--- collectgarbage('setstepmul', 1000)
+collectgarbage('setpause', 110)
+collectgarbage('setstepmul', 1000)
 
--- gears.timer({
--- 	timeout = 5,
--- 	autostart = true,
--- 	callback = function()
--- 		collectgarbage('collect')
--- 	end,
--- })
+gears.timer({
+	timeout = 5,
+	autostart = true,
+	callback = function()
+		collectgarbage('collect')
+	end,
+})
