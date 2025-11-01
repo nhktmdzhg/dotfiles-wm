@@ -7,7 +7,6 @@ local screen = require('awful.screen')
 local scripts = require('scripts')
 local signals = require('config.signals')
 local spawn = require('awful.spawn')
-local table = require('gears.table')
 
 local keys = {}
 
@@ -53,7 +52,7 @@ function keys.init(vars)
 
 	local switcher = require('awesome-switcher')
 
-	local globalkeys = table.join( -- Brightness controls --
+	local globalkeys = { -- Brightness controls --
 		key({}, 'XF86MonBrightnessUp', function()
 			scripts.change_brightness(1)
 		end),
@@ -117,7 +116,7 @@ function keys.init(vars)
 		key({ super, ctrl }, 'r', awesome.restart),
 		key({ super }, 'd', toggle_show_desktop),
 		key({ super }, 'b', function()
-			spawn('zen-browser')
+			spawn('zen')
 		end),
 		key({ super }, 'n', function()
 			spawn('goneovim')
@@ -132,10 +131,10 @@ function keys.init(vars)
 		-- Deadd notification center toggle --
 		key({ super, shift }, 'n', function()
 			spawn({ 'sh', '-c', 'kill -s USR1 $(pidof deadd-notification-center)' })
-		end)
-	)
+		end),
+	}
 
-	local clientkeys = table.join(
+	local clientkeys = {
 		key({ super, shift }, 'Up', function(c)
 			c:relative_move(0, -10, 0, 0)
 		end),
@@ -198,10 +197,10 @@ function keys.init(vars)
 		key({ super }, 'z', function(c)
 			c.minimized = true
 			c:lower()
-		end)
-	)
+		end),
+	}
 
-	local clientbuttons = table.join(
+	local clientbuttons = {
 		button({}, 1, function(c)
 			c:emit_signal('request::activate', 'mouse_click', {
 				raise = true,
@@ -218,8 +217,8 @@ function keys.init(vars)
 				raise = true,
 			})
 			mouse.client.resize(c)
-		end)
-	)
+		end),
+	}
 
 	return {
 		globalkeys = globalkeys,

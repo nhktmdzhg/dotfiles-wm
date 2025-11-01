@@ -12,7 +12,7 @@ local dashboard_visible = false
 local avatar_path = os.getenv('HOME') .. '/.config/awesome/avatar.png'
 local launcher_list = {
 	{ name = 'St', icon = '', command = 'st' },
-	{ name = 'Zen browser', icon = '󰺕', command = 'zen-browser' },
+	{ name = 'Zen browser', icon = '󰺕', command = 'zen' },
 	{ name = 'PCManFM', icon = '', command = 'pcmanfm-qt' },
 	{ name = 'Neovim', icon = '', command = 'goneovim' },
 	{ name = 'Open config', icon = '', command = { 'sh', '-c', 'cd ~/.config/awesome && goneovim rc.lua' } },
@@ -42,7 +42,7 @@ local function create_name_widget()
 		{
 			text = 'Hello, 長夜月',
 			font = 'Maple Mono NF CN 18',
-			align = 'center',
+			halign = 'center',
 			widget = wibox.widget.textbox,
 		},
 		fg = palette.text.hex,
@@ -179,7 +179,7 @@ local function create_media_button(id, icon, command)
 			{
 				text = icon,
 				font = 'JetBrainsMono Nerd Font Mono 16',
-				align = 'center',
+				halign = 'center',
 				widget = wibox.widget.textbox,
 			},
 			margins = 10,
@@ -248,7 +248,7 @@ local function create_volume_control()
 				id = 'icon_text',
 				text = '󰕾',
 				font = 'JetBrainsMono Nerd Font Mono 16',
-				align = 'center',
+				halign = 'center',
 				widget = wibox.widget.textbox,
 			},
 			widget = wibox.container.margin,
@@ -365,7 +365,7 @@ local function create_brightness_control()
 				id = 'icon_text',
 				text = '󰃚',
 				font = 'JetBrainsMono Nerd Font Mono 16',
-				align = 'center',
+				halign = 'center',
 				widget = wibox.widget.textbox,
 			},
 			widget = wibox.container.margin,
@@ -434,7 +434,7 @@ local function create_round_button(icon, cmd)
 			{
 				text = icon,
 				font = 'JetBrainsMono Nerd Font Mono 50',
-				align = 'center',
+				halign = 'center',
 				valign = 'center',
 				widget = wibox.widget.textbox,
 			},

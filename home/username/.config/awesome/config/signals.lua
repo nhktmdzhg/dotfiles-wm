@@ -20,7 +20,7 @@ end
 
 function signals.toggle_deadd()
 	deadd_paused = not deadd_paused
-	if client.focus.fullscreen then
+	if client.focus and client.focus.fullscreen then
 		return
 	end
 	if deadd_paused then
@@ -41,7 +41,7 @@ function signals.init(vars)
 	local margin_right = vars.margin_right
 
 	-- Signals
-	client.connect_signal('manage', function(c)
+	client.connect_signal('request::manage', function(c)
 		local wa = c.screen.workarea
 		if not c.fullscreen then
 			c:geometry({

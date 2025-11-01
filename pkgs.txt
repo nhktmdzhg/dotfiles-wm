@@ -1,4 +1,4 @@
-awesome
+awesome-git
 bluez
 bluez-utils
 brightnessctl
@@ -14,7 +14,7 @@ imlib2
 ksnip
 ksuperkey
 libxft
-lua53-pam-git
+lua-pam-git
 lxqt-policykit
 maple-mono-nf-cn-unhinted
 nmcurse-rs-git

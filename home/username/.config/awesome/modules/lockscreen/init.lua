@@ -2,6 +2,7 @@
 local awful = require('awful')
 local gears = require('gears')
 local mocha = require('mocha')
+package.cpath = package.cpath .. ';/usr/lib/lua-pam/?.so'
 local pam = require('liblua_pam')
 local vars = require('config.vars')
 local wibox = require('wibox')
@@ -58,7 +59,7 @@ local function create_lockscreen_ui(s)
 	local clock_widget = wibox.widget({
 		format = '<span foreground="' .. mocha.text.hex .. '">%H:%M</span>',
 		font = 'Maple Mono NF CN 48',
-		align = 'center',
+		halign = 'center',
 		widget = wibox.widget.textclock,
 	})
 
@@ -66,7 +67,7 @@ local function create_lockscreen_ui(s)
 	local date_widget = wibox.widget({
 		format = '<span foreground="' .. mocha.subtext1.hex .. '">%Y年%m月%d日</span>',
 		font = 'Maple Mono NF CN 16',
-		align = 'center',
+		halign = 'center',
 		widget = wibox.widget.textclock,
 	})
 
@@ -74,7 +75,7 @@ local function create_lockscreen_ui(s)
 	local user_label = wibox.widget({
 		markup = '<span foreground="' .. mocha.lavender.hex .. '">' .. (os.getenv('USER') or 'user') .. '</span>',
 		font = 'Maple Mono NF CN 20',
-		align = 'center',
+		halign = 'center',
 		widget = wibox.widget.textbox,
 	})
 
@@ -84,7 +85,7 @@ local function create_lockscreen_ui(s)
 			{
 				text = '',
 				font = 'JetBrainsMono Nerd Font Mono 48',
-				align = 'center',
+				halign = 'center',
 				widget = wibox.widget.textbox,
 			},
 			id = 'lock_icon',
@@ -102,7 +103,7 @@ local function create_lockscreen_ui(s)
 	local status_message = wibox.widget({
 		markup = '',
 		font = 'Maple Mono NF CN 12',
-		align = 'center',
+		halign = 'center',
 		widget = wibox.widget.textbox,
 	})
 
@@ -273,7 +274,7 @@ function lockscreen.show()
 	if not lockscreen.keygrabber then
 		lockscreen.keygrabber = awful.keygrabber({
 			autostart = false,
-			keypressed_callback = function(_, _, key, _)
+			keypressed_callback = function(self, modifiers, key, event)
 				if key == 'BackSpace' then
 					if #lockscreen.password > 0 then
 						lockscreen.password = lockscreen.password:sub(1, -2)
@@ -284,12 +285,12 @@ function lockscreen.show()
 					update_indicator()
 				end
 			end,
-			keyreleased_callback = function(_, _, key, _)
+			keyreleased_callback = function(self, modifiers, key, event)
 				if key == 'Return' or key == 'KP_Enter' then
 					try_unlock()
 				end
 			end,
-			stop_callback = function()
+			stop_callback = function(self)
 				awful.spawn({
 					'notify-send',
 					'-i',
@@ -299,7 +300,7 @@ function lockscreen.show()
 				})
 				awful.spawn({ 'physlock', '-L' })
 			end,
-			start_callback = function()
+			start_callback = function(self)
 				awful.spawn({ 'physlock', '-l' })
 			end,
 		})

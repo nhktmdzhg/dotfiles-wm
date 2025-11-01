@@ -5,26 +5,13 @@ local dashboard = require('config.dashboard')
 local layout = require('awful.layout')
 local palette = require('mocha')
 local tag = require('awful.tag')
-local wallpaper = require('gears.wallpaper')
 local wibox = require('wibox')
 local widgets = require('config.widgets')
 
 local wibar = {}
 
-local function set_wallpaper(s, vars)
-	wallpaper.maximized(vars.wallpaper, s, true)
-end
-
 function wibar.init(vars)
-	-- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
-	screen.connect_signal('property::geometry', function(s)
-		set_wallpaper(s, vars)
-	end)
-
-	awful_screen.connect_for_each_screen(function(s)
-		-- Wallpaper
-		set_wallpaper(s, vars)
-
+	screen.connect_signal('request::desktop_decoration', function(s)
 		-- Each screen has its own tag table.
 		tag({ '1' }, s, layout.layouts[1])
 
@@ -50,7 +37,6 @@ function wibar.init(vars)
 		local volume_icon_container, volume_percent_container = widgets.create_volume()
 		local calendar_icon_container, date_widget_container, time_widget_container = widgets.create_calendar()
 		local dashboard_toggle_container = widgets.create_dashboard_toggle()
-		dashboard.create()
 
 		-- Add widgets to the wibar
 		s.mywibar:setup({
@@ -95,6 +81,8 @@ function wibar.init(vars)
 			},
 		})
 	end)
+
+	dashboard.create()
 end
 
 return wibar

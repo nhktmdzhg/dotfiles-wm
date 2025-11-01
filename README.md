@@ -84,7 +84,7 @@ The configuration includes **32 carefully selected packages** optimized for perf
 
 - `ttf-jetbrains-mono-nerd` - Programming font with icon support
 - `noto-fonts` - Comprehensive Unicode font coverage
-- `darkly-qt5-git` / `darkly-qt6-git` - Dark Qt themes
+- `oxygen5` / `oxygen` - Dark Qt themes
 - `qt5ct` / `qt6ct` - Qt configuration tools
 
 ### 🛠️ **Utilities & Tools**
@@ -163,11 +163,6 @@ chmod +x ~/.xinitrc
 
 # 5. Update font cache
 fc-cache -fv
-
-# 6. Create wallpaper directory
-mkdir -p ~/wallpaper
-```
-
 </details>
 
 ### 🔄 **Post-Installation**
@@ -310,9 +305,9 @@ cp your-wallpaper.jpg ~/wallpaper/
 
 ```lua
 -- Edit ~/.config/awesome/config/wibar.lua
-local function set_wallpaper(s, vars)
-    wallpaper.maximized(vars.home .. '/wallpaper/your-wallpaper.jpg', s, true)
-end
+screen.connect_signal('request::wallpaper', function(s)
+	wallpaper.maximized(vars.wallpaper, s, true)
+end)
 ```
 
 ### ⚙️ **Default Applications**

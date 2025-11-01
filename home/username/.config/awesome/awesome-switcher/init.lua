@@ -457,58 +457,54 @@ function _M.switch(dir, mod_key1, release_key, mod_key2, key_switch)
 
 	-- Now that we have collected all windows, we should run a keygrabber
 	-- as long as the user is alt-tabbing:
-	keygrabber.run(function(mod, key, event)
-		-- Stop alt-tabbing when the alt-key is released
-		if gears.table.hasitem(mod, mod_key1) then
-			if (key == release_key or key == 'Escape') and event == 'release' then
-				if _M.preview_wbox.visible == true then
-					_M.preview_wbox.visible = false
-					_M.preview_live_timer:stop()
-				else
-					_M.previewDelayTimer:stop()
+	local grabber = keygrabber({
+		autostart = true,
+		stop_key = release_key,
+		stop_event = 'release',
+		keypressed_callback = function(self, modifiers, key, event)
+			if key == key_switch and event == 'press' then
+				local mod_set = {}
+				for _, m in ipairs(modifiers) do
+					mod_set[m] = true
 				end
 
-				if key == 'Escape' then
-					for i = 1, #_M.altTabTable do
-						_M.altTabTable[i].client.minimized = _M.altTabTable[i].minimized
-					end
-				else
-					-- Raise clients in order to restore history
-					local c
-					for i = 1, _M.altTabIndex - 1 do
-						c = _M.altTabTable[_M.altTabIndex - i].client
-						if not _M.altTabTable[i].minimized then
-							c:raise()
-							client.focus = c
-						end
-					end
-
-					-- raise chosen client on top of all
-					c = _M.altTabTable[_M.altTabIndex].client
-					c:raise()
-					c:jump_to()
-					client.focus = c
-
-					-- restore minimized clients
-					for i = 1, #_M.altTabTable do
-						if i ~= _M.altTabIndex and _M.altTabTable[i].minimized then
-							_M.altTabTable[i].client.minimized = true
-						end
-					end
-				end
-
-				keygrabber.stop()
-			elseif key == key_switch and event == 'press' then
-				if gears.table.hasitem(mod, mod_key2) then
-					-- Move to previous client on Shift-Tab
+				if mod_set[mod_key2] then
 					_M.cycle(-1)
 				else
-					-- Move to next client on each Tab-press
 					_M.cycle(1)
 				end
 			end
-		end
-	end)
+		end,
+		keyreleased_callback = function(self, modifiers, key, event)
+			if key == 'Escape' then
+				for i = 1, #_M.altTabTable do
+					_M.altTabTable[i].client.minimized = _M.altTabTable[i].minimized
+				end
+				self:stop()
+			end
+		end,
+		stop_callback = function(self)
+			if _M.preview_wbox.visible then
+				_M.preview_wbox.visible = false
+				_M.preview_live_timer:stop()
+			else
+				_M.previewDelayTimer:stop()
+			end
+
+			-- Raise chosen client
+			local c = _M.altTabTable[_M.altTabIndex].client
+			c:raise()
+			c:jump_to()
+			client.focus = c
+
+			-- Restore minimized clients
+			for i = 1, #_M.altTabTable do
+				if i ~= _M.altTabIndex and _M.altTabTable[i].minimized then
+					_M.altTabTable[i].client.minimized = true
+				end
+			end
+		end,
+	})
 
 	-- switch to next client
 	_M.cycle(dir)

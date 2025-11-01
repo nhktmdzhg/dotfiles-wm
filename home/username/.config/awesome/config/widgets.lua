@@ -63,15 +63,17 @@ local current_preview_client = nil
 local widgets = {}
 
 function widgets.create_tasklist(s)
-	local tasklist_buttons = table.join(button({}, 1, function(c)
-		if c == client.focus then
-			c.minimized = true
-		else
-			c:emit_signal('request::activate', 'tasklist', {
-				raise = true,
-			})
-		end
-	end))
+	local tasklist_buttons = {
+		button({}, 1, function(c)
+			if c == client.focus then
+				c.minimized = true
+			else
+				c:emit_signal('request::activate', 'tasklist', {
+					raise = true,
+				})
+			end
+		end),
+	}
 
 	local mytasklist = widget.tasklist({
 		screen = s,
@@ -205,7 +207,7 @@ function widgets.create_arch_logo()
 		{
 			{
 				markup = '',
-				align = 'center',
+				halign = 'center',
 				valign = 'center',
 				widget = wibox.widget.textbox,
 				font = 'JetBrainsMono Nerd Font Mono 20',
@@ -257,7 +259,7 @@ function widgets.create_window_name(s)
 	local window_name = wibox.widget({
 		widget = wibox.widget.textbox,
 		font = 'Maple Mono NF CN 9',
-		align = 'center',
+		halign = 'center',
 		valign = 'center',
 	})
 
@@ -311,7 +313,7 @@ function widgets.create_battery()
 	local battery_icon = wibox.widget({
 		widget = wibox.widget.textbox,
 		font = 'JetBrainsMono Nerd Font Mono 16',
-		align = 'center',
+		halign = 'center',
 		valign = 'center',
 	})
 
@@ -339,7 +341,7 @@ function widgets.create_battery()
 	local battery_percent = wibox.widget({
 		widget = wibox.widget.textbox,
 		font = 'Maple Mono NF CN 9',
-		align = 'center',
+		halign = 'center',
 		valign = 'center',
 	})
 
@@ -375,7 +377,7 @@ function widgets.create_network()
 	local network_icon = wibox.widget({
 		widget = wibox.widget.textbox,
 		font = 'JetBrainsMono Nerd Font Mono 16',
-		align = 'center',
+		halign = 'center',
 		valign = 'center',
 	})
 
@@ -417,7 +419,7 @@ function widgets.create_network()
 	local network_status = wibox.widget({
 		widget = wibox.widget.textbox,
 		font = 'Maple Mono NF CN 9',
-		align = 'center',
+		halign = 'center',
 		valign = 'center',
 	})
 
@@ -449,7 +451,7 @@ function widgets.create_volume()
 	local volume_icon = wibox.widget({
 		widget = wibox.widget.textbox,
 		font = 'JetBrainsMono Nerd Font Mono 16',
-		align = 'center',
+		halign = 'center',
 		valign = 'center',
 	})
 
@@ -495,7 +497,7 @@ function widgets.create_volume()
 	local volume_percent = wibox.widget({
 		widget = wibox.widget.textbox,
 		font = 'Maple Mono NF CN 9',
-		align = 'center',
+		halign = 'center',
 		valign = 'center',
 	})
 
@@ -535,7 +537,7 @@ function widgets.create_calendar()
 	local calendar_icon = wibox.widget({
 		widget = wibox.widget.textbox,
 		font = 'JetBrainsMono Nerd Font Mono 16',
-		align = 'center',
+		halign = 'center',
 		valign = 'center',
 		text = '',
 	})
@@ -567,7 +569,7 @@ function widgets.create_calendar()
 	local date_widget = wibox.widget({
 		widget = wibox.widget.textbox,
 		font = 'Maple Mono NF CN 9',
-		align = 'center',
+		halign = 'center',
 		valign = 'center',
 	})
 
@@ -595,7 +597,7 @@ function widgets.create_calendar()
 	local time_widget = wibox.widget({
 		widget = wibox.widget.textbox,
 		font = 'Maple Mono NF CN 9',
-		align = 'center',
+		halign = 'center',
 		valign = 'center',
 	})
 
@@ -626,7 +628,7 @@ end
 function widgets.create_simple_separator()
 	local separator = wibox.widget({
 		markup = '|',
-		align = 'center',
+		halign = 'center',
 		valign = 'center',
 		widget = wibox.widget.textbox,
 		font = 'Maple Mono NF CN 15',
@@ -643,7 +645,7 @@ function widgets.create_dashboard_toggle()
 		widget = wibox.widget.textbox,
 		text = '󰕮',
 		font = 'JetBrainsMono Nerd Font Mono 16',
-		align = 'center',
+		halign = 'center',
 		valign = 'center',
 	})
 
