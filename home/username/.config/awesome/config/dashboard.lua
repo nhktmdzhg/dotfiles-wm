@@ -134,6 +134,7 @@ local function create_current_playing()
 		{
 			font = 'Maple Mono NF CN 12',
 			widget = wibox.widget.textbox,
+			halign = 'center',
 		},
 		fg = palette.text.hex,
 		widget = wibox.container.background,
