@@ -280,7 +280,7 @@ function widgets.create_window_name(s)
 	timer({
 		timeout = 0.1,
 		autostart = true,
-		callnow = true,
+		call_now = true,
 		callback = function()
 			local c = client.focus
 			local name = ''
@@ -323,7 +323,7 @@ function widgets.create_battery()
 	timer({
 		timeout = 1,
 		autostart = true,
-		callnow = true,
+		call_now = true,
 		callback = function()
 			scripts.get_battery_icon(function(icon)
 				battery_icon.text = icon
@@ -351,7 +351,7 @@ function widgets.create_battery()
 	timer({
 		timeout = 1,
 		autostart = true,
-		callnow = true,
+		call_now = true,
 		callback = function()
 			scripts.get_battery_percent(function(percent)
 				if percent then
@@ -401,7 +401,7 @@ function widgets.create_network()
 	timer({
 		timeout = 1,
 		autostart = true,
-		callnow = true,
+		call_now = true,
 		callback = function()
 			scripts.get_network_info(0, function(icon)
 				network_icon.text = icon
@@ -429,7 +429,7 @@ function widgets.create_network()
 	timer({
 		timeout = 1,
 		autostart = true,
-		callnow = true,
+		call_now = true,
 		callback = function()
 			scripts.get_network_info(1, function(status)
 				network_status.text = status
@@ -461,7 +461,7 @@ function widgets.create_volume()
 	timer({
 		timeout = 0.1,
 		autostart = true,
-		callnow = true,
+		call_now = true,
 		callback = function()
 			scripts.get_volume_info(2, function(icon)
 				volume_icon.text = icon
@@ -507,7 +507,7 @@ function widgets.create_volume()
 	timer({
 		timeout = 0.1,
 		autostart = true,
-		callnow = true,
+		call_now = true,
 		callback = function()
 			scripts.get_volume_info(3, function(status)
 				volume_percent.text = status or 'N/A'
@@ -579,7 +579,7 @@ function widgets.create_calendar()
 	timer({
 		timeout = 1,
 		autostart = true,
-		callnow = true,
+		call_now = true,
 		callback = function()
 			spawn.easy_async({ 'date', '+%Y年%m月%d日' }, function(stdout)
 				date_widget.text = stdout:gsub('%s+$', '')
@@ -607,7 +607,7 @@ function widgets.create_calendar()
 	timer({
 		timeout = 1,
 		autostart = true,
-		callnow = true,
+		call_now = true,
 		callback = function()
 			spawn.easy_async({ 'date', '+%H:%M:%S %p' }, function(stdout)
 				time_widget.text = stdout:gsub('%s+$', '')

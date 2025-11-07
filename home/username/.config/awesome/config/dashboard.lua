@@ -12,7 +12,7 @@ local dashboard_visible = false
 local avatar_path = os.getenv('HOME') .. '/.config/awesome/avatar.png'
 local launcher_list = {
 	{ name = 'St', icon = '', command = 'st' },
-	{ name = 'Zen browser', icon = '󰺕', command = 'zen' },
+	{ name = 'Zen browser', icon = '󰺕', command = 'zen-browser' },
 	{ name = 'PCManFM', icon = '', command = 'pcmanfm-qt' },
 	{ name = 'Neovim', icon = '', command = 'goneovim' },
 	{ name = 'Open config', icon = '', command = { 'sh', '-c', 'cd ~/.config/awesome && goneovim rc.lua' } },
@@ -148,7 +148,7 @@ local function create_current_playing()
 	gears.timer({
 		timeout = 1,
 		autostart = true,
-		callnow = true,
+		call_now = true,
 		callback = function()
 			awful.spawn.easy_async(
 				{ 'playerctl', 'metadata', '--format', '{{ title }} - {{ artist }}' },
@@ -164,6 +164,7 @@ local function create_current_playing()
 			)
 		end,
 	})
+
 	return scroll_container
 end
 
