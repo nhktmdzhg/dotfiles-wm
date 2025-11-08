@@ -375,11 +375,11 @@ local function create_brightness_control()
 	local function update_brightness_icon(brightness)
 		local icon_widget = brightness_icon:get_children_by_id('icon_text')[1]
 		if brightness == 0 then
-			icon_widget.text = '󰃠'
+			icon_widget.text = '󰃛'
 		elseif brightness < 30 then
 			icon_widget.text = '󰃞'
 		elseif brightness < 70 then
-			icon_widget.text = '󰃛'
+			icon_widget.text = '󰃠'
 		else
 			icon_widget.text = '󰃚'
 		end
