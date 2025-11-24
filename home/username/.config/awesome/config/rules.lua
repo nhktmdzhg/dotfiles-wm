@@ -20,7 +20,7 @@ function rules.init()
 		})
 
 		ruled.client.append_rule({
-			id = 'vscode',
+			id = 'vscodium',
 			rule_any = {
 				class = { 'Code' },
 			},

@@ -96,10 +96,10 @@ function keys.init(vars)
 			spawn({ 'env', 'XMODIFIERS=@im=none', 'rofi', '-no-lazy-grab', '-show', 'drun' })
 		end), -- Screenshot controls --
 		key({ ctrl }, 'Print', function()
-			spawn({ 'ksnip', '-r' })
+			spawn({ 'shutter', '-s' })
 		end),
 		key({}, 'Print', function()
-			spawn('ksnip')
+			spawn('shutter')
 		end), -- Applications --
 		key({ super }, 'e', function()
 			spawn('pcmanfm-qt')
@@ -116,7 +116,7 @@ function keys.init(vars)
 		key({ super, ctrl }, 'r', awesome.restart),
 		key({ super }, 'd', toggle_show_desktop),
 		key({ super }, 'b', function()
-			spawn('zen-browser')
+			spawn('zen')
 		end),
 		key({ super }, 'n', function()
 			spawn('goneovim')

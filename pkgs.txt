@@ -11,7 +11,6 @@ gd
 gsimplecal
 harfbuzz
 imlib2
-ksnip
 ksuperkey
 libxft
 lua-pam-git
@@ -29,6 +28,7 @@ playerctl
 qt5ct
 qt6ct
 rofi
+shutter
 ttf-jetbrains-mono-nerd
 upower
 wireless_tools

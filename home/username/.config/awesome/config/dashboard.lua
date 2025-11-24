@@ -12,7 +12,7 @@ local dashboard_visible = false
 local avatar_path = os.getenv('HOME') .. '/.config/awesome/avatar.png'
 local launcher_list = {
 	{ name = 'St', icon = '', command = 'st' },
-	{ name = 'Zen browser', icon = '󰺕', command = 'zen-browser' },
+	{ name = 'Zen browser', icon = '󰺕', command = 'zen' },
 	{ name = 'PCManFM', icon = '', command = 'pcmanfm-qt' },
 	{ name = 'Neovim', icon = '', command = 'goneovim' },
 	{ name = 'Open config', icon = '', command = { 'sh', '-c', 'cd ~/.config/awesome && goneovim rc.lua' } },

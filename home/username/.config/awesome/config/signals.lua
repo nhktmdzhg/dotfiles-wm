@@ -102,9 +102,6 @@ function signals.init(vars)
 
 	client.connect_signal('property::fullscreen', function(c)
 		local screen = c.screen
-		if c == screen.selected_tag then
-			return
-		end
 
 		if c.fullscreen then
 			screen.mywibar.visible = false
