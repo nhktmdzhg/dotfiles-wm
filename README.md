@@ -233,7 +233,7 @@ This configuration implements multiple layers of security for screen locking:
 | ------------------- | -------------------- | ------------------- |
 | `Super`             | Application Launcher | Rofi                |
 | `Ctrl + Alt + T`    | Terminal             | St                  |
-| `Super + E`         | File Manager         | PCManFM-Qt          |
+| `Super + E`         | File Manager         | PCManFM             |
 | `Super + B`         | Web Browser          | Default Browser     |
 | `Super + N`         | Text Editor          | Goneovim            |
 | `Super + Ctrl + N`  | Toggle Notifications | deadd popup on/off  |

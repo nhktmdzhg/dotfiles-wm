@@ -22,7 +22,7 @@ nvim
 oxygen
 oxygen5
 goneovim-bin
-pcmanfm-qt
+pcmanfm
 physlock
 playerctl
 qt5ct
