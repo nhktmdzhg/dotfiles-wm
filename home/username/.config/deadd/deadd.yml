@@ -23,6 +23,7 @@ notification-center:
 notification:
   use-markup: true
   parse-html-entities: true
+  use-action-icons: true
 
   dbus:
     send-noti-closed: false
@@ -48,7 +49,22 @@ notification:
       app-icon: ""
     modify:
       app-icon: "notification"
-
+  - match:
+      app-name: "Rhythmbox"
+    modify:
+      remove-actions: true
+      action-icons: true
+      actions:
+        - previous
+        - media-skip-backward
+        - play
+        - media-playback-start
+        - next
+        - media-skip-forward
+      action-commands:
+        previous: rhythmbox-client --previous
+        play: rhythmbox-client --play-pause
+        next: rhythmbox-client --next
   popup:
     default-timeout: 6000
     margin-top: 60

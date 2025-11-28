@@ -187,8 +187,8 @@ local function create_media_button(id, icon, command)
 	})
 
 	-- Click handler
-	button:connect_signal('button::press', function(_, _, _, btn)
-		if btn == 1 then
+	button:connect_signal('button::press', function(_, _, _, button)
+		if button == 1 then
 			awful.spawn(command)
 		end
 	end)
@@ -290,8 +290,8 @@ local function create_volume_control()
 	})
 
 	-- Set volume using wpctl
-	volume_slider:connect_signal('property::value', function(slider)
-		local volume_level = math.floor(slider.value)
+	volume_slider:connect_signal('property::value', function(_, new_value)
+		local volume_level = math.floor(new_value)
 		awful.spawn({ 'wpctl', 'set-volume', '@DEFAULT_AUDIO_SINK@', volume_level .. '%' })
 		current_volume = volume_level
 		update_volume_icon(volume_level)
@@ -403,8 +403,8 @@ local function create_brightness_control()
 	})
 
 	-- Set brightness using brightnessctl
-	brightness_slider:connect_signal('property::value', function(slider)
-		local brightness_level = math.floor(slider.value)
+	brightness_slider:connect_signal('property::value', function(_, new_value)
+		local brightness_level = math.floor(new_value)
 		awful.spawn({ 'brightnessctl', 'set', brightness_level .. '%' })
 		update_brightness_icon(brightness_level)
 	end)
@@ -452,8 +452,8 @@ local function create_round_button(icon, cmd)
 		button:get_children_by_id('button_bg')[1].bg = palette.surface0.hex
 	end)
 
-	button:connect_signal('button::press', function(_, _, _, btn)
-		if btn == 1 then
+	button:connect_signal('button::press', function(_, _, _, button)
+		if button == 1 then
 			awful.spawn(cmd)
 		end
 	end)
