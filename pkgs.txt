@@ -14,7 +14,7 @@ imlib2
 ksuperkey
 libxft
 lua-pam-git
-lxqt-policykit
+lxsession
 maple-mono-nf-cn-unhinted
 nmcurse-rs-git
 noto-fonts

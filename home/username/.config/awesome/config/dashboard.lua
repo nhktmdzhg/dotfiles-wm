@@ -135,6 +135,7 @@ local function create_current_playing()
 			font = 'Maple Mono NF CN 12',
 			widget = wibox.widget.textbox,
 			halign = 'center',
+			valign = 'center',
 		},
 		fg = palette.text.hex,
 		widget = wibox.container.background,
@@ -159,7 +160,10 @@ local function create_current_playing()
 					else
 						current_song = 'Now Playing: ' .. current_song
 					end
-					current_widget.widget.text = current_song
+					if current_widget.widget.text ~= current_song then
+						current_widget.widget.text = current_song
+						scroll_container:emit_signal('widget::redraw_needed')
+					end
 				end
 			)
 		end,
