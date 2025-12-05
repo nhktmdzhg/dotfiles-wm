@@ -12,7 +12,6 @@ gsimplecal
 harfbuzz
 imlib2
 ksuperkey
-libpulse
 libxft
 lua-pam-git
 lxsession

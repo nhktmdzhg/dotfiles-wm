@@ -11,31 +11,11 @@ local dashboard_visible = false
 
 local avatar_path = os.getenv('HOME') .. '/.config/awesome/avatar.png'
 local launcher_list = {
-	{
-		name = 'St',
-		icon = '',
-		command = 'st',
-	},
-	{
-		name = 'Zen browser',
-		icon = '󰺕',
-		command = 'zen',
-	},
-	{
-		name = 'PCManFM',
-		icon = '',
-		command = 'pcmanfm',
-	},
-	{
-		name = 'Neovim',
-		icon = '',
-		command = 'goneovim',
-	},
-	{
-		name = 'Open config',
-		icon = '',
-		command = { 'sh', '-c', 'cd ~/.config/awesome && goneovim rc.lua' },
-	},
+	{ name = 'St', icon = '', command = 'st' },
+	{ name = 'Zen browser', icon = '󰺕', command = 'zen' },
+	{ name = 'PCManFM', icon = '', command = 'pcmanfm' },
+	{ name = 'Neovim', icon = '', command = 'goneovim' },
+	{ name = 'Open config', icon = '', command = { 'sh', '-c', 'cd ~/.config/awesome && goneovim rc.lua' } },
 	{
 		name = 'HSR',
 		icon = '',
@@ -293,18 +273,15 @@ local function create_volume_control()
 	end
 
 	local update_volume_slider = function()
-		awful.spawn.easy_async({ 'pactl', 'get-sink-volume', '@DEFAULT_SINK@' }, function(stdout)
-			local vol_str = stdout:match('/[%s]*([%d%.]+)%%')
+		awful.spawn.easy_async({ 'wpctl', 'get-volume', '@DEFAULT_AUDIO_SINK@' }, function(stdout)
+			local vol_str = stdout:match('Volume: ([%d%.]+)')
 			if vol_str then
-				local volume = math.floor(tonumber(vol_str))
+				local volume = math.floor(tonumber(vol_str) * 100)
 				current_volume = volume
 				volume_slider.value = volume
+				update_volume_icon(volume)
 			end
-
-			awful.spawn.easy_async({ 'pactl', 'get-sink-mute', '@DEFAULT_SINK@' }, function(mute_stdout)
-				is_muted = mute_stdout:find('Mute: yes') ~= nil
-			end)
-
+			is_muted = stdout:find('%[MUTED%]') ~= nil
 			update_volume_icon(current_volume)
 		end)
 	end
@@ -316,17 +293,17 @@ local function create_volume_control()
 		callback = update_volume_slider,
 	})
 
-	-- Set volume using pactl
+	-- Set volume using wpctl
 	volume_slider:connect_signal('property::value', function(_, new_value)
 		local volume_level = math.floor(new_value)
-		awful.spawn({ 'pactl', 'set-sink-volume', '@DEFAULT_SINK@', volume_level .. '%' })
+		awful.spawn({ 'wpctl', 'set-volume', '@DEFAULT_AUDIO_SINK@', volume_level .. '%' })
 		current_volume = volume_level
 		update_volume_icon(volume_level)
 	end)
 
 	-- Toggle mute function
 	local function toggle_mute()
-		awful.spawn.easy_async({ 'pactl', 'set-sink-mute', '@DEFAULT_SINK@', 'toggle' }, function()
+		awful.spawn.easy_async({ 'wpctl', 'set-mute', '@DEFAULT_AUDIO_SINK@', 'toggle' }, function()
 			is_muted = not is_muted
 			update_volume_icon(current_volume)
 		end)
