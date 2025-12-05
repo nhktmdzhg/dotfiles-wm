@@ -21,7 +21,7 @@ end
 function autostart.init()
 	package.loaded['naughty.dbus'] = {}
 	spawn_once('xsettingsd', 'xsettingsd')
-	spawn({ 'wpctl', 'set-volume', '@DEFAULT_AUDIO_SOURCE@', '150%' })
+	spawn({ 'pactl', 'set-source-volume', '@DEFAULT_SOURCE@', '150%' })
 	spawn({ 'ksuperkey', '-e', 'Super_L=Alt_L|F2' })
 	spawn({ 'ksuperkey', '-e', 'Super_R=Alt_L|F2' })
 	spawn_once('fastcompmgr', { 'fastcompmgr', '-r', '0', '-o', '0', '-l', '0', '-t', '0', '-C' })
