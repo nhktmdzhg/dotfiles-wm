@@ -64,25 +64,19 @@
         {
             "type": "wm",
             "key": "   WM",
-            "format": "{2}",
+            "format": "{2} ({3})",
             "keyColor": "yellow"
-        },
-        {
-            "type": "wmtheme",
-            "key": "   WM Theme",
-            "format": "{1}",
-            "keyColor": "magenta"
         },
         {
             "type": "theme",
             "key": "   Theme",
-            "format": "{2}",
+            "format": "{1}, {2}",
             "keyColor": "magenta"
         },
         {
             "type": "icons",
             "key": "   Icons",
-            "format": "{2}",
+            "format": "{1}, {2}",
             "keyColor": "cyan"
         },
         {
@@ -99,7 +93,7 @@
         {
             "type": "terminal",
             "key": "   Terminal",
-            "format": "{1}",
+            "format": "{1} {6}",
             "keyColor": "red"
         },
         {

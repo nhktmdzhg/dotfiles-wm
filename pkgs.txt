@@ -32,4 +32,5 @@ shutter
 ttf-jetbrains-mono-nerd
 upower
 wireless_tools
+wireplumber
 xss-lock

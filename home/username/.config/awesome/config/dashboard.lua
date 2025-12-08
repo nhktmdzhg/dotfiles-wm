@@ -279,7 +279,6 @@ local function create_volume_control()
 				local volume = math.floor(tonumber(vol_str) * 100)
 				current_volume = volume
 				volume_slider.value = volume
-				update_volume_icon(volume)
 			end
 			is_muted = stdout:find('%[MUTED%]') ~= nil
 			update_volume_icon(current_volume)

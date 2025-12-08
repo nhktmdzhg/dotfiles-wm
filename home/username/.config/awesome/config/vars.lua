@@ -15,6 +15,6 @@ vars.margin_right = 10
 
 -- Paths
 vars.home = os.getenv('HOME')
-vars.wallpaper = vars.home .. '/wallpaper/evernight.jpg'
+vars.wallpaper = vars.home .. '/wallpaper/evernight-wall.jpg'
 
 return vars
