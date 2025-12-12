@@ -35,6 +35,8 @@ local function set_icon(c, icon_widget)
 				icon_widget.image = surface.load_uncached('/opt/zalo/icon.png')
 			elseif c.class == 'goneovim' then
 				icon_widget.image = surface.load_uncached('/usr/share/pixmaps/goneovim.ico')
+			elseif c.class == 'dev.zed.Zed' then
+				icon_widget.image = surface.load_uncached('/usr/share/icons/zed.png')
 			else
 				icon_widget.image = surface.load_uncached(noicon_path)
 			end

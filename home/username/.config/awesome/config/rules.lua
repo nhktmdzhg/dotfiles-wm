@@ -20,16 +20,6 @@ function rules.init()
 		})
 
 		ruled.client.append_rule({
-			id = 'vscodium',
-			rule_any = {
-				class = { 'Code' },
-			},
-			properties = {
-				maximized = true,
-			},
-		})
-
-		ruled.client.append_rule({
 			id = 'splash_dialog',
 			rule_any = {
 				type = { 'splash', 'dialog' },

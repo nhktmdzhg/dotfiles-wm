@@ -21,7 +21,6 @@ noto-fonts
 nvim
 oxygen
 oxygen5
-goneovim-bin
 pcmanfm
 physlock
 playerctl

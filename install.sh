@@ -63,24 +63,24 @@ print_info() {
 # Check if running on Arch Linux
 check_system() {
     print_step "Checking system compatibility..."
-    
+
     if ! command -v pacman >/dev/null 2>&1; then
         print_error "This script requires Arch Linux or an Arch-based distribution"
         exit 1
     fi
-    
+
     if [[ $EUID -eq 0 ]]; then
         print_error "Do not run this script as root!"
         exit 1
     fi
-    
+
     print_success "System check passed - Arch Linux detected"
 }
 
 # Create backup of existing configurations
 create_backup() {
     print_step "Creating backup of existing configurations..."
-    
+
     local backup_needed=false
     local configs_to_backup=(
         ".config/awesome"
@@ -95,14 +95,14 @@ create_backup() {
         ".Xresources"
         ".gtkrc-2.0"
     )
-    
+
     for config in "${configs_to_backup[@]}"; do
         if [[ -e "$HOME/$config" ]]; then
             backup_needed=true
             break
         fi
     done
-    
+
     if [[ "$backup_needed" == true ]]; then
         mkdir -p "$BACKUP_DIR"
         for config in "${configs_to_backup[@]}"; do
@@ -120,41 +120,41 @@ create_backup() {
 # Install AUR helper
 install_aur_helper() {
     print_step "Checking for AUR helper..."
-    
+
     local aur_helpers=("paru" "yay" "trizen" "pikaur")
     local aur_helper=""
-    
+
     for helper in "${aur_helpers[@]}"; do
         if command -v "$helper" >/dev/null 2>&1; then
             aur_helper="$helper"
             break
         fi
     done
-    
+
     if [[ -z "$aur_helper" ]]; then
         print_info "No AUR helper found. Installing paru..."
-        
+
         # Install dependencies
         sudo pacman -S --needed --noconfirm base-devel git
-        
+
         # Clone and install paru
         local temp_dir
         temp_dir=$(mktemp -d)
         cd "$temp_dir"
-        
+
         git clone https://aur.archlinux.org/paru-bin.git
         cd paru-bin
         makepkg -si --noconfirm
-        
+
         cd "$SCRIPT_DIR"
         rm -rf "$temp_dir"
-        
+
         aur_helper="paru"
         print_success "Paru installed successfully"
     else
         print_success "Found AUR helper: $aur_helper"
     fi
-    
+
     echo "$aur_helper"
 }
 
@@ -162,34 +162,34 @@ install_aur_helper() {
 install_packages() {
     local aur_helper="$1"
     print_step "Installing packages from pkgs.txt..."
-    
+
     if [[ ! -f "$SCRIPT_DIR/pkgs.txt" ]]; then
         print_error "pkgs.txt not found in $SCRIPT_DIR"
         return 1
     fi
-    
+
     local packages=()
     local pkg_count=0
-    
+
     # Read packages from file
     while IFS= read -r line || [[ -n "$line" ]]; do
         # Remove comments and whitespace
         line=$(echo "$line" | sed 's/#.*$//' | xargs)
-        
+
         # Skip empty lines
         if [[ -n "$line" ]]; then
             packages+=("$line")
             ((pkg_count++))
         fi
     done < "$SCRIPT_DIR/pkgs.txt"
-    
+
     if [[ ${#packages[@]} -eq 0 ]]; then
         print_warning "No valid packages found in pkgs.txt"
         return 0
     fi
-    
+
     print_info "Found $pkg_count packages to install"
-    
+
     # Install packages
     print_info "Installing packages with $aur_helper..."
     if "$aur_helper" -S --needed --noconfirm "${packages[@]}"; then
@@ -213,14 +213,14 @@ install_st() {
 # Copy configuration files
 install_configs() {
     print_step "Installing configuration files..."
-    
+
     local source_dir="$SCRIPT_DIR/home/username"
-    
+
     if [[ ! -d "$source_dir" ]]; then
         print_error "Configuration directory not found: $source_dir"
         return 1
     fi
-    
+
     # Copy files with progress
     print_info "Copying configuration files..."
     if cp -rf "$source_dir"/. "$HOME/"; then
@@ -229,7 +229,7 @@ install_configs() {
         print_error "Failed to copy configuration files"
         return 1
     fi
-    
+
     print_info "Copying PAM configuration file..."
     if sudo cp "$SCRIPT_DIR/etc/pam.d/awesome" "/etc/pam.d"; then
         print_success "PAM Configuration file copied successfully"
@@ -237,26 +237,26 @@ install_configs() {
         print_error "Failed to copy PAM configuration file"
         return 1
     fi
-    
+
     # Set proper permissions
     print_info "Setting proper permissions..."
     chmod +x "$HOME/.config/awesome/lock.sh" 2>/dev/null || true
     chmod +x "$HOME/.xinitrc" 2>/dev/null || true
-    
+
     print_success "Permissions set successfully"
 }
 
 # Post-installation tasks
 post_install() {
     print_step "Running post-installation tasks..."
-    
+
     # Update font cache
     if command -v fc-cache >/dev/null 2>&1; then
         print_info "Updating font cache..."
         fc-cache -fv >/dev/null 2>&1
         print_success "Font cache updated"
     fi
-    
+
     print_success "Post-installation tasks completed"
 }
 
@@ -298,13 +298,13 @@ cleanup() {
 main() {
     # Set up error handling
     trap cleanup EXIT
-    
+
     # Clear log file
     : > "$LOG_FILE"
-    
+
     # Start installation
     print_header
-    
+
     check_system
     create_backup
     local aur_helper
@@ -314,7 +314,7 @@ main() {
     install_configs
     post_install
     show_final_message
-    
+
     print_success "Installation completed successfully!"
 }
 
