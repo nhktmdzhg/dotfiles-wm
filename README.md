@@ -355,10 +355,9 @@ Key configuration files and their purposes:
 
 Enhance your desktop experience with these complementary configurations:
 
-| Component      | Description                      | Repository                                                        |
-| -------------- | -------------------------------- | ----------------------------------------------------------------- |
-| **🔧 Neovim**  | Modern Vim-based editor with LSP | [nhktmdzhg/nvim](https://github.com/nhktmdzhg/nvim)               |
-| **🌐 Browser** | Zen Browser configuration        | [nhktmdzhg/zen-browser](https://github.com/nhktmdzhg/zen-browser) |
+| Component      | Description                      | Repository                                         |
+| -------------- | -------------------------------- | ---------------------------------------------------|
+| **🔧 Neovim**  | Modern Vim-based editor with LSP | [nhktmdzhg/nvim](https://github.com/nhktmdzhg/nvim)|
 
 ---
 

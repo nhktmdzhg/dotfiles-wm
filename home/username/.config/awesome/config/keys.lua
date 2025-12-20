@@ -116,7 +116,7 @@ function keys.init(vars)
 		key({ super, ctrl }, 'r', awesome.restart),
 		key({ super }, 'd', toggle_show_desktop),
 		key({ super }, 'b', function()
-			spawn('zen')
+			spawn('firefox')
 		end),
 		key({ super }, 'n', function()
 			spawn('goneovim')
