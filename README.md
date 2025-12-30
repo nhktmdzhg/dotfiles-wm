@@ -138,7 +138,7 @@ chmod +x install.sh
 6. 🔑 **Permission Setup** - Sets executable permissions for scripts
 7. 🔤 **Font Cache** - Updates system font cache
 
-### �️ **Manual Installation**
+### **Manual Installation**
 
 <details>
 <summary><b>Step-by-step manual process</b></summary>
@@ -161,6 +161,7 @@ chmod +x ~/.xinitrc
 
 # 5. Update font cache
 fc-cache -fv
+```
 </details>
 
 ### 🔄 **Post-Installation**
@@ -198,13 +199,13 @@ This configuration implements multiple layers of security for screen locking:
 
 ```
 
-┌─────────────────┐ ┌──────────────────┐ ┌─────────────────┐
-│ AwesomeWM │ │ physlock │ │ PAM │
-│ Lockscreen │───▶│ TTY Protection │───▶│ Authentication │
-│ (lua-pam) │ │ (kernel level) │ │ (system auth) │
-└─────────────────┘ └──────────────────┘ └─────────────────┘
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│ AwesomeWM	      │    │ physlock         │    │ PAM             │
+│ Lockscreen      │───▶│ TTY Protection   │───▶│ Authentication  │
+│ (lua-pam)       │    │ (kernel level)   │    │ (system auth)   │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
 
-````
+```
 
 **Usage:**
 
