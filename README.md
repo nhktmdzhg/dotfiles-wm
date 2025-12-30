@@ -33,7 +33,7 @@ _A meticulously crafted, production-ready AwesomeWM desktop environment featurin
 - **🌙 Catppuccin Mocha Theme** - Carefully balanced dark color palette
 - **🎭 BeautyLine Icons** - Consistent, modern icon theme throughout the system
 - **🔤 JetBrains Mono Nerd Font** - Programming-focused typography with icon support
-- **🔔 Elegant Notifications** - Modern deadd-notification-center with popup and notification center
+- **🔔 Elegant Notifications** - Modern naughty with popup
 
 ### ⚡ **Performance & Efficiency**
 
@@ -65,7 +65,6 @@ _A meticulously crafted, production-ready AwesomeWM desktop environment featurin
 | ------------- | -------------- | ---------------------- | ---------------------------------------- |
 | **AwesomeWM** | Window Manager | `~/.config/awesome/`   | Lua-based tiling WM with custom widgets  |
 | **Rofi**      | Launcher       | `~/.config/rofi/`      | Application launcher with custom styling |
-| **Deadd**     | Notifications  | `~/.config/deadd/`     | Modern notification center with popup UI |
 | **Fastfetch** | System Info    | `~/.config/fastfetch/` | Modern system information display        |
 
 ---
@@ -90,7 +89,6 @@ The configuration includes **32 carefully selected packages** optimized for perf
 ### 🛠️ **Utilities & Tools**
 
 - `rofi` - Application launcher and window switcher
-- `deadd-notification-center` - Modern notification center and daemon
 - `fastfetch` - Modern system information display
 - `playerctl` - Media player control
 - `brightnessctl` - Backlight control
@@ -229,17 +227,16 @@ This configuration implements multiple layers of security for screen locking:
 
 ### 🚀 **Essential Shortcuts**
 
-| Shortcut            | Action               | Application         |
-| ------------------- | -------------------- | ------------------- |
-| `Super`             | Application Launcher | Rofi                |
-| `Ctrl + Alt + T`    | Terminal             | St                  |
-| `Super + E`         | File Manager         | PCManFM             |
-| `Super + B`         | Web Browser          | Default Browser     |
-| `Super + N`         | Text Editor          | Goneovim            |
-| `Super + Ctrl + N`  | Toggle Notifications | deadd popup on/off  |
-| `Super + Shift + N` | Notification Center  | deadd center toggle |
-| `Super + Esc`       | Dashboard            | Custom Dashboard    |
-| `Super + L`         | Lock Screen          | Custom Lockscreen   |
+| Shortcut            | Action               | Application           |
+| ------------------- | -------------------- | --------------------- |
+| `Super`             | Application Launcher | Rofi                  |
+| `Ctrl + Alt + T`    | Terminal             | St                    |
+| `Super + E`         | File Manager         | PCManFM               |
+| `Super + B`         | Web Browser          | Default Browser       |
+| `Super + N`         | Text Editor          | Goneovim              |
+| `Super + Ctrl + N`  | Toggle Notifications | naughty popup on/off  |
+| `Super + Esc`       | Dashboard            | Custom Dashboard      |
+| `Super + L`         | Lock Screen          | Custom Lockscreen     |
 
 ### 🪟 **Window Management**
 
