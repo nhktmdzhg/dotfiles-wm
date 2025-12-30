@@ -14,12 +14,12 @@ local gears = require('gears')
 local keyboard = require('awful.keyboard')
 local keys = require('config.keys')
 local mouse = require('awful.mouse')
+local notifications = require('config.notifications')
 local rules = require('config.rules')
 local signals = require('config.signals')
 local vars = require('config.vars')
 local wallpaper = require('awful.wallpaper')
 local wibar = require('config.wibar')
-local wibox = require('wibox')
 
 -- Initialize theme
 beautiful.init(filesystem.get_configuration_dir() .. 'theme.lua')
@@ -28,18 +28,19 @@ beautiful.init(filesystem.get_configuration_dir() .. 'theme.lua')
 screen.connect_signal('request::wallpaper', function(s)
 	wallpaper({
 		screen = s,
-		widget = {
-			{
-				image = vars.wallpaper,
-				upscale = true,
-				downscale = true,
-				widget = wibox.widget.imagebox,
-			},
-			valign = 'center',
-			halign = 'center',
-			tiled = false,
-			widget = wibox.container.tile,
-		},
+		bg = '#1e1e2e',
+		-- widget = {
+		-- 	{
+		-- 		image = vars.wallpaper,
+		-- 		upscale = true,
+		-- 		downscale = true,
+		-- 		widget = wibox.widget.imagebox,
+		-- 	},
+		-- 	valign = 'center',
+		-- 	halign = 'center',
+		-- 	tiled = false,
+		-- 	widget = wibox.container.tile,
+		-- },
 	})
 end)
 
@@ -67,6 +68,7 @@ end)
 
 wibar.init(vars)
 signals.init(vars)
+notifications.init()
 
 collectgarbage('setpause', 110)
 collectgarbage('setstepmul', 1000)

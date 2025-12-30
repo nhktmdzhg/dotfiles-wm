@@ -1,37 +1,11 @@
 ---@diagnostic disable: undefined-global
 local gears = require('gears')
-local spawn = require('awful.spawn')
+local notifications = require('config.notifications')
 
 local signals = {}
 
-local deadd_paused = false
-
 local function clamp(x, min, max)
 	return math.max(min, math.min(max, x))
-end
-
-function signals.pause_popups()
-	spawn({ 'notify-send', 'a', '-h', 'boolean:deadd-notification-center:true', '-h', 'string:type:pausePopups' })
-end
-
-function signals.unpause_popups()
-	spawn({ 'notify-send', 'a', '-h', 'boolean:deadd-notification-center:true', '-h', 'string:type:unpausePopups' })
-end
-
-function signals.toggle_deadd()
-	deadd_paused = not deadd_paused
-	if client.focus and client.focus.fullscreen then
-		return
-	end
-	if deadd_paused then
-		signals.pause_popups()
-	else
-		signals.unpause_popups()
-	end
-end
-
-function signals.is_deadd_paused()
-	return deadd_paused
 end
 
 function signals.init(vars)
@@ -50,16 +24,16 @@ function signals.init(vars)
 				width = math.min(wa.width - margin_left - margin_right, c.width),
 				height = math.min(wa.height - margin_top - margin_bottom, c.height),
 			})
-			if deadd_paused then
-				signals.pause_popups()
+			if notifications.is_paused() then
+				notifications.pause()
 			else
-				signals.unpause_popups()
+				notifications.unpause()
 			end
 			c.shape = function(cr, w, h)
 				gears.shape.rounded_rect(cr, w, h, 11)
 			end
 		else
-			signals.pause_popups()
+			notifications.pause()
 		end
 	end)
 
@@ -67,13 +41,13 @@ function signals.init(vars)
 		local screen = c.screen
 		if c.fullscreen then
 			screen.mywibar.visible = false
-			signals.pause_popups()
+			notifications.pause()
 		else
 			screen.mywibar.visible = true
-			if deadd_paused then
-				signals.pause_popups()
+			if notifications.is_paused() then
+				notifications.pause()
 			else
-				signals.unpause_popups()
+				notifications.unpause()
 			end
 		end
 	end)
@@ -105,16 +79,16 @@ function signals.init(vars)
 
 		if c.fullscreen then
 			screen.mywibar.visible = false
-			signals.pause_popups()
+			notifications.pause()
 			c.shape = function(cr, w, h)
 				gears.shape.rectangle(cr, w, h)
 			end
 		else
 			screen.mywibar.visible = true
-			if deadd_paused then
-				signals.pause_popups()
+			if notifications.is_paused() then
+				notifications.pause()
 			else
-				signals.unpause_popups()
+				notifications.unpause()
 			end
 			c.shape = function(cr, w, h)
 				gears.shape.rounded_rect(cr, w, h, 11)

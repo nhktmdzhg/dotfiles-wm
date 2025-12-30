@@ -215,17 +215,10 @@ function scripts.change_brightness(arg)
 				icon = 'display-brightness-high'
 			end
 
-			spawn({
-				'notify-send',
-				tostring(brightness),
-				'--hint',
-				'int:value:' .. brightness,
-				'--hint',
-				'string:synchronous:display-brightness',
-				'-i',
-				icon,
-				'-t',
-				'1000',
+			require('naughty').notification({
+				title = tostring(brightness),
+				app_icon = icon,
+				timeout = 1,
 			})
 		end)
 	end)

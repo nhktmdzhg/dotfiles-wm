@@ -5,7 +5,6 @@ local key = require('awful.key')
 local mouse = require('awful.mouse')
 local screen = require('awful.screen')
 local scripts = require('scripts')
-local signals = require('config.signals')
 local spawn = require('awful.spawn')
 
 local keys = {}
@@ -124,15 +123,9 @@ function keys.init(vars)
 		key({ super }, 'c', function()
 			spawn('legcord')
 		end),
-		-- Deadd toggle --
+		-- Naughty toggle --
 		key({ super, ctrl }, 'n', function()
-			signals.toggle_deadd()
-		end),
-		-- Deadd notification center toggle --
-		key({ super, shift }, 'n', function()
-			spawn.easy_async({ 'pidof', 'deadd-notification-center' }, function(stdout)
-				spawn({ 'kill', '-s', 'USR1', string.sub(stdout, 1, #stdout - 1) })
-			end)
+			require('config.notifications').toggle_naughty()
 		end),
 	}
 

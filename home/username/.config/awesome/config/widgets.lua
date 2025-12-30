@@ -1,6 +1,5 @@
 ---@diagnostic disable: undefined-global
 local gears = require('gears')
-local table = require('gears.table')
 local timer = require('gears.timer')
 
 local wibox = require('wibox')
@@ -12,9 +11,9 @@ local widget = require('awful.widget')
 local cairo = require('lgi').cairo
 
 local filesystem = require('gears.filesystem')
+local notifications = require('config.notifications')
 local palette = require('mocha')
 local scripts = require('scripts')
-local signals = require('config.signals')
 local surface = require('gears.surface')
 
 -- Path to default SVG icon for better scaling
@@ -291,10 +290,10 @@ function widgets.create_window_name(s)
 			else
 				name = 'No focused window'
 				s.mywibar.visible = true
-				if signals.is_deadd_paused() then
-					signals.pause_popups()
+				if notifications.is_paused() then
+					notifications.pause()
 				else
-					signals.unpause_popups()
+					notifications.unpause()
 				end
 			end
 			window_name.text = name

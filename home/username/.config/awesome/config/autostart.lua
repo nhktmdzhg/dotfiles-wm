@@ -19,7 +19,6 @@ local function spawn_once(cmd_name, cmd_full, use_full_cmd)
 end
 
 function autostart.init()
-	package.loaded['naughty.dbus'] = {}
 	spawn_once('xsettingsd', 'xsettingsd')
 	spawn({ 'wpctl', 'set-volume', '@DEFAULT_AUDIO_SOURCE@', '150%' })
 	spawn({ 'ksuperkey', '-e', 'Super_L=Alt_L|F2' })

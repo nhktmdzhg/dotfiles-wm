@@ -3,6 +3,7 @@ local awful = require('awful')
 local gears = require('gears')
 local mocha = require('mocha')
 package.cpath = package.cpath .. ';/usr/lib/lua-pam/?.so'
+local naughty = require('naughty')
 local pam = require('liblua_pam')
 local vars = require('config.vars')
 local wibox = require('wibox')
@@ -184,7 +185,10 @@ end
 
 local function authenticate(password)
 	if not pam then
-		awful.spawn({ 'notify-send', 'Cannot load PAM module', '-u', 'critical' })
+		naughty.notification({
+			title = 'Cannot load PAM module',
+			urgency = 'critical',
+		})
 		return true
 	end
 
@@ -194,7 +198,10 @@ local function authenticate(password)
 		end)
 
 		if not ok then
-			awful.spawn({ 'notify-send', 'PAM Error', '-u', 'critical' })
+			naughty.notification({
+				title = 'PAM Error',
+				urgency = 'critical',
+			})
 			return false
 		end
 
@@ -291,12 +298,10 @@ function lockscreen.show()
 				end
 			end,
 			stop_callback = function(self)
-				awful.spawn({
-					'notify-send',
-					'-i',
-					'im-user-online',
-					'Session Manager',
-					'Welcome back ' .. os.getenv('USER'),
+				naughty.notification({
+					title = 'Session Manager',
+					message = 'Welcome back ' .. os.getenv('USER'),
+					app_icon = 'im-user-online',
 				})
 				awful.spawn({ 'physlock', '-L' })
 			end,
