@@ -101,7 +101,7 @@ function keys.init(vars)
 			spawn('shutter')
 		end), -- Applications --
 		key({ super }, 'e', function()
-			spawn('pcmanfm')
+			spawn({ 'st', '-e', 'yazi' })
 		end),
 		key({ super }, 'l', function()
 			lockscreen.show()

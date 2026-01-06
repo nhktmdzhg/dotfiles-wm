@@ -20,7 +20,6 @@ noto-fonts
 nvim
 oxygen
 oxygen5
-pcmanfm
 physlock
 playerctl
 qt5ct
@@ -32,3 +31,4 @@ upower
 wireless_tools
 wireplumber
 xss-lock
+yazi

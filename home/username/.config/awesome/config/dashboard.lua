@@ -13,7 +13,7 @@ local avatar_path = os.getenv('HOME') .. '/.config/awesome/avatar.png'
 local launcher_list = {
 	{ name = 'St', icon = '', command = 'st' },
 	{ name = 'Firefox', icon = '', command = 'firefox' },
-	{ name = 'PCManFM', icon = '', command = 'pcmanfm' },
+	{ name = 'Yazi', icon = '', command = { 'st', '-e', 'yazi' } },
 	{ name = 'Neovim', icon = '', command = 'goneovim' },
 	{ name = 'Open config', icon = '', command = { 'sh', '-c', 'cd ~/.config/awesome && goneovim rc.lua' } },
 	{
