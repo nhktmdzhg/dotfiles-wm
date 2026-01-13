@@ -192,7 +192,7 @@ install_packages() {
 
     # Install packages
     print_info "Installing packages with $aur_helper..."
-    if "$aur_helper" -S --needed --noconfirm "${packages[@]}"; then
+    if "$aur_helper" -S --needed "${packages[@]}"; then
         print_success "All packages installed successfully"
     else
         print_error "Some packages failed to install"
