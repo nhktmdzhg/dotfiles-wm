@@ -28,14 +28,8 @@ local function set_icon(c, icon_widget)
 		elseif c.icon then
 			icon_widget.image = c.icon
 		else
-			if c.class == 'legcord' then
-				icon_widget.image = surface.load_uncached(icon_dir .. 'discord.svg')
-			elseif c.class == 'Zalo' then
+			if c.class == 'Zalo' then
 				icon_widget.image = surface.load_uncached('/opt/zalo/icon.png')
-			elseif c.class == 'goneovim' then
-				icon_widget.image = surface.load_uncached('/usr/share/pixmaps/goneovim.ico')
-			elseif c.class == 'dev.zed.Zed' then
-				icon_widget.image = surface.load_uncached('/usr/share/icons/zed.png')
 			else
 				icon_widget.image = surface.load_uncached(noicon_path)
 			end
@@ -228,7 +222,7 @@ function widgets.create_arch_logo()
 
 	arch_logo:connect_signal('button::press', function(_, _, _, button)
 		if button == 1 then
-			spawn({ 'env', 'XMODIFIERS=@im=none', 'rofi', '-no-lazy-grab', '-show', 'drun' })
+			spawn({ 'rofi', '-no-lazy-grab', '-show', 'drun' })
 		end
 	end)
 
@@ -387,7 +381,7 @@ function widgets.create_network()
 
 	network_icon_container:connect_signal('button::press', function(_, _, _, button)
 		if button == 1 then
-			spawn({ 'st', '-e', 'nmcurse' })
+			spawn({ 'wezterm-gui', '-e', 'nmcurse' })
 		end
 	end)
 

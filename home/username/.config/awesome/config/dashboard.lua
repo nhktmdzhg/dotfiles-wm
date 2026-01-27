@@ -11,15 +11,15 @@ local dashboard_visible = false
 
 local avatar_path = os.getenv('HOME') .. '/.config/awesome/avatar.png'
 local launcher_list = {
-	{ name = 'St', icon = '', command = 'st' },
+	{ name = 'Wezterm', icon = '', command = 'wezterm-gui' },
 	{ name = 'Firefox', icon = '', command = 'firefox' },
-	{ name = 'Yazi', icon = '', command = { 'st', '-e', 'yazi' } },
-	{ name = 'Neovim', icon = '', command = 'goneovim' },
-	{ name = 'Open config', icon = '', command = { 'sh', '-c', 'cd ~/.config/awesome && goneovim rc.lua' } },
+	{ name = 'Yazi', icon = '', command = { 'wezterm-gui', '-e', 'yazi' } },
+	{ name = 'Neovim', icon = '', command = 'neovide' },
+	{ name = 'Open config', icon = '', command = { 'sh', '-c', 'cd ~/.config/awesome && neovide rc.lua' } },
 	{
 		name = 'HSR',
 		icon = '',
-		command = { 'env', 'MANGOHUD=1', 'XMODIFIERS=@im=none', 'bottles-cli', 'run', '-p', 'HSR', '-b', 'michos' },
+		command = { 'env', 'MANGOHUD=1', 'bottles-cli', 'run', '-p', 'HSR', '-b', 'michos' },
 	},
 }
 

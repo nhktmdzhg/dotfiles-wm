@@ -6,12 +6,8 @@ bottom
 dash
 fastcompmgr-git
 fastfetch
-gd
 gsimplecal
-harfbuzz
-imlib2
 ksuperkey
-libxft
 lua-pam-git
 lxsession
 maple-mono-nf-cn-unhinted
@@ -28,6 +24,7 @@ rofi
 shutter
 ttf-jetbrains-mono-nerd
 upower
+wezterm-git
 wireless_tools
 wireplumber
 xss-lock

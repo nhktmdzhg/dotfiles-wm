@@ -77,7 +77,7 @@ The configuration includes **32 carefully selected packages** optimized for perf
 
 - `awesome` - High-performance AwesomeWM with Lua
 - `fastcompr` - Lightweight compositor for X11
-- `st` - Simple lightweight and customizable terminal emulator
+- `wezterm` - Customizable terminal emulator with GPU acceleration and Lua-based configuration
 
 ### 🎨 **Theming & Appearance**
 
@@ -162,6 +162,7 @@ chmod +x ~/.xinitrc
 # 5. Update font cache
 fc-cache -fv
 ```
+
 </details>
 
 ### 🔄 **Post-Installation**
@@ -214,7 +215,7 @@ This configuration implements multiple layers of security for screen locking:
 ~/.config/awesome/lock.sh
 
 # Or use the keybinding: Super + L
-````
+```
 
 **Security Benefits:**
 
@@ -228,16 +229,16 @@ This configuration implements multiple layers of security for screen locking:
 
 ### 🚀 **Essential Shortcuts**
 
-| Shortcut            | Action               | Application           |
-| ------------------- | -------------------- | --------------------- |
-| `Super`             | Application Launcher | Rofi                  |
-| `Ctrl + Alt + T`    | Terminal             | St                    |
-| `Super + E`         | File Manager         | Yazi                  |
-| `Super + B`         | Web Browser          | Default Browser       |
-| `Super + N`         | Text Editor          | Goneovim              |
-| `Super + Ctrl + N`  | Toggle Notifications | naughty popup on/off  |
-| `Super + Esc`       | Dashboard            | Custom Dashboard      |
-| `Super + L`         | Lock Screen          | Custom Lockscreen     |
+| Shortcut           | Action               | Application          |
+| ------------------ | -------------------- | -------------------- |
+| `Super`            | Application Launcher | Rofi                 |
+| `Ctrl + Alt + T`   | Terminal             | Wezterm              |
+| `Super + E`        | File Manager         | Yazi                 |
+| `Super + B`        | Web Browser          | Firefox              |
+| `Super + N`        | Text Editor          | Neovide              |
+| `Super + Ctrl + N` | Toggle Notifications | naughty popup on/off |
+| `Super + Esc`      | Dashboard            | Custom Dashboard     |
+| `Super + L`        | Lock Screen          | Custom Lockscreen    |
 
 ### 🪟 **Window Management**
 
@@ -353,9 +354,9 @@ Key configuration files and their purposes:
 
 Enhance your desktop experience with these complementary configurations:
 
-| Component      | Description                      | Repository                                         |
-| -------------- | -------------------------------- | ---------------------------------------------------|
-| **🔧 Neovim**  | Modern Vim-based editor with LSP | [nhktmdzhg/nvim](https://github.com/nhktmdzhg/nvim)|
+| Component     | Description                      | Repository                                          |
+| ------------- | -------------------------------- | --------------------------------------------------- |
+| **🔧 Neovim** | Modern Vim-based editor with LSP | [nhktmdzhg/nvim](https://github.com/nhktmdzhg/nvim) |
 
 ---
 

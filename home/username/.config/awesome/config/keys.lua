@@ -92,7 +92,7 @@ function keys.init(vars)
 			dashboard.toggle()
 		end),
 		key({ alt }, 'F2', function()
-			spawn({ 'env', 'XMODIFIERS=@im=none', 'rofi', '-no-lazy-grab', '-show', 'drun' })
+			spawn({ 'rofi', '-no-lazy-grab', '-show', 'drun' })
 		end), -- Screenshot controls --
 		key({ ctrl }, 'Print', function()
 			spawn({ 'shutter', '-s' })
@@ -101,16 +101,16 @@ function keys.init(vars)
 			spawn('shutter')
 		end), -- Applications --
 		key({ super }, 'e', function()
-			spawn({ 'st', '-e', 'yazi' })
+			spawn({ 'wezterm-gui', '-e', 'yazi' })
 		end),
 		key({ super }, 'l', function()
 			lockscreen.show()
 		end),
 		key({ ctrl, alt }, 't', function()
-			spawn({ 'st' })
+			spawn({ 'wezterm-gui' })
 		end),
 		key({ ctrl, shift }, 'Escape', function()
-			spawn({ 'st', '-e', 'btm' })
+			spawn({ 'wezterm-gui', '-e', 'btm' })
 		end), -- Awesome --
 		key({ super, ctrl }, 'r', awesome.restart),
 		key({ super }, 'd', toggle_show_desktop),
@@ -118,10 +118,10 @@ function keys.init(vars)
 			spawn('firefox')
 		end),
 		key({ super }, 'n', function()
-			spawn('goneovim')
+			spawn('neovide')
 		end),
 		key({ super }, 'c', function()
-			spawn('legcord')
+			spawn('discord')
 		end),
 		-- Naughty toggle --
 		key({ super, ctrl }, 'n', function()

@@ -310,10 +310,8 @@ function _M.preview()
 				elseif c.icon then
 					icon = gears.surface(c.icon)
 				else
-					if c.class == 'legcord' then
-						icon = gears.surface(gears.surface.load(icon_dir .. 'discord.svg'))
-					elseif c.class == 'Zalo' then
-						icon = gears.surface(gears.surface.load('/opt/zalo/icon.png'))
+					if c.class == 'Zalo' then
+						icon_widget.image = surface.load_uncached('/opt/zalo/icon.png')
 					else
 						icon = gears.surface(gears.surface.load(_M.noicon))
 					end
