@@ -118,7 +118,7 @@ function keys.init(vars)
 			spawn('firefox')
 		end),
 		key({ super }, 'n', function()
-			spawn('neovide')
+			spawn('goneovim')
 		end),
 		key({ super }, 'c', function()
 			spawn('discord')

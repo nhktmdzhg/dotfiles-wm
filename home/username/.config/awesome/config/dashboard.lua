@@ -14,8 +14,8 @@ local launcher_list = {
 	{ name = 'Wezterm', icon = '', command = 'wezterm-gui' },
 	{ name = 'Firefox', icon = '', command = 'firefox' },
 	{ name = 'Yazi', icon = '', command = { 'wezterm-gui', '-e', 'yazi' } },
-	{ name = 'Neovim', icon = '', command = 'neovide' },
-	{ name = 'Open config', icon = '', command = { 'sh', '-c', 'cd ~/.config/awesome && neovide rc.lua' } },
+	{ name = 'Neovim', icon = '', command = 'goneovim' },
+	{ name = 'Open config', icon = '', command = { 'sh', '-c', 'cd ~/.config/awesome && goneovim rc.lua' } },
 	{
 		name = 'HSR',
 		icon = '',

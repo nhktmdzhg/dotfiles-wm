@@ -235,7 +235,7 @@ This configuration implements multiple layers of security for screen locking:
 | `Ctrl + Alt + T`   | Terminal             | Wezterm              |
 | `Super + E`        | File Manager         | Yazi                 |
 | `Super + B`        | Web Browser          | Firefox              |
-| `Super + N`        | Text Editor          | Neovide              |
+| `Super + N`        | Text Editor          | Goneovim             |
 | `Super + Ctrl + N` | Toggle Notifications | naughty popup on/off |
 | `Super + Esc`      | Dashboard            | Custom Dashboard     |
 | `Super + L`        | Lock Screen          | Custom Lockscreen    |

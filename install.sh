@@ -2,309 +2,280 @@
 # AwesomeWM Dotfiles Installation Script
 # Author: ミツキナノカ (nhktmdzhg)
 # Description: Automated installer for AwesomeWM desktop environment
-# Version: 2.0
+# Version: 3.0
 
-set -euo pipefail  # Exit on error, undefined vars, pipe failures
+set -euo pipefail
 
-# Color codes for output
-readonly RED='\033[0;31m'
-readonly GREEN='\033[0;32m'
-readonly YELLOW='\033[1;33m'
-readonly BLUE='\033[0;34m'
-readonly PURPLE='\033[0;35m'
-readonly CYAN='\033[0;36m'
-readonly WHITE='\033[1;37m'
-readonly NC='\033[0m' # No Color
-
-# Script configuration
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly LOG_FILE="$SCRIPT_DIR/install.log"
 readonly BACKUP_DIR="$HOME/.dotfiles-backup-$(date +%Y%m%d_%H%M%S)"
 
-# Logging function
-log() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a "$LOG_FILE"
+bootstrap() {
+    echo ""
+    echo "  ==> Updating system (pacman -Syu)..."
+    sudo pacman -Syu --noconfirm
+
+    if ! command -v gum >/dev/null 2>&1; then
+        echo "  ==> Installing gum..."
+        sudo pacman -S --needed --noconfirm gum
+    fi
+
+    echo "  ==> Bootstrap complete."
+    echo ""
 }
 
-# Print functions
+# ─── Logging ──────────────────────────────────────────────────────────────────
+log() { echo "$(date '+%Y-%m-%d %H:%M:%S') [$1] $2" >> "$LOG_FILE"; }
+
+step()    { gum log --level info  "➤  $1"; log "STEP"    "$1"; }
+success() { gum log --level info  "✓  $1"; log "SUCCESS" "$1"; }
+warning() { gum log --level warn  "$1";    log "WARNING" "$1"; }
+err()     { gum log --level error "$1";    log "ERROR"   "$1"; }
+info()    { gum log --level debug "$1";    log "INFO"    "$1"; }
+
+# ─── Header ───────────────────────────────────────────────────────────────────
 print_header() {
-    echo -e "${PURPLE}════════════════════════════════════════════════════════════════${NC}"
-    echo -e "${WHITE}           AwesomeWM Dotfiles Installation Script${NC}"
-    echo -e "${WHITE}                    ミツキナノカ's Setup${NC}"
-    echo -e "${PURPLE}════════════════════════════════════════════════════════════════${NC}"
+    clear
+    gum style \
+    --border double \
+    --border-foreground 135 \
+    --foreground 255 \
+    --bold \
+    --align center \
+    --width 64 \
+    --padding "1 4" \
+    "⚙  AwesomeWM Dotfiles Installer" \
+    "ミツキナノカ's Setup  •  v3.0"
     echo
 }
 
-print_step() {
-    echo -e "${CYAN}➤ $1${NC}"
-    log "STEP: $1"
-}
-
-print_success() {
-    echo -e "${GREEN}✓ $1${NC}"
-    log "SUCCESS: $1"
-}
-
-print_warning() {
-    echo -e "${YELLOW}⚠ WARNING: $1${NC}"
-    log "WARNING: $1"
-}
-
-print_error() {
-    echo -e "${RED}✗ ERROR: $1${NC}"
-    log "ERROR: $1"
-}
-
-print_info() {
-    echo -e "${BLUE}ℹ $1${NC}"
-    log "INFO: $1"
-}
-
-# Check if running on Arch Linux
+# ─── Check system ─────────────────────────────────────────────────────────────
 check_system() {
-    print_step "Checking system compatibility..."
+    step "Checking system compatibility..."
 
     if ! command -v pacman >/dev/null 2>&1; then
-        print_error "This script requires Arch Linux or an Arch-based distribution"
+        err "This script requires Arch Linux or an Arch-based distribution"
         exit 1
     fi
 
     if [[ $EUID -eq 0 ]]; then
-        print_error "Do not run this script as root!"
+        err "Do not run this script as root!"
         exit 1
     fi
 
-    print_success "System check passed - Arch Linux detected"
+    success "System check passed — Arch Linux btw detected"
 }
 
-# Create backup of existing configurations
+# ─── Backup ───────────────────────────────────────────────────────────────────
 create_backup() {
-    print_step "Creating backup of existing configurations..."
+    step "Checking for existing configurations..."
 
-    local backup_needed=false
-    local configs_to_backup=(
-        ".config/awesome"
-        ".config/rofi"
-        ".config/fastfetch"
-        ".config/gtk-2.0"
-        ".config/gtk-3.0"
-        ".config/gtk-4.0"
-        ".config/qt5ct"
-        ".config/qt6ct"
-        ".xinitrc"
-        ".Xresources"
-        ".gtkrc-2.0"
+    local configs=(
+        ".config/awesome" ".config/rofi" ".config/fastfetch"
+        ".config/gtk-2.0" ".config/gtk-3.0" ".config/gtk-4.0"
+        ".config/qt5ct" ".config/qt6ct"
+        ".xinitrc" ".Xresources" ".gtkrc-2.0"
     )
 
-    for config in "${configs_to_backup[@]}"; do
-        if [[ -e "$HOME/$config" ]]; then
-            backup_needed=true
-            break
-        fi
+    local found=()
+    for c in "${configs[@]}"; do
+        [[ -e "$HOME/$c" ]] && found+=("$c")
     done
 
-    if [[ "$backup_needed" == true ]]; then
-        mkdir -p "$BACKUP_DIR"
-        for config in "${configs_to_backup[@]}"; do
-            if [[ -e "$HOME/$config" ]]; then
-                cp -r "$HOME/$config" "$BACKUP_DIR/" 2>/dev/null || true
-                print_info "Backed up: $config"
-            fi
-        done
-        print_success "Backup created at: $BACKUP_DIR"
-    else
-        print_info "No existing configurations found - backup skipped"
+    if [[ ${#found[@]} -eq 0 ]]; then
+        info "No existing configs found — backup skipped"
+        return 0
     fi
+
+    gum style --foreground 220 --bold "Found existing configs:"
+    printf '  • %s\n' "${found[@]}"
+    echo
+
+    # gum confirm: exit 0 = Yes, exit 1 = No
+    if ! gum confirm "Create backup before overwriting?"; then
+        warning "Backup skipped by user"
+        return 0
+    fi
+
+    mkdir -p "$BACKUP_DIR"
+    for c in "${found[@]}"; do
+        cp -r "$HOME/$c" "$BACKUP_DIR/" 2>/dev/null || true
+        info "Backed up: $c"
+    done
+
+    success "Backup saved to: $BACKUP_DIR"
 }
 
-# Install AUR helper
+# ─── AUR helper ───────────────────────────────────────────────────────────────
 install_aur_helper() {
-    print_step "Checking for AUR helper..."
+    step "Checking for AUR helper..."
 
-    local aur_helpers=("paru" "yay" "trizen" "pikaur")
-    local aur_helper=""
-
-    for helper in "${aur_helpers[@]}"; do
+    for helper in paru yay trizen pikaur; do
         if command -v "$helper" >/dev/null 2>&1; then
-            aur_helper="$helper"
-            break
+            success "Found AUR helper: $helper"
+            echo "$helper"
+            return 0
         fi
     done
 
-    if [[ -z "$aur_helper" ]]; then
-        print_info "No AUR helper found. Installing paru..."
+    info "No AUR helper found."
 
-        # Install dependencies
-        sudo pacman -S --needed --noconfirm base-devel git
+    local choice
+    choice=$(gum choose \
+        --header "Select AUR helper to install:" \
+    "paru" "yay" "trizen" "pikaur")
 
-        # Clone and install paru
-        local temp_dir
-        temp_dir=$(mktemp -d)
-        cd "$temp_dir"
+    gum confirm "Install $choice now?" || { err "AUR helper installation cancelled"; exit 1; }
 
-        git clone https://aur.archlinux.org/paru-bin.git
-        cd paru-bin
-        makepkg -si --noconfirm
+    local tmp_dir
+    tmp_dir=$(mktemp -d)
 
-        cd "$SCRIPT_DIR"
-        rm -rf "$temp_dir"
+    gum spin --spinner globe --title "Cloning $choice from AUR..." -- \
+    git clone "https://aur.archlinux.org/${choice}-bin.git" "$tmp_dir/${choice}-bin" 2>/dev/null \
+    || git clone "https://aur.archlinux.org/${choice}.git" "$tmp_dir/${choice}"
 
-        aur_helper="paru"
-        print_success "Paru installed successfully"
-    else
-        print_success "Found AUR helper: $aur_helper"
-    fi
+    local build_dir="$tmp_dir/${choice}-bin"
+    [[ -d "$build_dir" ]] || build_dir="$tmp_dir/${choice}"
 
-    echo "$aur_helper"
+    gum spin --spinner moon --title "Building & installing $choice..." -- \
+    bash -c "cd '$build_dir' && makepkg -si --noconfirm"
+
+    rm -rf "$tmp_dir"
+    success "$choice installed successfully"
+    echo "$choice"
 }
 
-# Install packages from pkgs.txt
+# ─── Install packages ─────────────────────────────────────────────────────────
 install_packages() {
     local aur_helper="$1"
-    print_step "Installing packages from pkgs.txt..."
+    step "Reading packages from pkgs.txt..."
 
     if [[ ! -f "$SCRIPT_DIR/pkgs.txt" ]]; then
-        print_error "pkgs.txt not found in $SCRIPT_DIR"
+        err "pkgs.txt not found in $SCRIPT_DIR"
         return 1
     fi
 
     local packages=()
-    local pkg_count=0
-
-    # Read packages from file
     while IFS= read -r line || [[ -n "$line" ]]; do
-        # Remove comments and whitespace
         line=$(echo "$line" | sed 's/#.*$//' | xargs)
-
-        # Skip empty lines
-        if [[ -n "$line" ]]; then
-            packages+=("$line")
-            ((pkg_count++))
-        fi
+        [[ -n "$line" ]] && packages+=("$line")
     done < "$SCRIPT_DIR/pkgs.txt"
 
     if [[ ${#packages[@]} -eq 0 ]]; then
-        print_warning "No valid packages found in pkgs.txt"
+        warning "No valid packages found in pkgs.txt"
         return 0
     fi
 
-    print_info "Found $pkg_count packages to install"
+    info "Found ${#packages[@]} packages to install"
 
-    # Install packages
-    print_info "Installing packages with $aur_helper..."
-    if "$aur_helper" -S --needed "${packages[@]}"; then
-        print_success "All packages installed successfully"
-    else
-        print_error "Some packages failed to install"
-        return 1
-    fi
+    gum style --foreground 220 --bold "Packages to install:"
+    printf '  • %s\n' "${packages[@]}"
+    echo
+
+    gum confirm "Install all ${#packages[@]} packages with $aur_helper?" \
+    || { err "Installation cancelled by user"; exit 1; }
+
+    gum spin --spinner moon --show-output \
+    --title "Installing packages with $aur_helper (this may take a while)..." -- \
+    "$aur_helper" -S --needed "${packages[@]}"
+
+    success "All packages installed successfully"
 }
 
-# Copy configuration files
+# ─── Install configs ──────────────────────────────────────────────────────────
 install_configs() {
-    print_step "Installing configuration files..."
+    step "Installing configuration files..."
 
     local source_dir="$SCRIPT_DIR/home/username"
 
     if [[ ! -d "$source_dir" ]]; then
-        print_error "Configuration directory not found: $source_dir"
+        err "Config source directory not found: $source_dir"
         return 1
     fi
 
-    # Copy files with progress
-    print_info "Copying configuration files..."
-    if cp -rf "$source_dir"/. "$HOME/"; then
-        print_success "Configuration files copied successfully"
-    else
-        print_error "Failed to copy configuration files"
-        return 1
-    fi
+    gum spin --spinner dot --title "Copying dotfiles to $HOME..." -- \
+    cp -rf "$source_dir"/. "$HOME/"
 
-    print_info "Copying PAM configuration file..."
-    if sudo cp "$SCRIPT_DIR/etc/pam.d/awesome" "/etc/pam.d"; then
-        print_success "PAM Configuration file copied successfully"
-    else
-        print_error "Failed to copy PAM configuration file"
-        return 1
-    fi
+    gum spin --spinner dot --title "Copying PAM config (/etc/pam.d/awesome)..." -- \
+    sudo cp "$SCRIPT_DIR/etc/pam.d/awesome" "/etc/pam.d/"
 
-    # Set proper permissions
-    print_info "Setting proper permissions..."
     chmod +x "$HOME/.config/awesome/lock.sh" 2>/dev/null || true
     chmod +x "$HOME/.xinitrc" 2>/dev/null || true
 
-    print_success "Permissions set successfully"
+    success "Configuration files installed & permissions set"
 }
 
-# Post-installation tasks
+# ─── Post install ─────────────────────────────────────────────────────────────
 post_install() {
-    print_step "Running post-installation tasks..."
+    step "Running post-installation tasks..."
 
-    # Update font cache
     if command -v fc-cache >/dev/null 2>&1; then
-        print_info "Updating font cache..."
-        fc-cache -fv >/dev/null 2>&1
-        print_success "Font cache updated"
+        gum spin --spinner dot --title "Updating font cache..." -- fc-cache -fv
+        success "Font cache updated"
     fi
 
-    print_success "Post-installation tasks completed"
+    success "Post-installation tasks completed"
 }
 
-# Display final instructions
+# ─── Final message ────────────────────────────────────────────────────────────
 show_final_message() {
     echo
-    echo -e "${GREEN}════════════════════════════════════════════════════════════════${NC}"
-    echo -e "${WHITE}                    Installation Complete!${NC}"
-    echo -e "${GREEN}════════════════════════════════════════════════════════════════${NC}"
+    gum style \
+    --border rounded \
+    --border-foreground 76 \
+    --foreground 255 \
+    --bold \
+    --align center \
+    --width 64 \
+    --padding "1 4" \
+    "✅  Installation Complete!"
     echo
-    echo -e "${YELLOW}Next steps:${NC}"
-    echo -e "  1. ${CYAN}Log out and log back in${NC}"
-    echo -e "  2. ${CYAN}Select 'AwesomeWM' from your display manager${NC}"
+
+    gum style --foreground 220 --bold "Next steps:"
+    echo "  1. $(gum style --foreground 51 'Log out and log back in')"
+    echo "  2. $(gum style --foreground 51 "Select 'AwesomeWM' from your display manager")"
     echo
-    echo -e "${YELLOW}Useful commands:${NC}"
-    echo -e "  • ${CYAN}Super${NC} - Open application launcher"
-    echo -e "  • ${CYAN}Super + Ctrl + R${NC} - Reload AwesomeWM"
-    echo -e "  • ${CYAN}Super + Esc${NC} - Session menu"
+
+    gum style --foreground 220 --bold "Useful shortcuts:"
+    echo "  • $(gum style --foreground 212 'Super')              — Open application launcher"
+    echo "  • $(gum style --foreground 212 'Super + Ctrl + R')   — Reload AwesomeWM"
+    echo "  • $(gum style --foreground 212 'Super + Esc')        — Session menu"
     echo
-    echo -e "${BLUE}Installation log: $LOG_FILE${NC}"
-    if [[ -d "$BACKUP_DIR" ]]; then
-        echo -e "${BLUE}Backup location: $BACKUP_DIR${NC}"
-    fi
+
+    gum style --foreground 69 "📄 Log  : $LOG_FILE"
+    [[ -d "$BACKUP_DIR" ]] && gum style --foreground 69 "💾 Backup: $BACKUP_DIR"
     echo
-    echo -e "${PURPLE}Made with 💙 by ミツキナノカ${NC}"
+    gum style --foreground 135 --align center --width 64 "Made with 💙 by ミツキナノカ"
     echo
 }
 
-# Cleanup function
+# ─── Cleanup ──────────────────────────────────────────────────────────────────
 cleanup() {
-    local exit_code=$?
-    if [[ $exit_code -ne 0 ]]; then
-        print_error "Installation failed! Check $LOG_FILE for details."
-    fi
-    exit $exit_code
+    local code=$?
+    [[ $code -ne 0 ]] && err "Installation failed! Check $LOG_FILE for details."
+    exit $code
 }
 
-# Main installation function
+# ─── Main ─────────────────────────────────────────────────────────────────────
 main() {
-    # Set up error handling
     trap cleanup EXIT
-
-    # Clear log file
     : > "$LOG_FILE"
 
-    # Start installation
-    print_header
+    bootstrap
 
+    print_header
     check_system
     create_backup
+
     local aur_helper
     aur_helper=$(install_aur_helper)
+
     install_packages "$aur_helper"
     install_configs
     post_install
     show_final_message
 
-    print_success "Installation completed successfully!"
+    success "Installation completed successfully!"
 }
 
 # Run main function
