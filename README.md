@@ -76,7 +76,7 @@ The configuration includes **32 carefully selected packages** optimized for perf
 ### 🏗️ **Core System**
 
 - `awesome` - High-performance AwesomeWM with Lua
-- `fastcompr` - Lightweight compositor for X11
+- `srcom` - Lightweight compositor for X11
 - `wezterm` - Customizable terminal emulator with GPU acceleration and Lua-based configuration
 
 ### 🎨 **Theming & Appearance**

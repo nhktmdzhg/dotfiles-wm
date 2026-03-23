@@ -4,7 +4,6 @@ bluez-utils
 brightnessctl
 bottom
 dash
-fastcompmgr-git
 fastfetch
 gsimplecal
 ksuperkey
@@ -22,6 +21,7 @@ qt5ct
 qt6ct
 rofi
 shutter
+srcom-bin
 ttf-jetbrains-mono-nerd
 upower
 wezterm-git
