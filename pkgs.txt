@@ -6,6 +6,7 @@ bottom
 dash
 fastfetch
 gsimplecal
+ksnip
 ksuperkey
 lua-pam-git
 lxsession
@@ -20,7 +21,6 @@ playerctl
 qt5ct
 qt6ct
 rofi
-shutter
 srcom-bin
 ttf-jetbrains-mono-nerd
 upower

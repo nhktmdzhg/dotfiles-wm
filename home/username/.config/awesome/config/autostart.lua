@@ -37,6 +37,7 @@ function autostart.init()
 	spawn_once('fcitx5', 'fcitx5')
 	spawn.once({ 'bluetoothctl', 'power', 'off' })
 	spawn_once('xmousepastebloc', 'xmousepasteblock')
+	spawn({ 'wmname', 'march7th' })
 end
 
 return autostart
