@@ -5,8 +5,8 @@ brightnessctl
 bottom
 dash
 fastfetch
+flameshot
 gsimplecal
-ksnip
 ksuperkey
 lua-pam-git
 lxsession
@@ -15,10 +15,8 @@ nmcurse-rs-git
 noto-fonts
 nvim
 oxygen
-oxygen5
 physlock
 playerctl
-qt5ct
 qt6ct
 rofi
 srcom-bin

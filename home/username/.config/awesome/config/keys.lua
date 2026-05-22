@@ -95,10 +95,10 @@ function keys.init(vars)
 			spawn({ 'rofi', '-no-lazy-grab', '-show', 'drun' })
 		end), -- Screenshot controls --
 		key({ ctrl }, 'Print', function()
-			spawn({ 'ksnip', '-r' })
+			spawn({ 'flameshot', 'gui' })
 		end),
 		key({}, 'Print', function()
-			spawn('ksnip')
+			spawn('flameshot')
 		end), -- Applications --
 		key({ super }, 'e', function()
 			spawn({ 'wezterm-gui', '-e', 'yazi' })
