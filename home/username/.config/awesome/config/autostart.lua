@@ -23,7 +23,7 @@ function autostart.init()
 	spawn({ 'wpctl', 'set-volume', '@DEFAULT_AUDIO_SOURCE@', '150%' })
 	spawn({ 'ksuperkey', '-e', 'Super_L=Alt_L|F2' })
 	spawn({ 'ksuperkey', '-e', 'Super_R=Alt_L|F2' })
-	spawn_once('srcom', { 'srcom' })
+	spawn_once('picom', { 'picom' })
 	spawn_once('polkit-gnome-au', '/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1')
 	spawn_once('xss-lock', { 'xss-lock', '-q', '-l', os.getenv('HOME') .. '/.config/awesome/lock.sh' })
 	spawn({ 'xset', 's', 'off' })
@@ -37,6 +37,7 @@ function autostart.init()
 	spawn.once({ 'bluetoothctl', 'power', 'off' })
 	spawn_once('xmousepastebloc', 'xmousepasteblock')
 	spawn({ 'wmname', 'march7th' })
+	spawn_once('zalo-for-linux', { 'zalo', '--disable-gpu' })
 end
 
 return autostart

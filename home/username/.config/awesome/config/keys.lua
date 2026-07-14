@@ -4,6 +4,7 @@ local dashboard = require('config.dashboard')
 local key = require('awful.key')
 local mouse = require('awful.mouse')
 local screen = require('awful.screen')
+local screenshot = require('awful.screenshot')
 local scripts = require('scripts')
 local spawn = require('awful.spawn')
 
@@ -95,10 +96,18 @@ function keys.init(vars)
 			spawn({ 'rofi', '-no-lazy-grab', '-show', 'drun' })
 		end), -- Screenshot controls --
 		key({ ctrl }, 'Print', function()
-			spawn({ 'flameshot', 'gui' })
+			spawn('shutter')
 		end),
 		key({}, 'Print', function()
-			spawn('flameshot')
+			local ss = screenshot({
+				interactive = true,
+				directory = '/tmp',
+			})
+			ss:connect_signal('file::saved', function(_, file_path)
+				spawn.with_shell('xclip -selection clipboard -t image/png -i ' .. file_path .. ' && rm ' .. file_path)
+			end)
+
+			ss:refresh()
 		end), -- Applications --
 		key({ super }, 'e', function()
 			spawn({ 'wezterm-gui', '-e', 'yazi' })

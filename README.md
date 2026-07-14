@@ -76,7 +76,7 @@ The configuration includes **32 carefully selected packages** optimized for perf
 ### 🏗️ **Core System**
 
 - `awesome` - High-performance AwesomeWM with Lua
-- `srcom` - Lightweight compositor for X11
+- `picom` - Lightweight compositor for X11
 - `wezterm` - Customizable terminal emulator with GPU acceleration and Lua-based configuration
 
 ### 🎨 **Theming & Appearance**
@@ -92,7 +92,7 @@ The configuration includes **32 carefully selected packages** optimized for perf
 - `fastfetch` - Modern system information display
 - `playerctl` - Media player control
 - `brightnessctl` - Backlight control
-- `ksnip` - Screenshot tool
+- `shutter` - Screenshot tool
 
 ### 🔧 **System Integration**
 
@@ -266,14 +266,14 @@ This configuration implements multiple layers of security for screen locking:
 
 ### � **Screenshots & System**
 
-| Shortcut                | Action             | Tool                  |
-| ----------------------- | ------------------ | --------------------- |
-| `Print`                 | Screenshot Toolbar | ksnip                 |
-| `Ctrl + Print`          | Area Screenshot    | ksnip (region select) |
-| `Ctrl + Shift + Esc`    | System Monitor     | bottom                |
-| `XF86MonBrightnessUp`   | Brightness +       | brightnessctl         |
-| `XF86MonBrightnessDown` | Brightness -       | brightnessctl         |
-| `Super + Ctrl + R`      | Reload WM          | Restart AwesomeWM     |
+| Shortcut                | Action          | Tool              |
+| ----------------------- | --------------- | ----------------- |
+| `Print`                 | Area Screenshot | Built in          |
+| `Ctrl + Print`          | Screenshot Tool | shutter           |
+| `Ctrl + Shift + Esc`    | System Monitor  | bottom            |
+| `XF86MonBrightnessUp`   | Brightness +    | brightnessctl     |
+| `XF86MonBrightnessDown` | Brightness -    | brightnessctl     |
+| `Super + Ctrl + R`      | Reload WM       | Restart AwesomeWM |
 
 ---
 

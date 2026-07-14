@@ -381,7 +381,7 @@ function widgets.create_network()
 
 	network_icon_container:connect_signal('button::press', function(_, _, _, button)
 		if button == 1 then
-			spawn({ 'wezterm-gui', '-e', 'nmcurse' })
+			spawn({ 'wezterm-gui', '-e', 'env', 'NMTUI_NO_UPDATE_CHECK=1', 'nmtui-go' })
 		end
 	end)
 

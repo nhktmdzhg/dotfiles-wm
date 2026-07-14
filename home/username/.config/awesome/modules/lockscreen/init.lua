@@ -281,6 +281,8 @@ function lockscreen.show()
 	if not lockscreen.keygrabber then
 		lockscreen.keygrabber = awful.keygrabber({
 			autostart = false,
+			stop_key = nil,
+			stop_event = nil,
 			keypressed_callback = function(self, modifiers, key, event)
 				if key == 'BackSpace' then
 					if #lockscreen.password > 0 then
