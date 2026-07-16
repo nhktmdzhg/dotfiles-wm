@@ -95,10 +95,10 @@ function keys.init(vars)
 		key({ alt }, 'F2', function()
 			spawn({ 'rofi', '-no-lazy-grab', '-show', 'drun' })
 		end), -- Screenshot controls --
-		key({ ctrl }, 'Print', function()
+		key({}, 'Print', function()
 			spawn('shutter')
 		end),
-		key({}, 'Print', function()
+		key({ ctrl }, 'Print', function()
 			local ss = screenshot({
 				interactive = true,
 				directory = '/tmp',

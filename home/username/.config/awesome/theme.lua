@@ -27,4 +27,8 @@ theme.notification_crit_fg = palette.text.hex
 theme.notification_crit_border_color = palette.peach.hex
 
 theme.notification_font = 'Maple Mono NF CN 12'
+theme.screenshot_frame_color = palette.red.hex
+theme.screenshot_frame_shape = function(cr, w, h)
+	shape.rounded_rect(cr, w, h, 12)
+end
 return theme
