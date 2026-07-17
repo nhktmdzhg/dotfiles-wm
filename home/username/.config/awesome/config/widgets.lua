@@ -18,11 +18,11 @@ local surface = require('gears.surface')
 
 -- Path to default SVG icon for better scaling
 local noicon_path = filesystem.get_configuration_dir() .. 'awesome-switcher/noicon.svg'
-local icon_dir = os.getenv('HOME') .. '/.local/share/icons/BeautyLine/apps/scalable/'
+local icon_dir = '/usr/share/icons/BeautyLine/apps/scalable/'
 
 local function set_icon(c, icon_widget)
 	if icon_widget and c then
-		local icon_path = icon_dir .. string.lower(c.class) .. '.svg'
+		local icon_path = icon_dir .. c.class .. '.svg'
 		if filesystem.file_readable(icon_path) then
 			icon_widget.image = surface.load_uncached(icon_path)
 		elseif c.icon then

@@ -43,7 +43,7 @@ local PREVIEW_BOX_TITLE_FONT = { 'sans', 'italic', 'normal' }
 local PREVIEW_BOX_TITLE_FONT_SIZE_FACTOR = 0.8
 local PREVIEW_BOX_TITLE_COLOR = text_color_normalized
 local CYCLE_ALL_CLIENTS = false
-local icon_dir = os.getenv('HOME') .. '/.local/share/icons/BeautyLine/apps/scalable/'
+local icon_dir = '/usr/share/icons/BeautyLine/apps/scalable/'
 
 -- Create wibox with optimized settings
 _M.preview_wbox = wibox({

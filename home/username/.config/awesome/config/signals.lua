@@ -1,6 +1,9 @@
 ---@diagnostic disable: undefined-global
+local filesystem = require('gears.filesystem')
 local gears = require('gears')
 local notifications = require('config.notifications')
+
+local icon_dir = '/usr/share/icons/BeautyLine/apps/scalable/'
 
 local signals = {}
 
@@ -34,6 +37,12 @@ function signals.init(vars)
 			end
 		else
 			notifications.pause()
+		end
+		local icon_path = icon_dir .. c.class .. '.svg'
+		if filesystem.file_readable(icon_path) then
+			c.icon = nil
+		elseif c.icon then
+			c.icon = c.icon
 		end
 	end)
 

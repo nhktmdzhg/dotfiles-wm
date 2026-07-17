@@ -125,7 +125,7 @@ function notifications.init()
 			return
 		end
 
-		local beautyline_base = os.getenv('HOME') .. '/.local/share/icons/BeautyLine/'
+		local beautyline_base = '/usr/share/icons/BeautyLine/'
 		local gfs = require('gears.filesystem')
 
 		local function find_in_beautyline(icon_name)
@@ -155,7 +155,7 @@ function notifications.init()
 			return
 		end
 
-		local beautyline_base = os.getenv('HOME') .. '/.local/share/icons/BeautyLine/'
+		local beautyline_base = '/usr/share/icons/BeautyLine/'
 		local gfs = require('gears.filesystem')
 
 		local function find_in_beautyline(icon_name)
