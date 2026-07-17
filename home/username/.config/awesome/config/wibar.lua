@@ -9,7 +9,7 @@ local widgets = require('config.widgets')
 
 local wibar = {}
 
-function wibar.init(vars)
+function wibar.init()
 	screen.connect_signal('request::desktop_decoration', function(s)
 		-- Each screen has its own tag table.
 		tag({ '1' }, s, layout.layouts[1])
@@ -32,6 +32,7 @@ function wibar.init(vars)
 		local mysystray = widgets.create_systray()
 		local window_name_container = widgets.create_window_name(s)
 		local battery_icon_container, battery_percent_container = widgets.create_battery()
+		local proton_vpn_status_container = widgets.create_proton_vpn()
 		local network_icon_container, network_status_container = widgets.create_network()
 		local volume_icon_container, volume_percent_container = widgets.create_volume()
 		local calendar_icon_container, date_widget_container, time_widget_container = widgets.create_calendar()
@@ -60,6 +61,8 @@ function wibar.init(vars)
 				battery_icon_container,
 				simple_separator,
 				battery_percent_container,
+				simple_separator,
+				proton_vpn_status_container,
 				simple_separator,
 				network_icon_container,
 				simple_separator,

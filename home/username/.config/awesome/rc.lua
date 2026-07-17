@@ -66,7 +66,7 @@ client.connect_signal('request::default_mousebindings', function()
 	mouse.append_client_mousebindings(keybindings.clientbuttons)
 end)
 
-wibar.init(vars)
+wibar.init()
 signals.init(vars)
 notifications.init()
 

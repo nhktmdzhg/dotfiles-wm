@@ -665,4 +665,46 @@ function widgets.create_dashboard_toggle()
 	return dashboard_icon_container
 end
 
+function widgets.create_proton_vpn()
+	local vpn_status = wibox.widget({
+		widget = wibox.widget.textbox,
+		font = 'Maple Mono NF CN 9',
+		halign = 'center',
+		valign = 'center',
+	})
+
+	local vpn_status_container = wibox.container.margin(vpn_status, 2, 2, 6, 6)
+	vpn_status_container = wibox.container.background(vpn_status_container)
+
+	tooltip({
+		objects = { vpn_status_container },
+		text = 'VPN Connection Status',
+		mode = 'outside',
+	})
+
+	vpn_status_container:connect_signal('button::press', function(_, _, _, button)
+		if button == 1 then
+			spawn('wezterm-gui -e pvpn')
+		end
+	end)
+
+	timer({
+		timeout = 1,
+		autostart = true,
+		call_now = true,
+		callback = function()
+			scripts.get_proton_vpn_info(function(status)
+				vpn_status.text = status
+				if status == '󰖂 ' then
+					vpn_status_container.fg = palette.mauve.hex
+				else
+					vpn_status_container.fg = palette.text.hex
+				end
+			end)
+		end,
+	})
+
+	return vpn_status_container
+end
+
 return widgets

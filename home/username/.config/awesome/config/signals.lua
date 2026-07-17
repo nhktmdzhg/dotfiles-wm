@@ -41,8 +41,6 @@ function signals.init(vars)
 		local icon_path = icon_dir .. c.class .. '.svg'
 		if filesystem.file_readable(icon_path) then
 			c.icon = nil
-		elseif c.icon then
-			c.icon = c.icon
 		end
 	end)
 

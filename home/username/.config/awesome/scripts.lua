@@ -224,4 +224,18 @@ function scripts.change_brightness(arg)
 	end)
 end
 
+function scripts.get_proton_vpn_info(callback)
+	spawn.easy_async({ 'pvpnctl', 'status' }, function(stdout)
+		local status
+
+		if stdout:match('Status:%s+Connected') then
+			local server_name = stdout:match('Server:%s+(%S+)')
+			status = server_name or 'Connected'
+		else
+			status = '󰖂 '
+		end
+		callback(status)
+	end)
+end
+
 return scripts
