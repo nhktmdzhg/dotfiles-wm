@@ -135,7 +135,7 @@ function keys.init(vars)
 		-- Naughty toggle --
 		key({ super, ctrl }, 'n', function()
 			require('config.notifications').toggle_naughty()
-		end),
+		end)
 	}
 
 	local clientkeys = {

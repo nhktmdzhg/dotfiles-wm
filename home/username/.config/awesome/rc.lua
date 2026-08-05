@@ -20,6 +20,7 @@ local signals = require('config.signals')
 local vars = require('config.vars')
 local wallpaper = require('awful.wallpaper')
 local wibar = require('config.wibar')
+local wibox = require('wibox')
 
 -- Initialize theme
 beautiful.init(filesystem.get_configuration_dir() .. 'theme.lua')
@@ -28,19 +29,18 @@ beautiful.init(filesystem.get_configuration_dir() .. 'theme.lua')
 screen.connect_signal('request::wallpaper', function(s)
 	wallpaper({
 		screen = s,
-		bg = '#1e1e2e',
-		-- widget = {
-		-- 	{
-		-- 		image = vars.wallpaper,
-		-- 		upscale = true,
-		-- 		downscale = true,
-		-- 		widget = wibox.widget.imagebox,
-		-- 	},
-		-- 	valign = 'center',
-		-- 	halign = 'center',
-		-- 	tiled = false,
-		-- 	widget = wibox.container.tile,
-		-- },
+		widget = {
+			{
+				image = vars.wallpaper,
+				upscale = true,
+				downscale = true,
+				widget = wibox.widget.imagebox,
+			},
+			valign = 'center',
+			halign = 'center',
+			tiled = false,
+			widget = wibox.container.tile,
+		},
 	})
 end)
 

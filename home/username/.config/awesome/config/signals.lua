@@ -32,9 +32,6 @@ function signals.init(vars)
 			else
 				notifications.unpause()
 			end
-			c.shape = function(cr, w, h)
-				gears.shape.rounded_rect(cr, w, h, 11)
-			end
 		else
 			notifications.pause()
 		end
@@ -87,18 +84,12 @@ function signals.init(vars)
 		if c.fullscreen then
 			screen.mywibar.visible = false
 			notifications.pause()
-			c.shape = function(cr, w, h)
-				gears.shape.rectangle(cr, w, h)
-			end
 		else
 			screen.mywibar.visible = true
 			if notifications.is_paused() then
 				notifications.pause()
 			else
 				notifications.unpause()
-			end
-			c.shape = function(cr, w, h)
-				gears.shape.rounded_rect(cr, w, h, 11)
 			end
 		end
 	end)

@@ -353,7 +353,7 @@ local function create_brightness_control()
 		handle_border_width = 1,
 		handle_border_color = palette.blue.hex,
 		minimum = 0,
-		maximum = 100,
+		maximum = 95,
 		value = 69,
 	})
 
@@ -392,8 +392,15 @@ local function create_brightness_control()
 		awful.spawn.easy_async({ 'brightnessctl', 'g' }, function(stdout)
 			local brightness = tonumber(stdout:match('(%d+)'))
 			if brightness then
-				brightness_slider.value = brightness
-				update_brightness_icon(brightness)
+				awful.spawn.easy_async({ 'brightnessctl', 'm' }, function(max_output)
+					local max_brightness = tonumber(max_output:match('(%d+)'))
+					if not max_brightness then
+						max_brightness = 65535
+					end
+					local real_brightness = math.floor((brightness / max_brightness) * 100)
+					brightness_slider.value = real_brightness
+					update_brightness_icon(real_brightness)
+				end)
 			end
 		end)
 	end
