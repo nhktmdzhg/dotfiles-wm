@@ -130,7 +130,7 @@ function keys.init(vars)
 			spawn('goneovim')
 		end),
 		key({ super }, 'c', function()
-			spawn('discord')
+			spawn('equicord')
 		end),
 		-- Naughty toggle --
 		key({ super, ctrl }, 'n', function()

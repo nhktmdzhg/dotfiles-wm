@@ -30,14 +30,14 @@ function autostart.init()
 	spawn({ 'xset', '-dpms' })
 	spawn_once('thunderbird', 'thunderbird')
 	spawn_once('mcontrolcenter', 'mcontrolcenter')
-	spawn_once('Discord', { 'discord', '--disable-gpu' })
+	spawn_once('Discord', { 'equicord', '--disable-gpu' })
 	-- Wayland version
-	-- spawn_once("Discord", {"env", "OZONE_PLATFORM=wayland", "XDG_SESSION_TYPE=wayland", "DISCORD_DISABLE_GPU_SANDBOX=1", "DISCORD_ENABLE_WAYLAND_PIPEWIRE=1", "ELECTRON_OZONE_PLATFORM_HINT=auto", "discord", "--no-sandbox", "--enable-zero-copy", "--ignore-gpu-blocklist", "--enable-gpu-rasterization", "--enable-native-gpu-memory-buffers", "--enable-features=WebRTCPipeWireCapturer,UseOzonePlatform,VaapiVideoDecoder", "--disable-features=UseChromeOSDirectVideoDecoder", "--ozone-platform=wayland", "--use-gl=desktop"}, true)
+	-- spawn_once("Discord", {"env", "OZONE_PLATFORM=wayland", "XDG_SESSION_TYPE=wayland", "DISCORD_DISABLE_GPU_SANDBOX=1", "DISCORD_ENABLE_WAYLAND_PIPEWIRE=1", "ELECTRON_OZONE_PLATFORM_HINT=auto", "equicord", "--no-sandbox", "--enable-zero-copy", "--ignore-gpu-blocklist", "--enable-gpu-rasterization", "--enable-native-gpu-memory-buffers", "--enable-features=WebRTCPipeWireCapturer,UseOzonePlatform,VaapiVideoDecoder", "--disable-features=UseChromeOSDirectVideoDecoder", "--ozone-platform=wayland", "--use-gl=desktop"}, true)
 	spawn_once('fcitx5', 'fcitx5')
 	spawn.once({ 'bluetoothctl', 'power', 'off' })
 	spawn_once('xmousepastebloc', 'xmousepasteblock')
 	spawn({ 'wmname', 'march7th' })
-	spawn_once('zalo-for-linux', { 'zalo', '--disable-gpu' })
+	spawn_once('zalo', { 'zalo', '--disable-gpu' })
 end
 
 return autostart

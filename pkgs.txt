@@ -16,7 +16,7 @@ noto-fonts
 nvim
 oxygen
 physlock
-picom
+picom-nhktmdzhg-git
 playerctl
 qt6ct
 rofi
