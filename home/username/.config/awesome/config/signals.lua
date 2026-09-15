@@ -62,9 +62,11 @@ function signals.init(vars)
 		else
 			notifications.pause()
 		end
-		local icon_path = icon_dir .. c.class .. '.svg'
-		if filesystem.file_readable(icon_path) then
-			c.icon = nil
+		if c.class then
+			local icon_path = icon_dir .. c.class .. '.svg'
+			if filesystem.file_readable(icon_path) then
+				c.icon = nil
+			end
 		end
 	end)
 

@@ -59,6 +59,10 @@ function keys.init(vars)
 
 	local switcher = require('awesome-switcher')
 
+	local function toggle_playback()
+		spawn({ 'playerctl', 'play-pause' })
+	end
+
 	local globalkeys = { -- Brightness controls --
 		key({}, 'XF86MonBrightnessUp', function()
 			scripts.change_brightness(1)
@@ -75,21 +79,15 @@ function keys.init(vars)
 		key({}, 'XF86AudioMute', function()
 			scripts.set_volume('toggle')
 		end),
-		key({}, 'XF86AudioPlay', function()
-			spawn({ 'playerctl', 'play-pause' })
-		end),
+		key({}, 'XF86AudioPlay', toggle_playback),
 		key({}, 'XF86AudioNext', function()
 			spawn({ 'playerctl', 'next' })
 		end),
 		key({}, 'XF86AudioPrev', function()
 			spawn({ 'playerctl', 'previous' })
 		end),
-		key({}, 'XF86AudioStop', function()
-			spawn({ 'playerctl', 'play-pause' })
-		end),
-		key({}, 'XF86AudioPause', function()
-			spawn({ 'playerctl', 'play-pause' })
-		end), -- Window controls --
+		key({}, 'XF86AudioStop', toggle_playback),
+		key({}, 'XF86AudioPause', toggle_playback), -- Window controls --
 		key({ alt }, 'Tab', function()
 			switcher.switch(1, alt, 'Alt_L', shift, 'Tab')
 		end),
@@ -103,7 +101,7 @@ function keys.init(vars)
 			spawn({ 'rofi', '-no-lazy-grab', '-show', 'drun' })
 		end), -- Screenshot controls --
 		key({}, 'Print', function()
-			spawn('shutter')
+			spawn({ 'shutter' })
 		end),
 		key({ ctrl }, 'Print', function()
 			local ss = screenshot({
@@ -132,13 +130,13 @@ function keys.init(vars)
 		key({ super, ctrl }, 'r', awesome.restart),
 		key({ super }, 'd', toggle_show_desktop),
 		key({ super }, 'b', function()
-			spawn('firefox')
+			spawn({ 'firefox' })
 		end),
 		key({ super }, 'n', function()
-			spawn('goneovim')
+			spawn({ 'goneovim' })
 		end),
 		key({ super }, 'c', function()
-			spawn('equicord')
+			spawn({ 'equicord' })
 		end),
 		-- Naughty toggle --
 		key({ super, ctrl }, 'n', function()

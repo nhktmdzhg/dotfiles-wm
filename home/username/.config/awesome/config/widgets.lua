@@ -22,6 +22,85 @@ local surface = require('gears.surface')
 -- Path to default SVG icon for better scaling
 local noicon_path = filesystem.get_configuration_dir() .. 'awesome-switcher/noicon.svg'
 local icon_dir = '/usr/share/icons/BeautyLine/apps/scalable/'
+local ICON_FONT = 'JetBrainsMono Nerd Font Mono 16'
+local TEXT_FONT = 'Maple Mono NF CN 9'
+
+--- Wraps a label in the margin, background and tooltip used by every wibar metric.
+-- @param label wibox.widget Label to wrap.
+-- @param fg string|nil Foreground of the wrapper, nil to inherit from the wibar.
+-- @param tooltip_text string Tooltip shown outside the bar.
+-- @return wibox.widget The background wrapper.
+local function wrap_label(label, fg, tooltip_text)
+	local container = wibox.container.background(wibox.container.margin(label, 2, 2, 6, 6))
+	container.fg = fg
+
+	tooltip({
+		objects = { container },
+		text = tooltip_text,
+		mode = 'outside',
+	})
+
+	return container
+end
+
+--- Creates a centered label wrapped in the margin and background used by every wibar metric.
+-- @param text string|nil Initial text, nil for metrics filled by a poll.
+-- @param font string Font of the label.
+-- @param fg string|nil Foreground of the wrapper, nil to inherit from the wibar.
+-- @param tooltip_text string Tooltip shown outside the bar.
+-- @return wibox.widget The background wrapper.
+-- @return wibox.widget The label, so callers can update its text.
+local function create_label(text, font, fg, tooltip_text)
+	local label = wibox.widget({
+		text = text,
+		widget = wibox.widget.textbox,
+		font = font,
+		halign = 'center',
+		valign = 'center',
+	})
+
+	return wrap_label(label, fg, tooltip_text), label
+end
+
+--- Creates a clock label that redraws itself on every second boundary.
+-- @param format string GLib date time format, without markup characters.
+-- @param tooltip_text string Tooltip shown outside the bar.
+-- @return wibox.widget The background wrapper.
+local function create_clock(format, tooltip_text)
+	local clock = wibox.widget({
+		format = format,
+		refresh = 1,
+		widget = wibox.widget.textclock,
+		font = TEXT_FONT,
+		halign = 'center',
+		valign = 'center',
+	})
+
+	local container = wibox.container.background(wibox.container.margin(clock, 2, 2, 6, 6))
+	container.fg = palette.text.hex
+
+	tooltip({
+		objects = { container },
+		text = tooltip_text,
+		mode = 'outside',
+	})
+
+	return container
+end
+
+--- Swaps the wrapper foreground while the pointer is on it.
+-- @param container wibox.widget The background wrapper.
+-- @param normal string Color when the pointer is away.
+-- @param hover string Color when the pointer is on it.
+local function connect_hover_fg(container, normal, hover)
+	container:connect_signal('mouse::enter', function()
+		container.fg = hover
+	end)
+
+	container:connect_signal('mouse::leave', function()
+		container.fg = normal
+	end)
+end
 
 --- Sets a client icon from the BeautyLine theme, the client hint, or a fallback image.
 -- @param c client Client whose icon is wanted.
@@ -60,13 +139,56 @@ local preview_timer = timer({
 })
 
 local current_preview_client = nil
-local current_preview_widget = nil
+
+local preview_widget = wibox.widget.base.make_widget()
+
+preview_widget.fit = function(_, _, _)
+	return 280, 180
+end
+
+preview_widget.draw = function(_, _, cairo_context, width, height)
+	if current_preview_client and current_preview_client.valid and current_preview_client.content then
+		local client_surface = gears.surface(current_preview_client.content)
+		if client_surface then
+			local cg = current_preview_client:geometry()
+			local scale_x = 260 / cg.width
+			local scale_y = 140 / cg.height
+			local scale = math.min(scale_x, scale_y)
+
+			local scaled_w = cg.width * scale
+			local scaled_h = cg.height * scale
+			local offset_x = (width - scaled_w) / 2
+			local offset_y = (height - scaled_h) / 2
+
+			cairo_context:translate(offset_x, offset_y)
+			cairo_context:scale(scale, scale)
+			cairo_context:set_source_surface(client_surface, 0, 0)
+			cairo_context:paint()
+			cairo_context:scale(1 / scale, 1 / scale)
+			cairo_context:translate(-offset_x, -offset_y)
+
+			cairo_context:set_source_rgb(1, 1, 1)
+			cairo_context:select_font_face('Maple Mono NF CN', cairo.FontSlant.NORMAL, cairo.FontWeight.NORMAL)
+			cairo_context:set_font_size(12)
+			local text = current_preview_client.class or current_preview_client.instance or 'Unknown'
+			local text_extents = cairo_context:text_extents(text)
+			local text_x = (width - text_extents.width) / 2
+			cairo_context:move_to(text_x, height - 15)
+			cairo_context:show_text(text)
+
+			client_surface:finish()
+		end
+	end
+end
+
+preview_wibox:setup({
+	preview_widget,
+	widget = wibox.container.background,
+})
 
 -- Redraw the preview tile on every frame while it is shown.
 preview_timer:connect_signal('timeout', function()
-	if current_preview_widget then
-		current_preview_widget:emit_signal('widget::updated')
-	end
+	preview_widget:emit_signal('widget::updated')
 end)
 
 local widgets = {}
@@ -123,71 +245,11 @@ function widgets.create_tasklist(s)
 					if c and c.valid and c.content then
 						current_preview_client = c
 
-						-- Create preview widget with custom draw function
-						local preview_widget = wibox.widget.base.make_widget()
-						preview_widget.fit = function(_, _, _)
-							return 280, 180
-						end
-						preview_widget.draw = function(_, _, cairo_context, width, height)
-							if
-								current_preview_client
-								and current_preview_client.valid
-								and current_preview_client.content
-							then
-								-- Get client content as surface
-								local surface = gears.surface(current_preview_client.content)
-								if surface then
-									-- Calculate scaling to fit preview
-									local cg = current_preview_client:geometry()
-									local scale_x = 260 / cg.width
-									local scale_y = 140 / cg.height
-									local scale = math.min(scale_x, scale_y)
-
-									local scaled_w = cg.width * scale
-									local scaled_h = cg.height * scale
-									local offset_x = (width - scaled_w) / 2
-									local offset_y = (height - scaled_h) / 2
-
-									-- Draw the client content
-									cairo_context:translate(offset_x, offset_y)
-									cairo_context:scale(scale, scale)
-									cairo_context:set_source_surface(surface, 0, 0)
-									cairo_context:paint()
-									cairo_context:scale(1 / scale, 1 / scale)
-									cairo_context:translate(-offset_x, -offset_y)
-
-									-- Draw app name
-									cairo_context:set_source_rgb(1, 1, 1)
-									cairo_context:select_font_face(
-										'Maple Mono NF CN',
-										cairo.FontSlant.NORMAL,
-										cairo.FontWeight.NORMAL
-									)
-									cairo_context:set_font_size(12)
-									local text = current_preview_client.class
-										or current_preview_client.instance
-										or 'Unknown'
-									local text_extents = cairo_context:text_extents(text)
-									local text_x = (width - text_extents.width) / 2
-									cairo_context:move_to(text_x, height - 15)
-									cairo_context:show_text(text)
-
-									surface:finish()
-								end
-							end
-						end
-
-						preview_wibox:setup({
-							preview_widget,
-							widget = wibox.container.background,
-						})
-
 						local coords = mouse.coords()
 						preview_wibox.x = coords.x + 10
 						preview_wibox.y = coords.y + 40
 						preview_wibox.visible = true
 
-						current_preview_widget = preview_widget
 						if not preview_timer.started then
 							preview_timer:start()
 						end
@@ -198,7 +260,6 @@ function widgets.create_tasklist(s)
 				self:connect_signal('mouse::leave', function()
 					preview_wibox.visible = false
 					current_preview_client = nil
-					current_preview_widget = nil
 					preview_timer:stop()
 				end)
 			end,
@@ -245,15 +306,7 @@ function widgets.create_arch_logo()
 		end
 	end)
 
-	-- Highlight the logo while the pointer is on it.
-	arch_logo:connect_signal('mouse::enter', function()
-		arch_logo.fg = palette.pink.hex
-	end)
-
-	-- Restore the logo color when the pointer leaves.
-	arch_logo:connect_signal('mouse::leave', function()
-		arch_logo.fg = palette.mauve.hex
-	end)
+	connect_hover_fg(arch_logo, palette.mauve.hex, palette.pink.hex)
 
 	return arch_logo
 end
@@ -322,39 +375,8 @@ end
 -- @return wibox.widget The battery icon container.
 -- @return wibox.widget The battery percentage container.
 function widgets.create_battery()
-	local battery_icon = wibox.widget({
-		widget = wibox.widget.textbox,
-		font = 'JetBrainsMono Nerd Font Mono 16',
-		halign = 'center',
-		valign = 'center',
-	})
-
-	local battery_icon_container = wibox.container.margin(battery_icon, 2, 2, 6, 6)
-	battery_icon_container = wibox.container.background(battery_icon_container)
-	battery_icon_container.fg = palette.green.hex
-
-	tooltip({
-		objects = { battery_icon_container },
-		text = 'Battery Status',
-		mode = 'outside',
-	})
-
-	local battery_percent = wibox.widget({
-		widget = wibox.widget.textbox,
-		font = 'Maple Mono NF CN 9',
-		halign = 'center',
-		valign = 'center',
-	})
-
-	local battery_percent_container = wibox.container.margin(battery_percent, 2, 2, 6, 6)
-	battery_percent_container = wibox.container.background(battery_percent_container)
-	battery_percent_container.fg = palette.text.hex
-
-	tooltip({
-		objects = { battery_percent_container },
-		text = 'Battery percent',
-		mode = 'outside',
-	})
+	local battery_icon_container, battery_icon = create_label(nil, ICON_FONT, palette.green.hex, 'Battery Status')
+	local battery_percent_container, battery_percent = create_label(nil, TEXT_FONT, palette.text.hex, 'Battery percent')
 
 	poller.every(1, function()
 		scripts.get_battery_info(function(icon, percent)
@@ -370,22 +392,9 @@ end
 -- @return wibox.widget The network icon container.
 -- @return wibox.widget The network status container.
 function widgets.create_network()
-	local network_icon = wibox.widget({
-		widget = wibox.widget.textbox,
-		font = 'JetBrainsMono Nerd Font Mono 16',
-		halign = 'center',
-		valign = 'center',
-	})
+	local network_icon_container, network_icon = create_label(nil, ICON_FONT, palette.blue.hex, 'Network Status')
 
-	local network_icon_container = wibox.container.margin(network_icon, 2, 2, 6, 6)
-	network_icon_container = wibox.container.background(network_icon_container)
-	network_icon_container.fg = palette.blue.hex
-
-	tooltip({
-		objects = { network_icon_container },
-		text = 'Network Status',
-		mode = 'outside',
-	})
+	connect_hover_fg(network_icon_container, palette.blue.hex, palette.sky.hex)
 
 	-- Left click opens nmtui in a terminal.
 	network_icon_container:connect_signal('button::press', function(_, _, _, button)
@@ -394,32 +403,7 @@ function widgets.create_network()
 		end
 	end)
 
-	-- Highlight the icon while the pointer is on it.
-	network_icon_container:connect_signal('mouse::enter', function()
-		network_icon_container.fg = palette.sky.hex
-	end)
-
-	-- Restore the icon color when the pointer leaves.
-	network_icon_container:connect_signal('mouse::leave', function()
-		network_icon_container.fg = palette.blue.hex
-	end)
-
-	local network_status = wibox.widget({
-		widget = wibox.widget.textbox,
-		font = 'Maple Mono NF CN 9',
-		halign = 'center',
-		valign = 'center',
-	})
-
-	local network_status_container = wibox.container.margin(network_status, 2, 2, 6, 6)
-	network_status_container = wibox.container.background(network_status_container)
-	network_status_container.fg = palette.text.hex
-
-	tooltip({
-		objects = { network_status_container },
-		text = 'SSID',
-		mode = 'outside',
-	})
+	local network_status_container, network_status = create_label(nil, TEXT_FONT, palette.text.hex, 'SSID')
 
 	poller.every(1, function()
 		scripts.get_network_info(function(icon, status)
@@ -435,22 +419,10 @@ end
 -- @return wibox.widget The volume icon container.
 -- @return wibox.widget The volume percentage container.
 function widgets.create_volume()
-	local volume_icon = wibox.widget({
-		widget = wibox.widget.textbox,
-		font = 'JetBrainsMono Nerd Font Mono 16',
-		halign = 'center',
-		valign = 'center',
-	})
+	local volume_icon_container, volume_icon =
+		create_label(nil, ICON_FONT, palette.peach.hex, '[L] Toggle Audio Mute [S] Audio Volume +/-')
 
-	local volume_icon_container = wibox.container.margin(volume_icon, 2, 2, 6, 6)
-	volume_icon_container = wibox.container.background(volume_icon_container)
-	volume_icon_container.fg = palette.peach.hex
-
-	tooltip({
-		objects = { volume_icon_container },
-		text = '[L] Toggle Audio Mute [S] Audio Volume +/-',
-		mode = 'outside',
-	})
+	connect_hover_fg(volume_icon_container, palette.peach.hex, palette.yellow.hex)
 
 	-- Left click toggles mute, the wheel steps the volume.
 	volume_icon_container:connect_signal('button::press', function(_, _, _, button)
@@ -463,32 +435,8 @@ function widgets.create_volume()
 		end
 	end)
 
-	-- Highlight the icon while the pointer is on it.
-	volume_icon_container:connect_signal('mouse::enter', function()
-		volume_icon_container.fg = palette.yellow.hex
-	end)
-
-	-- Restore the icon color when the pointer leaves.
-	volume_icon_container:connect_signal('mouse::leave', function()
-		volume_icon_container.fg = palette.peach.hex
-	end)
-
-	local volume_percent = wibox.widget({
-		widget = wibox.widget.textbox,
-		font = 'Maple Mono NF CN 9',
-		halign = 'center',
-		valign = 'center',
-	})
-
-	local volume_percent_container = wibox.container.margin(volume_percent, 2, 2, 6, 6)
-	volume_percent_container = wibox.container.background(volume_percent_container)
-	volume_percent_container.fg = palette.text.hex
-
-	tooltip({
-		objects = { volume_percent_container },
-		text = '[S] Audio Volume +/-',
-		mode = 'outside',
-	})
+	local volume_percent_container, volume_percent =
+		create_label(nil, TEXT_FONT, palette.text.hex, '[S] Audio Volume +/-')
 
 	-- The wheel steps the volume.
 	volume_percent_container:connect_signal('button::press', function(_, _, _, button)
@@ -522,82 +470,19 @@ function widgets.create_calendar()
 		text = '',
 	})
 
-	local calendar_icon_container = wibox.container.margin(calendar_icon, 2, 2, 6, 6)
-	calendar_icon_container = wibox.container.background(calendar_icon_container)
-	calendar_icon_container.fg = palette.red.hex
-
-	tooltip({
-		objects = { calendar_icon_container },
-		text = 'Calendar',
-		mode = 'outside',
-	})
+	local calendar_icon_container = wrap_label(calendar_icon, palette.red.hex, 'Calendar')
 
 	-- Left click opens gsimplecal.
 	calendar_icon_container:connect_signal('button::press', function(_, _, _, button)
 		if button == 1 then
-			spawn('gsimplecal')
+			spawn({ 'gsimplecal' })
 		end
 	end)
 
-	-- Highlight the icon while the pointer is on it.
-	calendar_icon_container:connect_signal('mouse::enter', function()
-		calendar_icon_container.fg = palette.maroon.hex
-	end)
+	connect_hover_fg(calendar_icon_container, palette.red.hex, palette.maroon.hex)
 
-	-- Restore the icon color when the pointer leaves.
-	calendar_icon_container:connect_signal('mouse::leave', function()
-		calendar_icon_container.fg = palette.red.hex
-	end)
-
-	local date_widget = wibox.widget({
-		widget = wibox.widget.textbox,
-		font = 'Maple Mono NF CN 9',
-		halign = 'center',
-		valign = 'center',
-	})
-
-	local date_widget_container = wibox.container.margin(date_widget, 2, 2, 6, 6)
-	date_widget_container = wibox.container.background(date_widget_container)
-	date_widget_container.fg = palette.text.hex
-
-	tooltip({
-		objects = { date_widget_container },
-		text = 'Date',
-		mode = 'outside',
-	})
-
-	local time_widget = wibox.widget({
-		widget = wibox.widget.textbox,
-		font = 'Maple Mono NF CN 9',
-		halign = 'center',
-		valign = 'center',
-	})
-
-	local time_widget_container = wibox.container.margin(time_widget, 2, 2, 6, 6)
-	time_widget_container = wibox.container.background(time_widget_container)
-	time_widget_container.fg = palette.text.hex
-
-	tooltip({
-		objects = { time_widget_container },
-		text = 'Time',
-		mode = 'outside',
-	})
-
-	poller.every(1, function()
-		local line_index = 0
-
-		spawn.with_line_callback({ 'date', '+%Y年%m月%d日%n%H:%M:%S %p' }, {
-			stdout = function(line)
-				line_index = line_index + 1
-				local text = line:gsub('%s+$', '')
-				if line_index == 1 then
-					date_widget.text = text
-				elseif line_index == 2 then
-					time_widget.text = text
-				end
-			end,
-		})
-	end)
+	local date_widget_container = create_clock('%Y年%m月%d日', 'Date')
+	local time_widget_container = create_clock('%H:%M:%S %p', 'Time')
 
 	return calendar_icon_container, date_widget_container, time_widget_container
 end
@@ -630,15 +515,7 @@ function widgets.create_dashboard_toggle()
 		valign = 'center',
 	})
 
-	local dashboard_icon_container = wibox.container.margin(dashboard_icon, 2, 2, 6, 6)
-	dashboard_icon_container = wibox.container.background(dashboard_icon_container)
-	dashboard_icon_container.fg = palette.lavender.hex
-
-	tooltip({
-		objects = { dashboard_icon_container },
-		text = 'Toggle Dashboard',
-		mode = 'outside',
-	})
+	local dashboard_icon_container = wrap_label(dashboard_icon, palette.lavender.hex, 'Toggle Dashboard')
 
 	-- Left click toggles the dashboard.
 	dashboard_icon_container:connect_signal('button::press', function(_, _, _, button)
@@ -648,15 +525,7 @@ function widgets.create_dashboard_toggle()
 		end
 	end)
 
-	-- Highlight the icon while the pointer is on it.
-	dashboard_icon_container:connect_signal('mouse::enter', function()
-		dashboard_icon_container.fg = palette.mauve.hex
-	end)
-
-	-- Restore the icon color when the pointer leaves.
-	dashboard_icon_container:connect_signal('mouse::leave', function()
-		dashboard_icon_container.fg = palette.lavender.hex
-	end)
+	connect_hover_fg(dashboard_icon_container, palette.lavender.hex, palette.mauve.hex)
 
 	return dashboard_icon_container
 end
@@ -664,26 +533,12 @@ end
 --- Creates the Proton VPN status label, refreshed every second.
 -- @return wibox.widget The VPN status container.
 function widgets.create_proton_vpn()
-	local vpn_status = wibox.widget({
-		widget = wibox.widget.textbox,
-		font = 'Maple Mono NF CN 9',
-		halign = 'center',
-		valign = 'center',
-	})
-
-	local vpn_status_container = wibox.container.margin(vpn_status, 2, 2, 6, 6)
-	vpn_status_container = wibox.container.background(vpn_status_container)
-
-	tooltip({
-		objects = { vpn_status_container },
-		text = 'VPN Connection Status',
-		mode = 'outside',
-	})
+	local vpn_status_container, vpn_status = create_label(nil, TEXT_FONT, nil, 'VPN Connection Status')
 
 	-- Left click opens the Proton VPN terminal client.
 	vpn_status_container:connect_signal('button::press', function(_, _, _, button)
 		if button == 1 then
-			spawn('wezterm-gui -e pvpn')
+			spawn({ 'wezterm-gui', '-e', 'pvpn' })
 		end
 	end)
 

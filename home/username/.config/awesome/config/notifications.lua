@@ -31,6 +31,21 @@ local function find_in_beautyline(icon_name)
 	return nil
 end
 
+--- Resolves a themed icon for a notification hint.
+-- @param name string Icon name from the notification hints.
+-- @return string|nil Path of the icon, nil when nothing matched.
+local function resolve_icon(name)
+	local lower = name:lower()
+	local path = find_in_beautyline(name)
+
+	if not path and lower ~= name then
+		path = find_in_beautyline(lower)
+	end
+
+	local menubar = require('menubar')
+	return path or menubar.utils.lookup_icon(name) or menubar.utils.lookup_icon(lower)
+end
+
 --- Stops notifications from being displayed.
 function notifications.pause()
 	real_paused = true
@@ -67,12 +82,12 @@ function notifications.init()
 		if real_paused then
 			return
 		end
-		local bg = palette.base.hex
-		local fg = palette.text.hex
-		local border_color = palette.mantle.hex
+		local bg = beautiful.notification_bg
+		local fg = beautiful.notification_fg
+		local border_color = beautiful.notification_border_color
 
 		if n.urgency == 'critical' then
-			border_color = palette.peach.hex
+			border_color = beautiful.notification_crit_border_color
 		end
 
 		local original_title = n.title
@@ -128,24 +143,24 @@ function notifications.init()
 	end)
 
 	naughty.config.presets.low = {
-		bg = palette.base.hex,
-		fg = palette.text.hex,
-		border_width = 6,
-		border_color = palette.mantle.hex,
+		bg = beautiful.notification_bg,
+		fg = beautiful.notification_fg,
+		border_width = beautiful.notification_border_width,
+		border_color = beautiful.notification_border_color,
 		shape = beautiful.notification_shape,
-		opacity = 0.95,
+		opacity = beautiful.notification_opacity,
 		timeout = 5,
 	}
 
 	naughty.config.presets.normal = naughty.config.presets.low
 
 	naughty.config.presets.critical = {
-		bg = palette.base.hex,
-		fg = palette.text.hex,
-		border_width = 6,
-		border_color = palette.peach.hex,
+		bg = beautiful.notification_crit_bg,
+		fg = beautiful.notification_crit_fg,
+		border_width = beautiful.notification_border_width,
+		border_color = beautiful.notification_crit_border_color,
 		shape = beautiful.notification_shape,
-		opacity = 0.95,
+		opacity = beautiful.notification_opacity,
 		timeout = 0,
 	}
 
@@ -155,10 +170,7 @@ function notifications.init()
 			return
 		end
 
-		local path = find_in_beautyline(hints.app_icon)
-			or find_in_beautyline(hints.app_icon:lower())
-			or require('menubar').utils.lookup_icon(hints.app_icon)
-			or require('menubar').utils.lookup_icon(hints.app_icon:lower())
+		local path = resolve_icon(hints.app_icon)
 
 		if path then
 			n.icon = path
@@ -171,10 +183,7 @@ function notifications.init()
 			return
 		end
 
-		local path = find_in_beautyline(hints.id)
-			or find_in_beautyline(hints.id:lower())
-			or require('menubar').utils.lookup_icon(hints.id)
-			or require('menubar').utils.lookup_icon(hints.id:lower())
+		local path = resolve_icon(hints.id)
 
 		if path then
 			a.icon = path

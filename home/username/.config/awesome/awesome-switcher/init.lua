@@ -139,9 +139,10 @@ function _M.getClients()
 end
 
 --- Rebuilds the alt-tab table from the current clients, keeping their minimized state.
+-- @param clients table|nil Client list to use, defaults to a fresh lookup.
 -- Optimized function to populate alt-tab table
-function _M.populateAltTabTable()
-	local clients = _M.getClients()
+function _M.populateAltTabTable(clients)
+	clients = clients or _M.getClients()
 
 	-- If we have existing data, restore minimized states efficiently
 	if #_M.altTabTable > 0 then
@@ -174,12 +175,13 @@ function _M.populateAltTabTable()
 end
 
 --- Tells whether the client list differs from the alt-tab table.
+-- @param clients table|nil Client list to compare, defaults to a fresh lookup.
 -- @return boolean True when the preview has to be redrawn.
 -- If the length of list of clients is not equal to the length of altTabTable,
 -- we need to repopulate the array and update the UI. This function does this
 -- check.
-function _M.clientsHaveChanged()
-	local clients = _M.getClients()
+function _M.clientsHaveChanged(clients)
+	clients = clients or _M.getClients()
 	return _M.tableLength(clients) ~= _M.tableLength(_M.altTabTable)
 end
 
@@ -200,8 +202,10 @@ end
 -- of clients is changed, we need to redraw the whole preview box. Otherwise, a
 -- simple widget::updated signal is enough
 function _M.updatePreview()
-	if _M.clientsHaveChanged() then
-		_M.populateAltTabTable()
+	local clients = _M.getClients()
+
+	if _M.clientsHaveChanged(clients) then
+		_M.populateAltTabTable(clients)
 		_M.preview()
 	end
 

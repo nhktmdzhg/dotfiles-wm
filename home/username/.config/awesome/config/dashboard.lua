@@ -14,10 +14,10 @@ local dashboard_visible = false
 
 local avatar_path = os.getenv('HOME') .. '/.config/awesome/avatar.png'
 local launcher_list = {
-	{ name = 'Wezterm', icon = '', command = 'wezterm-gui' },
-	{ name = 'Firefox', icon = '', command = 'firefox' },
+	{ name = 'Wezterm', icon = '', command = { 'wezterm-gui' } },
+	{ name = 'Firefox', icon = '', command = { 'firefox' } },
 	{ name = 'Yazi', icon = '', command = { 'wezterm-gui', '-e', 'yazi' } },
-	{ name = 'Neovim', icon = '', command = 'goneovim' },
+	{ name = 'Neovim', icon = '', command = { 'goneovim' } },
 	{ name = 'Open config', icon = '', command = { 'sh', '-c', 'cd ~/.config/awesome && goneovim rc.lua' } },
 	{
 		name = 'HSR',
@@ -245,13 +245,11 @@ local function create_media_controls()
 	})
 end
 
---- Creates the volume slider with its mute icon and the one second volume poll.
--- @return wibox.widget The volume row.
-local function create_volume_control()
-	local is_muted = false
-	local current_volume = 0
-
-	local volume_slider = wibox.widget({
+--- Creates the slider shared by the volume and brightness rows.
+-- @param maximum number Highest value of the slider.
+-- @return wibox.widget The slider.
+local function create_styled_slider(maximum)
+	return wibox.widget({
 		widget = wibox.widget.slider,
 		bar_shape = function(cr, width, height)
 			gears.shape.rounded_rect(cr, width, height, 25)
@@ -265,15 +263,21 @@ local function create_volume_control()
 		handle_border_width = 1,
 		handle_border_color = palette.blue.hex,
 		minimum = 0,
-		maximum = 150,
+		maximum = maximum,
 		value = 69,
 	})
+end
 
-	local volume_icon = wibox.widget({
+--- Creates the icon button shown on the left of a slider row.
+-- @param glyph string Icon glyph to draw.
+-- @return wibox.widget The background wrapper, its bg reacts to the pointer.
+-- @return wibox.widget The glyph label.
+local function create_slider_icon(glyph)
+	local icon = wibox.widget({
 		{
 			{
 				id = 'icon_text',
-				text = '󰕾',
+				text = glyph,
 				font = 'JetBrainsMono Nerd Font Mono 16',
 				halign = 'center',
 				widget = wibox.widget.textbox,
@@ -287,10 +291,22 @@ local function create_volume_control()
 		widget = wibox.container.background,
 	})
 
+	return icon, icon:get_children_by_id('icon_text')[1]
+end
+
+--- Creates the volume slider with its mute icon and the one second volume poll.
+-- @return wibox.widget The volume row.
+local function create_volume_control()
+	local is_muted = false
+	local current_volume = 0
+
+	local volume_slider = create_styled_slider(150)
+
+	local volume_icon, icon_widget = create_slider_icon('󰕾')
+
 	--- Picks the volume icon for the given level and mute state.
 	-- @param volume number Volume in percent.
 	local function update_volume_icon(volume)
-		local icon_widget = volume_icon:get_children_by_id('icon_text')[1]
 		if is_muted or volume == 0 then
 			icon_widget.text = '󰖁'
 		elseif volume < 30 then
@@ -381,46 +397,13 @@ end
 --- Creates the brightness slider with its icon and the one second brightness poll.
 -- @return wibox.widget The brightness row.
 local function create_brightness_control()
-	local brightness_slider = wibox.widget({
-		widget = wibox.widget.slider,
-		bar_shape = function(cr, width, height)
-			gears.shape.rounded_rect(cr, width, height, 25)
-		end,
-		bar_height = 25,
-		bar_color = palette.surface0.hex,
-		bar_active_color = palette.blue.hex,
-		handle_shape = gears.shape.circle,
-		handle_color = palette.blue.hex,
-		handle_width = 25,
-		handle_border_width = 1,
-		handle_border_color = palette.blue.hex,
-		minimum = 0,
-		maximum = 95,
-		value = 69,
-	})
+	local brightness_slider = create_styled_slider(95)
 
-	local brightness_icon = wibox.widget({
-		{
-			{
-				id = 'icon_text',
-				text = '󰃚',
-				font = 'JetBrainsMono Nerd Font Mono 16',
-				halign = 'center',
-				widget = wibox.widget.textbox,
-			},
-			widget = wibox.container.margin,
-			margins = 10,
-		},
-		id = 'icon_bg',
-		bg = palette.surface0.hex,
-		shape = gears.shape.rounded_rect,
-		widget = wibox.container.background,
-	})
+	local brightness_icon, icon_widget = create_slider_icon('󰃚')
 
 	--- Picks the brightness icon for the given level.
 	-- @param brightness number Brightness in percent.
 	local function update_brightness_icon(brightness)
-		local icon_widget = brightness_icon:get_children_by_id('icon_text')[1]
 		if brightness == 0 then
 			icon_widget.text = '󰃛'
 		elseif brightness < 30 then
@@ -542,7 +525,7 @@ local function create_power_grid()
 	})
 
 	local btn_lists = {
-		create_round_button('', os.getenv('HOME') .. '/.config/awesome/lock.sh'),
+		create_round_button('', { os.getenv('HOME') .. '/.config/awesome/lock.sh' }),
 		create_round_button(''),
 		create_round_button('󰒲', { 'systemctl', '--no-ask-password', 'suspend' }),
 		create_round_button(
