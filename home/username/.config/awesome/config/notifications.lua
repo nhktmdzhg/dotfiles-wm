@@ -1,22 +1,47 @@
+-- Naughty setup: pause state, notification template, urgency presets and icon lookup.
+
 ---@diagnostic disable: undefined-global
 local beautiful = require('beautiful')
+local filesystem = require('gears.filesystem')
 local naughty = require('naughty')
 local palette = require('mocha')
 local wibox = require('wibox')
 
 local notifications = {}
 
+-- Pause flag requested by the user (see toggle_naughty).
 local naughty_paused = false
+-- Effective pause flag, also set by fullscreen handling in config.signals.
 local real_paused = false
 
+local beautyline_base = '/usr/share/icons/BeautyLine/'
+local beautyline_categories = { 'actions', 'apps', 'devices', 'mimetypes', 'places' }
+
+--- Looks the icon up in the BeautyLine theme directories.
+-- @param icon_name string Icon name to resolve.
+-- @return string|nil Path of the first matching svg, nil when the theme has no such icon.
+local function find_in_beautyline(icon_name)
+	for _, category in ipairs(beautyline_categories) do
+		local path = beautyline_base .. category .. '/scalable/' .. icon_name .. '.svg'
+		if filesystem.file_readable(path) then
+			return path
+		end
+	end
+
+	return nil
+end
+
+--- Stops notifications from being displayed.
 function notifications.pause()
 	real_paused = true
 end
 
+--- Lets notifications be displayed again.
 function notifications.unpause()
 	real_paused = false
 end
 
+--- Flips the naughty pause flag, ignoring clients that are fullscreen.
 function notifications.toggle_naughty()
 	naughty_paused = not naughty_paused
 	if client.focus and client.focus.fullscreen then
@@ -29,11 +54,15 @@ function notifications.toggle_naughty()
 	end
 end
 
+--- Tells whether the user asked notifications to be paused.
+-- @return boolean The naughty pause flag.
 function notifications.is_paused()
 	return naughty_paused
 end
 
+--- Connects the naughty signals and installs the urgency presets.
 function notifications.init()
+	-- Draw every notification with the dashboard look, unless paused.
 	naughty.connect_signal('request::display', function(n)
 		if real_paused then
 			return
@@ -120,24 +149,10 @@ function notifications.init()
 		timeout = 0,
 	}
 
+	-- Resolve app icons through the BeautyLine theme first, then menubar.
 	naughty.connect_signal('request::icon', function(n, context, hints)
 		if context ~= 'app_icon' then
 			return
-		end
-
-		local beautyline_base = '/usr/share/icons/BeautyLine/'
-		local gfs = require('gears.filesystem')
-
-		local function find_in_beautyline(icon_name)
-			local categories = { 'actions', 'apps', 'devices', 'mimetypes', 'places' }
-			for _, category in ipairs(categories) do
-				local path = beautyline_base .. category .. '/scalable/' .. icon_name .. '.svg'
-				if gfs.file_readable(path) then
-					return path
-				end
-			end
-
-			return nil
 		end
 
 		local path = find_in_beautyline(hints.app_icon)
@@ -150,24 +165,10 @@ function notifications.init()
 		end
 	end)
 
+	-- Resolve action icons through the BeautyLine theme first, then menubar.
 	naughty.connect_signal('request::action_icon', function(a, context, hints)
 		if context ~= 'action_icon' then
 			return
-		end
-
-		local beautyline_base = '/usr/share/icons/BeautyLine/'
-		local gfs = require('gears.filesystem')
-
-		local function find_in_beautyline(icon_name)
-			local categories = { 'actions', 'apps', 'devices', 'mimetypes', 'places' }
-			for _, category in ipairs(categories) do
-				local path = beautyline_base .. category .. '/scalable/' .. icon_name .. '.svg'
-				if gfs.file_readable(path) then
-					return path
-				end
-			end
-
-			return nil
 		end
 
 		local path = find_in_beautyline(hints.id)

@@ -1,3 +1,5 @@
+-- Wibar widget factories plus the tasklist hover preview.
+
 ---@diagnostic disable: undefined-global
 local gears = require('gears')
 local timer = require('gears.timer')
@@ -13,6 +15,7 @@ local cairo = require('lgi').cairo
 local filesystem = require('gears.filesystem')
 local notifications = require('config.notifications')
 local palette = require('mocha')
+local poller = require('poller')
 local scripts = require('scripts')
 local surface = require('gears.surface')
 
@@ -20,6 +23,9 @@ local surface = require('gears.surface')
 local noicon_path = filesystem.get_configuration_dir() .. 'awesome-switcher/noicon.svg'
 local icon_dir = '/usr/share/icons/BeautyLine/apps/scalable/'
 
+--- Sets a client icon from the BeautyLine theme, the client hint, or a fallback image.
+-- @param c client Client whose icon is wanted.
+-- @param icon_widget wibox.widget Image widget to update.
 local function set_icon(c, icon_widget)
 	if icon_widget and c then
 		local icon_path = icon_dir .. c.class .. '.svg'
@@ -54,9 +60,20 @@ local preview_timer = timer({
 })
 
 local current_preview_client = nil
+local current_preview_widget = nil
+
+-- Redraw the preview tile on every frame while it is shown.
+preview_timer:connect_signal('timeout', function()
+	if current_preview_widget then
+		current_preview_widget:emit_signal('widget::updated')
+	end
+end)
 
 local widgets = {}
 
+--- Creates the tasklist with its buttons and the hover preview.
+-- @param s screen Screen the tasklist is built for.
+-- @return wibox.widget The tasklist, capped at 32px height.
 function widgets.create_tasklist(s)
 	local tasklist_buttons = {
 		button({}, 1, function(c)
@@ -170,19 +187,18 @@ function widgets.create_tasklist(s)
 						preview_wibox.y = coords.y + 40
 						preview_wibox.visible = true
 
-						-- Start live preview timer
-						preview_timer:connect_signal('timeout', function()
-							if preview_widget then
-								preview_widget:emit_signal('widget::updated')
-							end
-						end)
-						preview_timer:start()
+						current_preview_widget = preview_widget
+						if not preview_timer.started then
+							preview_timer:start()
+						end
 					end
 				end)
 
+				-- Hide the preview when the pointer leaves the entry.
 				self:connect_signal('mouse::leave', function()
 					preview_wibox.visible = false
 					current_preview_client = nil
+					current_preview_widget = nil
 					preview_timer:stop()
 				end)
 			end,
@@ -197,6 +213,8 @@ function widgets.create_tasklist(s)
 	return wibox.container.constraint(mytasklist, 'exact', nil, 32)
 end
 
+--- Creates the logo button that opens rofi.
+-- @return wibox.widget The logo widget.
 function widgets.create_arch_logo()
 	local arch_logo = wibox.widget({
 		{
@@ -220,16 +238,19 @@ function widgets.create_arch_logo()
 		mode = 'outside',
 	})
 
+	-- Left click opens the rofi launcher.
 	arch_logo:connect_signal('button::press', function(_, _, _, button)
 		if button == 1 then
 			spawn({ 'rofi', '-no-lazy-grab', '-show', 'drun' })
 		end
 	end)
 
+	-- Highlight the logo while the pointer is on it.
 	arch_logo:connect_signal('mouse::enter', function()
 		arch_logo.fg = palette.pink.hex
 	end)
 
+	-- Restore the logo color when the pointer leaves.
 	arch_logo:connect_signal('mouse::leave', function()
 		arch_logo.fg = palette.mauve.hex
 	end)
@@ -237,6 +258,8 @@ function widgets.create_arch_logo()
 	return arch_logo
 end
 
+--- Creates the tray widget.
+-- @return wibox.widget The tray widget.
 function widgets.create_systray()
 	local mysystray = wibox.widget({
 		wibox.widget.systray(),
@@ -250,6 +273,9 @@ function widgets.create_systray()
 	return mysystray
 end
 
+--- Creates the scrolling label with the focused client name, refreshed ten times a second.
+-- @param s screen Screen whose wibar is shown again when no client is focused.
+-- @return wibox.widget The window name widget.
 function widgets.create_window_name(s)
 	local window_name = wibox.widget({
 		widget = wibox.widget.textbox,
@@ -272,31 +298,29 @@ function widgets.create_window_name(s)
 		mode = 'outside',
 	})
 
-	timer({
-		timeout = 0.1,
-		autostart = true,
-		call_now = true,
-		callback = function()
-			local c = client.focus
-			local name = ''
-			if c then
-				name = c.name
+	poller.every(0.1, function()
+		local c = client.focus
+		local name = ''
+		if c then
+			name = c.name
+		else
+			name = 'No focused window'
+			s.mywibar.visible = true
+			if notifications.is_paused() then
+				notifications.pause()
 			else
-				name = 'No focused window'
-				s.mywibar.visible = true
-				if notifications.is_paused() then
-					notifications.pause()
-				else
-					notifications.unpause()
-				end
+				notifications.unpause()
 			end
-			window_name.text = name
-		end,
-	})
+		end
+		window_name.text = name
+	end)
 
 	return window_name_container
 end
 
+--- Creates the battery icon and percentage, refreshed every second.
+-- @return wibox.widget The battery icon container.
+-- @return wibox.widget The battery percentage container.
 function widgets.create_battery()
 	local battery_icon = wibox.widget({
 		widget = wibox.widget.textbox,
@@ -313,17 +337,6 @@ function widgets.create_battery()
 		objects = { battery_icon_container },
 		text = 'Battery Status',
 		mode = 'outside',
-	})
-
-	timer({
-		timeout = 1,
-		autostart = true,
-		call_now = true,
-		callback = function()
-			scripts.get_battery_icon(function(icon)
-				battery_icon.text = icon
-			end)
-		end,
 	})
 
 	local battery_percent = wibox.widget({
@@ -343,24 +356,19 @@ function widgets.create_battery()
 		mode = 'outside',
 	})
 
-	timer({
-		timeout = 1,
-		autostart = true,
-		call_now = true,
-		callback = function()
-			scripts.get_battery_percent(function(percent)
-				if percent then
-					battery_percent.text = percent .. ' %'
-				else
-					battery_percent.text = 'N/A'
-				end
-			end)
-		end,
-	})
+	poller.every(1, function()
+		scripts.get_battery_info(function(icon, percent)
+			battery_icon.text = icon
+			battery_percent.text = percent .. ' %'
+		end)
+	end)
 
 	return battery_icon_container, battery_percent_container
 end
 
+--- Creates the network icon and status line, refreshed every second.
+-- @return wibox.widget The network icon container.
+-- @return wibox.widget The network status container.
 function widgets.create_network()
 	local network_icon = wibox.widget({
 		widget = wibox.widget.textbox,
@@ -379,30 +387,22 @@ function widgets.create_network()
 		mode = 'outside',
 	})
 
+	-- Left click opens nmtui in a terminal.
 	network_icon_container:connect_signal('button::press', function(_, _, _, button)
 		if button == 1 then
 			spawn({ 'wezterm-gui', '-e', 'env', 'NMTUI_NO_UPDATE_CHECK=1', 'nmtui-go' })
 		end
 	end)
 
+	-- Highlight the icon while the pointer is on it.
 	network_icon_container:connect_signal('mouse::enter', function()
 		network_icon_container.fg = palette.sky.hex
 	end)
 
+	-- Restore the icon color when the pointer leaves.
 	network_icon_container:connect_signal('mouse::leave', function()
 		network_icon_container.fg = palette.blue.hex
 	end)
-
-	timer({
-		timeout = 1,
-		autostart = true,
-		call_now = true,
-		callback = function()
-			scripts.get_network_info(0, function(icon)
-				network_icon.text = icon
-			end)
-		end,
-	})
 
 	local network_status = wibox.widget({
 		widget = wibox.widget.textbox,
@@ -421,20 +421,19 @@ function widgets.create_network()
 		mode = 'outside',
 	})
 
-	timer({
-		timeout = 1,
-		autostart = true,
-		call_now = true,
-		callback = function()
-			scripts.get_network_info(1, function(status)
-				network_status.text = status
-			end)
-		end,
-	})
+	poller.every(1, function()
+		scripts.get_network_info(function(icon, status)
+			network_icon.text = icon
+			network_status.text = status
+		end)
+	end)
 
 	return network_icon_container, network_status_container
 end
 
+--- Creates the volume icon and percentage, refreshed ten times a second.
+-- @return wibox.widget The volume icon container.
+-- @return wibox.widget The volume percentage container.
 function widgets.create_volume()
 	local volume_icon = wibox.widget({
 		widget = wibox.widget.textbox,
@@ -453,31 +452,23 @@ function widgets.create_volume()
 		mode = 'outside',
 	})
 
-	timer({
-		timeout = 0.1,
-		autostart = true,
-		call_now = true,
-		callback = function()
-			scripts.get_volume_info(2, function(icon)
-				volume_icon.text = icon
-			end)
-		end,
-	})
-
+	-- Left click toggles mute, the wheel steps the volume.
 	volume_icon_container:connect_signal('button::press', function(_, _, _, button)
 		if button == 1 then
-			scripts.get_volume_info(0, nil)
+			scripts.set_volume('toggle')
 		elseif button == 4 then
-			scripts.get_volume_info(1, nil)
+			scripts.set_volume('up')
 		elseif button == 5 then
-			scripts.get_volume_info(-1, nil)
+			scripts.set_volume('down')
 		end
 	end)
 
+	-- Highlight the icon while the pointer is on it.
 	volume_icon_container:connect_signal('mouse::enter', function()
 		volume_icon_container.fg = palette.yellow.hex
 	end)
 
+	-- Restore the icon color when the pointer leaves.
 	volume_icon_container:connect_signal('mouse::leave', function()
 		volume_icon_container.fg = palette.peach.hex
 	end)
@@ -499,28 +490,29 @@ function widgets.create_volume()
 		mode = 'outside',
 	})
 
-	timer({
-		timeout = 0.1,
-		autostart = true,
-		call_now = true,
-		callback = function()
-			scripts.get_volume_info(3, function(status)
-				volume_percent.text = status or 'N/A'
-			end)
-		end,
-	})
-
+	-- The wheel steps the volume.
 	volume_percent_container:connect_signal('button::press', function(_, _, _, button)
 		if button == 4 then
-			scripts.get_volume_info(1, nil)
+			scripts.set_volume('up')
 		elseif button == 5 then
-			scripts.get_volume_info(-1, nil)
+			scripts.set_volume('down')
 		end
+	end)
+
+	poller.every(0.1, function()
+		scripts.get_volume_info(function(icon, status)
+			volume_icon.text = icon
+			volume_percent.text = status or 'N/A'
+		end)
 	end)
 
 	return volume_icon_container, volume_percent_container
 end
 
+--- Creates the calendar button, the date label and the time label, refreshed every second.
+-- @return wibox.widget The calendar icon container.
+-- @return wibox.widget The date container.
+-- @return wibox.widget The time container.
 function widgets.create_calendar()
 	local calendar_icon = wibox.widget({
 		widget = wibox.widget.textbox,
@@ -540,16 +532,19 @@ function widgets.create_calendar()
 		mode = 'outside',
 	})
 
+	-- Left click opens gsimplecal.
 	calendar_icon_container:connect_signal('button::press', function(_, _, _, button)
 		if button == 1 then
 			spawn('gsimplecal')
 		end
 	end)
 
+	-- Highlight the icon while the pointer is on it.
 	calendar_icon_container:connect_signal('mouse::enter', function()
 		calendar_icon_container.fg = palette.maroon.hex
 	end)
 
+	-- Restore the icon color when the pointer leaves.
 	calendar_icon_container:connect_signal('mouse::leave', function()
 		calendar_icon_container.fg = palette.red.hex
 	end)
@@ -571,17 +566,6 @@ function widgets.create_calendar()
 		mode = 'outside',
 	})
 
-	timer({
-		timeout = 1,
-		autostart = true,
-		call_now = true,
-		callback = function()
-			spawn.easy_async({ 'date', '+%Y年%m月%d日' }, function(stdout)
-				date_widget.text = stdout:gsub('%s+$', '')
-			end)
-		end,
-	})
-
 	local time_widget = wibox.widget({
 		widget = wibox.widget.textbox,
 		font = 'Maple Mono NF CN 9',
@@ -599,20 +583,27 @@ function widgets.create_calendar()
 		mode = 'outside',
 	})
 
-	timer({
-		timeout = 1,
-		autostart = true,
-		call_now = true,
-		callback = function()
-			spawn.easy_async({ 'date', '+%H:%M:%S %p' }, function(stdout)
-				time_widget.text = stdout:gsub('%s+$', '')
-			end)
-		end,
-	})
+	poller.every(1, function()
+		local line_index = 0
+
+		spawn.with_line_callback({ 'date', '+%Y年%m月%d日%n%H:%M:%S %p' }, {
+			stdout = function(line)
+				line_index = line_index + 1
+				local text = line:gsub('%s+$', '')
+				if line_index == 1 then
+					date_widget.text = text
+				elseif line_index == 2 then
+					time_widget.text = text
+				end
+			end,
+		})
+	end)
 
 	return calendar_icon_container, date_widget_container, time_widget_container
 end
 
+--- Creates the vertical bar used between wibar widgets.
+-- @return wibox.widget The separator widget.
 function widgets.create_simple_separator()
 	local separator = wibox.widget({
 		markup = '|',
@@ -628,6 +619,8 @@ function widgets.create_simple_separator()
 	return separator_container
 end
 
+--- Creates the dashboard toggle button.
+-- @return wibox.widget The toggle widget.
 function widgets.create_dashboard_toggle()
 	local dashboard_icon = wibox.widget({
 		widget = wibox.widget.textbox,
@@ -647,6 +640,7 @@ function widgets.create_dashboard_toggle()
 		mode = 'outside',
 	})
 
+	-- Left click toggles the dashboard.
 	dashboard_icon_container:connect_signal('button::press', function(_, _, _, button)
 		if button == 1 then
 			local dashboard = require('config.dashboard')
@@ -654,10 +648,12 @@ function widgets.create_dashboard_toggle()
 		end
 	end)
 
+	-- Highlight the icon while the pointer is on it.
 	dashboard_icon_container:connect_signal('mouse::enter', function()
 		dashboard_icon_container.fg = palette.mauve.hex
 	end)
 
+	-- Restore the icon color when the pointer leaves.
 	dashboard_icon_container:connect_signal('mouse::leave', function()
 		dashboard_icon_container.fg = palette.lavender.hex
 	end)
@@ -665,6 +661,8 @@ function widgets.create_dashboard_toggle()
 	return dashboard_icon_container
 end
 
+--- Creates the Proton VPN status label, refreshed every second.
+-- @return wibox.widget The VPN status container.
 function widgets.create_proton_vpn()
 	local vpn_status = wibox.widget({
 		widget = wibox.widget.textbox,
@@ -682,27 +680,23 @@ function widgets.create_proton_vpn()
 		mode = 'outside',
 	})
 
+	-- Left click opens the Proton VPN terminal client.
 	vpn_status_container:connect_signal('button::press', function(_, _, _, button)
 		if button == 1 then
 			spawn('wezterm-gui -e pvpn')
 		end
 	end)
 
-	timer({
-		timeout = 1,
-		autostart = true,
-		call_now = true,
-		callback = function()
-			scripts.get_proton_vpn_info(function(status)
-				vpn_status.text = status
-				if status == '󰖂 ' then
-					vpn_status_container.fg = palette.mauve.hex
-				else
-					vpn_status_container.fg = palette.text.hex
-				end
-			end)
-		end,
-	})
+	poller.every(1, function()
+		scripts.get_proton_vpn_info(function(status)
+			vpn_status.text = status
+			if status == '󰖂 ' then
+				vpn_status_container.fg = palette.mauve.hex
+			else
+				vpn_status_container.fg = palette.text.hex
+			end
+		end)
+	end)
 
 	return vpn_status_container
 end

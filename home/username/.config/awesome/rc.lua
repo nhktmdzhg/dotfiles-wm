@@ -1,3 +1,5 @@
+-- Entry point of the AwesomeWM configuration: theme, module wiring and global defaults.
+
 ---@diagnostic disable: undefined-global
 -- AwesomeWM Configuration
 -- Main configuration file
@@ -58,10 +60,12 @@ local keybindings = keys.init(vars)
 keyboard.append_global_keybindings(keybindings.globalkeys)
 
 rules.init()
+-- Hand the client keybindings to every new client.
 client.connect_signal('request::default_keybindings', function()
 	keyboard.append_client_keybindings(keybindings.clientkeys)
 end)
 
+-- Hand the client mousebindings to every new client.
 client.connect_signal('request::default_mousebindings', function()
 	mouse.append_client_mousebindings(keybindings.clientbuttons)
 end)

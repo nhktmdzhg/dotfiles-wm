@@ -1,7 +1,10 @@
+-- Lockscreen: per-screen lock UI, PAM authentication and keyboard grab.
+
 ---@diagnostic disable: undefined-field
 local awful = require('awful')
 local gears = require('gears')
 local mocha = require('mocha')
+-- liblua_pam lives outside Lua's default search path.
 package.cpath = package.cpath .. ';/usr/lib/lua-pam/?.so'
 local naughty = require('naughty')
 local pam = require('liblua_pam')
@@ -32,6 +35,11 @@ local mocha_colors = {
 	mocha.lavender.hex,
 }
 
+--- Builds the lock UI of one screen: wallpaper, clock, date, user label, indicator and status.
+-- @param s screen Screen to cover.
+-- @return wibox The lock wibox of that screen.
+-- @return wibox.widget The indicator widget, recolored on every key press.
+-- @return wibox.widget The status message widget.
 local function create_lockscreen_ui(s)
 	-- Main container with wallpaper
 	local lock_container = wibox({
@@ -183,6 +191,9 @@ local function create_lockscreen_ui(s)
 	return lock_container, indicator_widget, status_message
 end
 
+--- Checks a password against PAM for the current user.
+-- @param password string Password typed by the user.
+-- @return boolean|nil True on success, false on a PAM error, nil when pam exposes no auth function.
 local function authenticate(password)
 	if not pam then
 		naughty.notification({
@@ -209,6 +220,7 @@ local function authenticate(password)
 	end
 end
 
+--- Covers every screen with the lock UI and starts the keyboard grab.
 function lockscreen.show()
 	if lockscreen.visible then
 		return
@@ -239,6 +251,9 @@ function lockscreen.show()
 		end
 	end
 
+	--- Shows the same status message on every lock screen.
+	-- @param message string Text to display.
+	-- @param is_error boolean Paint it red instead of green.
 	local function update_status(message, is_error)
 		for _, screen_lock in ipairs(lockscreen.screens) do
 			if is_error then
@@ -253,6 +268,7 @@ function lockscreen.show()
 		end
 	end
 
+	--- Gives every lock screen indicator a new random color.
 	local function update_indicator()
 		for _, screen_lock in ipairs(lockscreen.screens) do
 			if screen_lock.indicator_widget then
@@ -265,6 +281,7 @@ function lockscreen.show()
 		end
 	end
 
+	--- Authenticates the typed password and either unlocks or clears it.
 	local function try_unlock()
 		update_status('Unlocking btw...', false)
 		if authenticate(lockscreen.password) then
@@ -315,6 +332,7 @@ function lockscreen.show()
 	lockscreen.keygrabber:start()
 end
 
+--- Removes the lock UI, stops the keyboard grab and clears the typed password.
 function lockscreen.hide()
 	if not lockscreen.visible then
 		return

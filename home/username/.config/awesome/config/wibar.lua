@@ -1,3 +1,5 @@
+-- Builds the top wibar with its widgets on every screen.
+
 ---@diagnostic disable: undefined-global
 local awful_wibar = require('awful.wibar')
 local dashboard = require('config.dashboard')
@@ -9,6 +11,7 @@ local widgets = require('config.widgets')
 
 local wibar = {}
 
+--- Creates the tag, the wibar and its widgets on every screen, then builds the dashboard.
 function wibar.init()
 	screen.connect_signal('request::desktop_decoration', function(s)
 		-- Each screen has its own tag table.

@@ -1,3 +1,5 @@
+-- Catppuccin Mocha palette: each color as hex, rgb and hsl.
+
 return {
 	name = 'mocha',
 	rosewater = {

@@ -1,3 +1,5 @@
+-- Client rules: default placement, focus and taskbar behavior.
+
 local client = require('awful.client')
 local placement = require('awful.placement')
 local ruled = require('ruled')
@@ -5,7 +7,9 @@ local screen = require('awful.screen')
 
 local rules = {}
 
+--- Appends the client rules: global defaults, splash/dialog, menus and gsimplecal.
 function rules.init()
+	-- Populate the client ruleset when awesome asks for it.
 	ruled.client.connect_signal('request::rules', function()
 		ruled.client.append_rule({
 			id = 'global',

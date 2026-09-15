@@ -1,3 +1,5 @@
+-- Alt-Tab window switcher with a live preview grid.
+
 ---@diagnostic disable: undefined-global
 -- Core libraries
 local cairo = require('lgi').cairo
@@ -66,6 +68,9 @@ _M.source = string.sub(debug.getinfo(1, 'S').source, 2)
 _M.path = string.sub(_M.source, 1, string.find(_M.source, '/[^/]*$'))
 _M.noicon = _M.path .. 'noicon.svg'
 
+--- Counts the entries of an array-like or hash table.
+-- @param T table Table to measure.
+-- @return number Number of entries.
 -- Optimized function for counting table size (use # operator when possible)
 function _M.tableLength(T)
 	-- For array-like tables, use the # operator which is much faster
@@ -82,6 +87,8 @@ function _M.tableLength(T)
 	return count
 end
 
+--- Lists the clients of the focused screen, focus history first.
+-- @return table Array of clients.
 -- Optimized function to get clients list
 function _M.getClients()
 	local clients = {}
@@ -131,6 +138,7 @@ function _M.getClients()
 	return clients
 end
 
+--- Rebuilds the alt-tab table from the current clients, keeping their minimized state.
 -- Optimized function to populate alt-tab table
 function _M.populateAltTabTable()
 	local clients = _M.getClients()
@@ -165,6 +173,8 @@ function _M.populateAltTabTable()
 	end
 end
 
+--- Tells whether the client list differs from the alt-tab table.
+-- @return boolean True when the preview has to be redrawn.
 -- If the length of list of clients is not equal to the length of altTabTable,
 -- we need to repopulate the array and update the UI. This function does this
 -- check.
@@ -173,6 +183,9 @@ function _M.clientsHaveChanged()
 	return _M.tableLength(clients) ~= _M.tableLength(_M.altTabTable)
 end
 
+--- Builds the label drawn under a preview tile.
+-- @param c client Client of the tile.
+-- @return string Text, prefixed with the class name or the window title.
 function _M.createPreviewText(c)
 	if c.class then
 		return ' - ' .. c.class
@@ -181,6 +194,7 @@ function _M.createPreviewText(c)
 	end
 end
 
+--- Refreshes the alt-tab table and redraws the preview tiles.
 -- Preview is created here.
 -- This is called any _M.settings.preview_box_fps milliseconds. In case the list
 -- of clients is changed, we need to redraw the whole preview box. Otherwise, a
@@ -196,6 +210,11 @@ function _M.updatePreview()
 	end
 end
 
+-- Redraw the preview on every frame while the switcher is open.
+_M.preview_live_timer:connect_signal('timeout', _M.updatePreview)
+
+--- Moves the alt-tab selection and unminimizes the selected client.
+-- @param dir number 1 for the next client, -1 for the previous one.
 function _M.cycle(dir)
 	-- Switch to next client
 	_M.altTabIndex = (_M.altTabIndex + dir) % #_M.altTabTable
@@ -207,6 +226,7 @@ function _M.cycle(dir)
 	_M.altTabTable[_M.altTabIndex].client.minimized = false
 end
 
+--- Lays out the preview wibox: one tile per client with icon, title and thumbnail.
 function _M.preview()
 	-- Apply hard-coded settings for better performance
 	_M.preview_wbox:set_bg(PREVIEW_BOX_BG)
@@ -311,7 +331,7 @@ function _M.preview()
 					icon = gears.surface(c.icon)
 				else
 					if c.class == 'Zalo' then
-						icon_widget.image = surface.load_uncached('/opt/zalo/icon.png')
+						icon = gears.surface(gears.surface.load('/opt/zalo/icon.png'))
 					else
 						icon = gears.surface(gears.surface.load(_M.noicon))
 					end
@@ -418,16 +438,22 @@ function _M.preview()
 	_M.preview_wbox:set_widget(preview_layout)
 end
 
+--- Starts the preview refresh timer and shows the preview wibox.
 -- This starts the timer for updating and it shows the preview UI.
 function _M.showPreview()
 	_M.preview_live_timer.timeout = 1 / PREVIEW_BOX_FPS
-	_M.preview_live_timer:connect_signal('timeout', _M.updatePreview)
 	_M.preview_live_timer:start()
 
 	_M.preview()
 	_M.preview_wbox.visible = true
 end
 
+--- Opens the switcher: preview delay, key grabber and selection handling.
+-- @param dir number Initial direction, 1 or -1.
+-- @param mod_key1 string Modifier that opened the switcher.
+-- @param release_key string Key whose release closes the switcher.
+-- @param mod_key2 string Second modifier, reverses the direction while held.
+-- @param key_switch string Key that cycles through the clients.
 function _M.switch(dir, mod_key1, release_key, mod_key2, key_switch)
 	_M.populateAltTabTable()
 

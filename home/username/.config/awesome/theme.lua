@@ -1,3 +1,5 @@
+-- Theme values consumed by beautiful: fonts, colors, tooltip and notification styling.
+
 local palette = require('mocha')
 local shape = require('gears.shape')
 

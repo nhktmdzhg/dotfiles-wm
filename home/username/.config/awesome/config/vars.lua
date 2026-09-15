@@ -1,3 +1,5 @@
+-- Shared constants: key modifiers, window margins and session paths.
+
 -- Variables and constants
 local vars = {}
 

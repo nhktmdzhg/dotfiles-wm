@@ -1,4 +1,7 @@
+-- Global, client and mouse keybindings.
+
 ---@diagnostic disable: undefined-global
+
 local button = require('awful.button')
 local dashboard = require('config.dashboard')
 local key = require('awful.key')
@@ -12,6 +15,7 @@ local keys = {}
 
 local lockscreen = require('modules.lockscreen')
 
+--- Minimizes every visible client of the focused tag, or brings them back when none is visible.
 local function toggle_show_desktop()
 	local current_tag = screen.focused().selected_tag
 	local client_on_tag = current_tag:clients()
@@ -39,6 +43,9 @@ local function toggle_show_desktop()
 	end
 end
 
+--- Builds the global, client and mouse keybindings.
+-- @param vars table Shared constants from config.vars.
+-- @return table Table with globalkeys, clientkeys and clientbuttons.
 function keys.init(vars)
 	local super = vars.super
 	local alt = vars.alt
@@ -60,13 +67,13 @@ function keys.init(vars)
 			scripts.change_brightness(-1)
 		end), -- Audio-volume controls --
 		key({}, 'XF86AudioRaiseVolume', function()
-			scripts.get_volume_info(1, nil)
+			scripts.set_volume('up')
 		end),
 		key({}, 'XF86AudioLowerVolume', function()
-			scripts.get_volume_info(-1, nil)
+			scripts.set_volume('down')
 		end),
 		key({}, 'XF86AudioMute', function()
-			scripts.get_volume_info(0, nil)
+			scripts.set_volume('toggle')
 		end),
 		key({}, 'XF86AudioPlay', function()
 			spawn({ 'playerctl', 'play-pause' })
@@ -103,6 +110,7 @@ function keys.init(vars)
 				interactive = true,
 				directory = '/tmp',
 			})
+			-- Copy the saved screenshot to the clipboard and delete the file.
 			ss:connect_signal('file::saved', function(_, file_path)
 				spawn.with_shell('xclip -selection clipboard -t image/png -i ' .. file_path .. ' && rm ' .. file_path)
 			end)
@@ -135,7 +143,7 @@ function keys.init(vars)
 		-- Naughty toggle --
 		key({ super, ctrl }, 'n', function()
 			require('config.notifications').toggle_naughty()
-		end)
+		end),
 	}
 
 	local clientkeys = {

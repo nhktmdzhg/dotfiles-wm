@@ -1,7 +1,13 @@
+-- Starts the session background programs once, skipping the ones already running.
+
 local spawn = require('awful.spawn')
 
 local autostart = {}
 
+--- Spawns a program only when no matching process is already running.
+-- @param cmd_name string Process name for pgrep, or the full command line if use_full_cmd is set.
+-- @param cmd_full string|table Command passed to awful.spawn.
+-- @param use_full_cmd boolean Match the whole command line instead of the executable name.
 local function spawn_once(cmd_name, cmd_full, use_full_cmd)
 	local pgrep_args = { 'pgrep', '-u', os.getenv('USER') }
 	if use_full_cmd then
@@ -11,13 +17,16 @@ local function spawn_once(cmd_name, cmd_full, use_full_cmd)
 	end
 	table.insert(pgrep_args, cmd_name)
 
-	spawn.easy_async(pgrep_args, function(_, _, _, exitcode)
-		if exitcode ~= 0 then
-			spawn(cmd_full)
-		end
-	end)
+	spawn.with_line_callback(pgrep_args, {
+		exit = function(_, code)
+			if code ~= 0 then
+				spawn(cmd_full)
+			end
+		end,
+	})
 end
 
+--- Starts every background program of the session.
 function autostart.init()
 	spawn_once('xsettingsd', 'xsettingsd')
 	spawn({ 'wpctl', 'set-volume', '@DEFAULT_AUDIO_SOURCE@', '150%' })
