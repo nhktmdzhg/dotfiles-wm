@@ -22,7 +22,7 @@ local surface = require('gears.surface')
 -- Path to default SVG icon for better scaling
 local noicon_path = filesystem.get_configuration_dir() .. 'awesome-switcher/noicon.svg'
 local icon_dir = '/usr/share/icons/BeautyLine/apps/scalable/'
-local ICON_FONT = 'JetBrainsMono Nerd Font Mono 16'
+local ICON_FONT = 'Symbols Nerd Font 12'
 local TEXT_FONT = 'Maple Mono NF CN 9'
 
 --- Wraps a label in the margin, background and tooltip used by every wibar metric.
@@ -280,11 +280,11 @@ function widgets.create_arch_logo()
 	local arch_logo = wibox.widget({
 		{
 			{
-				markup = '',
+				markup = '',
 				halign = 'center',
 				valign = 'center',
 				widget = wibox.widget.textbox,
-				font = 'JetBrainsMono Nerd Font Mono 20',
+				font = ICON_FONT,
 			},
 			margins = 2,
 			widget = wibox.container.margin,
@@ -332,7 +332,7 @@ end
 function widgets.create_window_name(s)
 	local window_name = wibox.widget({
 		widget = wibox.widget.textbox,
-		font = 'Maple Mono NF CN 9',
+		font = TEXT_FONT,
 		halign = 'center',
 		valign = 'center',
 	})
@@ -464,7 +464,7 @@ end
 function widgets.create_calendar()
 	local calendar_icon = wibox.widget({
 		widget = wibox.widget.textbox,
-		font = 'JetBrainsMono Nerd Font Mono 16',
+		font = ICON_FONT,
 		halign = 'center',
 		valign = 'center',
 		text = '',
@@ -509,8 +509,8 @@ end
 function widgets.create_dashboard_toggle()
 	local dashboard_icon = wibox.widget({
 		widget = wibox.widget.textbox,
-		text = '󰕮',
-		font = 'JetBrainsMono Nerd Font Mono 16',
+		text = '',
+		font = ICON_FONT,
 		halign = 'center',
 		valign = 'center',
 	})

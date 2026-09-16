@@ -32,7 +32,7 @@ _A meticulously crafted, production-ready AwesomeWM desktop environment featurin
 
 - **🌙 Catppuccin Mocha Theme** - Carefully balanced dark color palette
 - **🎭 BeautyLine Icons** - Consistent, modern icon theme throughout the system
-- **🔤 JetBrains Mono Nerd Font** - Programming-focused typography with icon support
+- **🔤 Symbols Nerd Font** - Official Nerd Font from Nerd Fonts Project
 - **🔔 Elegant Notifications** - Modern naughty with popup
 
 ### ⚡ **Performance & Efficiency**
@@ -81,7 +81,7 @@ The configuration includes **32 carefully selected packages** optimized for perf
 
 ### 🎨 **Theming & Appearance**
 
-- `ttf-jetbrains-mono-nerd` - Programming font with icon support
+- `ttf-nerd-fonts-symbols` - Programming font with icon support
 - `noto-fonts` - Comprehensive Unicode font coverage
 - `oxygen5` / `oxygen` - Dark Qt themes
 - `qt5ct` / `qt6ct` - Qt configuration tools
@@ -235,7 +235,7 @@ This configuration implements multiple layers of security for screen locking:
 | `Ctrl + Alt + T`   | Terminal             | Wezterm              |
 | `Super + E`        | File Manager         | Yazi                 |
 | `Super + B`        | Web Browser          | Firefox              |
-| `Super + N`        | Text Editor          | Goneovim             |
+| `Super + N`        | Text Editor          | Helix                |
 | `Super + Ctrl + N` | Toggle Notifications | naughty popup on/off |
 | `Super + Esc`      | Dashboard            | Custom Dashboard     |
 | `Super + L`        | Lock Screen          | Custom Lockscreen    |
@@ -350,16 +350,6 @@ Key configuration files and their purposes:
 
 ---
 
-## 🔗 Recommended Companions
-
-Enhance your desktop experience with these complementary configurations:
-
-| Component     | Description                      | Repository                                          |
-| ------------- | -------------------------------- | --------------------------------------------------- |
-| **🔧 Neovim** | Modern Vim-based editor with LSP | [nhktmdzhg/nvim](https://github.com/nhktmdzhg/nvim) |
-
----
-
 ## 🐛 Troubleshooting
 
 ### 🔧 **Common Issues**
@@ -397,8 +387,6 @@ paru -S --needed $(cat ~/dotfiles/pkgs.txt | tr '\n' ' ')
 ```bash
 # Rebuild font cache
 fc-cache -fv
-# Verify JetBrains Mono installation
-fc-list | grep -i jetbrains
 ```
 
 **AwesomeWM Won't Start**

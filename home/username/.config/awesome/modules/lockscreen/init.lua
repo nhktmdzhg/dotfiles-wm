@@ -93,7 +93,7 @@ local function create_lockscreen_ui(s)
 		{
 			{
 				text = '',
-				font = 'JetBrainsMono Nerd Font Mono 48',
+				font = 'Symbols Nerd Font 40',
 				halign = 'center',
 				widget = wibox.widget.textbox,
 			},

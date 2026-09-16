@@ -17,8 +17,8 @@ local launcher_list = {
 	{ name = 'Wezterm', icon = '', command = { 'wezterm-gui' } },
 	{ name = 'Firefox', icon = '', command = { 'firefox' } },
 	{ name = 'Yazi', icon = '', command = { 'wezterm-gui', '-e', 'yazi' } },
-	{ name = 'Neovim', icon = '', command = { 'goneovim' } },
-	{ name = 'Open config', icon = '', command = { 'sh', '-c', 'cd ~/.config/awesome && goneovim rc.lua' } },
+	{ name = 'Helix', icon = '', command = { 'wezterm-gui', '-e', 'helix' } },
+	{ name = 'Open config', icon = '', command = { 'sh', '-c', 'wezterm-gui start --cwd ~/.config/awesome/ -- helix rc.lua' } },
 	{
 		name = 'HSR',
 		icon = '',
@@ -79,7 +79,7 @@ local function create_launcher_widget(launcher)
 	local launcher_widget = wibox.widget({
 		{
 			text = launcher.icon,
-			font = 'JetBrainsMono Nerd Font Mono 14',
+			font = 'Symbols Nerd Font 14',
 			widget = wibox.widget.textbox,
 		},
 		{
@@ -200,7 +200,7 @@ local function create_media_button(id, icon, command)
 		{
 			{
 				text = icon,
-				font = 'JetBrainsMono Nerd Font Mono 16',
+				font = 'Maple Mono NF CN 16',
 				halign = 'center',
 				widget = wibox.widget.textbox,
 			},
@@ -278,7 +278,7 @@ local function create_slider_icon(glyph)
 			{
 				id = 'icon_text',
 				text = glyph,
-				font = 'JetBrainsMono Nerd Font Mono 16',
+				font = 'Symbols Nerd Font 16',
 				halign = 'center',
 				widget = wibox.widget.textbox,
 			},
@@ -479,7 +479,7 @@ local function create_round_button(icon, cmd)
 		{
 			{
 				text = icon,
-				font = 'JetBrainsMono Nerd Font Mono 50',
+				font = 'Symbols Nerd Font 35',
 				halign = 'center',
 				valign = 'center',
 				widget = wibox.widget.textbox,

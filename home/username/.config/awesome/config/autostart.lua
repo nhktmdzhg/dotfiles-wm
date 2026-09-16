@@ -46,7 +46,7 @@ function autostart.init()
 	spawn.once({ 'bluetoothctl', 'power', 'off' })
 	spawn_once('xmousepastebloc', { 'xmousepasteblock' })
 	spawn({ 'wmname', 'march7th' })
-	spawn_once('zalo', { 'zalo', '--disable-gpu' })
+	spawn_once('zalo', { 'zalo', '--disable-gpu' }, true)
 end
 
 return autostart

@@ -13,7 +13,6 @@ lxsession
 maple-mono-nf-cn-unhinted
 nmtui-go
 noto-fonts
-nvim
 oxygen
 physlock
 picom-nhktmdzhg-git
@@ -21,7 +20,7 @@ playerctl
 qt6ct
 rofi
 shutter
-ttf-jetbrains-mono-nerd
+ttf-nerd-fonts-symbols
 upower
 wezterm-git
 wireless_tools

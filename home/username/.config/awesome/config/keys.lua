@@ -133,7 +133,7 @@ function keys.init(vars)
 			spawn({ 'firefox' })
 		end),
 		key({ super }, 'n', function()
-			spawn({ 'goneovim' })
+			spawn({ 'wezterm-gui', '-e', 'helix' })
 		end),
 		key({ super }, 'c', function()
 			spawn({ 'equicord' })
