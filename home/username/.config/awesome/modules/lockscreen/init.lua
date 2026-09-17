@@ -3,6 +3,7 @@
 ---@diagnostic disable: undefined-field
 local awful = require('awful')
 local gears = require('gears')
+local images = require('images')
 local mocha = require('mocha')
 -- liblua_pam lives outside Lua's default search path.
 package.cpath = package.cpath .. ';/usr/lib/lua-pam/?.so'
@@ -35,6 +36,9 @@ local mocha_colors = {
 	mocha.lavender.hex,
 }
 
+-- Reuse the scaled wallpaper between locks instead of decoding the 4K source again.
+local scaled_wallpapers = {}
+
 --- Builds the lock UI of one screen: wallpaper, clock, date, user label, indicator and status.
 -- @param s screen Screen to cover.
 -- @return wibox The lock wibox of that screen.
@@ -57,8 +61,12 @@ local function create_lockscreen_ui(s)
 	-- Wallpaper widget
 	local wallpaper_widget = nil
 	if gears.filesystem.file_readable(vars.wallpaper) then
+		local key = s.geometry.width .. 'x' .. s.geometry.height
+		scaled_wallpapers[key] = scaled_wallpapers[key]
+				or images.scaled(vars.wallpaper, s.geometry.width, s.geometry.height)
+
 		wallpaper_widget = wibox.widget({
-			image = vars.wallpaper,
+			image = scaled_wallpapers[key],
 			resize = true,
 			widget = wibox.widget.imagebox,
 		})
@@ -260,10 +268,10 @@ function lockscreen.show()
 				screen_lock.status_widget.markup = '<span foreground="' .. mocha.red.hex .. '">' .. message .. '</span>'
 			else
 				screen_lock.status_widget.markup = '<span foreground="'
-					.. mocha.green.hex
-					.. '">'
-					.. message
-					.. '</span>'
+						.. mocha.green.hex
+						.. '">'
+						.. message
+						.. '</span>'
 			end
 		end
 	end

@@ -13,6 +13,7 @@ require('awful.autofocus')
 -- Require custom modules
 local autostart = require('config.autostart')
 local gears = require('gears')
+local images = require('images')
 local keyboard = require('awful.keyboard')
 local keys = require('config.keys')
 local mouse = require('awful.mouse')
@@ -33,7 +34,7 @@ screen.connect_signal('request::wallpaper', function(s)
 		screen = s,
 		widget = {
 			{
-				image = vars.wallpaper,
+				image = images.scaled(vars.wallpaper, s.geometry.width, s.geometry.height),
 				upscale = true,
 				downscale = true,
 				widget = wibox.widget.imagebox,

@@ -3,6 +3,7 @@
 ---@diagnostic disable: undefined-global
 local awful = require('awful')
 local gears = require('gears')
+local images = require('images')
 local palette = require('mocha')
 local poller = require('poller')
 local wibox = require('wibox')
@@ -31,7 +32,7 @@ local launcher_list = {
 local function create_avatar_widget()
 	return wibox.widget({
 		{
-			image = avatar_path,
+			image = images.scaled(avatar_path, 200, 200),
 			resize = true,
 			forced_height = 100,
 			forced_width = 100,

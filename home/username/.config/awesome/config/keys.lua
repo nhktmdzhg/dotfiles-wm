@@ -16,7 +16,7 @@ local keys = {}
 
 local lockscreen = require('modules.lockscreen')
 
-local hidden_clients = {}
+local hidden_clients = setmetatable({}, { __mode = 'k' })
 
 -- A client the user brings back on its own is no longer ours to restore.
 client.connect_signal('property::minimized', function(c)
