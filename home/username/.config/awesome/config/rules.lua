@@ -7,7 +7,7 @@ local screen = require('awful.screen')
 
 local rules = {}
 
---- Appends the client rules: global defaults, splash/dialog, menus and gsimplecal.
+--- Appends the client rules: global defaults, splash/dialog and menus.
 function rules.init()
 	-- Populate the client ruleset when awesome asks for it.
 	ruled.client.connect_signal('request::rules', function()
@@ -38,17 +38,6 @@ function rules.init()
 			id = 'menus',
 			rule_any = {
 				type = { 'menu', 'popup_menu', 'dropdown_menu', 'combo' },
-			},
-			properties = {
-				skip_taskbar = true,
-				placement = placement.resize_to_mouse,
-			},
-		})
-
-		ruled.client.append_rule({
-			id = 'gsimplecal',
-			rule_any = {
-				class = { 'Gsimplecal', 'gsimplecal' },
 			},
 			properties = {
 				skip_taskbar = true,

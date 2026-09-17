@@ -10,6 +10,7 @@ local button = require('awful.button')
 local spawn = require('awful.spawn')
 local tooltip = require('awful.tooltip')
 local widget = require('awful.widget')
+local calendar_popup = require('awful.widget.calendar_popup')
 local cairo = require('lgi').cairo
 
 local filesystem = require('gears.filesystem')
@@ -420,7 +421,7 @@ end
 -- @return wibox.widget The volume percentage container.
 function widgets.create_volume()
 	local volume_icon_container, volume_icon =
-		create_label(nil, ICON_FONT, palette.peach.hex, '[L] Toggle Audio Mute [S] Audio Volume +/-')
+			create_label(nil, ICON_FONT, palette.peach.hex, '[L] Toggle Audio Mute [S] Audio Volume +/-')
 
 	connect_hover_fg(volume_icon_container, palette.peach.hex, palette.yellow.hex)
 
@@ -436,7 +437,7 @@ function widgets.create_volume()
 	end)
 
 	local volume_percent_container, volume_percent =
-		create_label(nil, TEXT_FONT, palette.text.hex, '[S] Audio Volume +/-')
+			create_label(nil, TEXT_FONT, palette.text.hex, '[S] Audio Volume +/-')
 
 	-- The wheel steps the volume.
 	volume_percent_container:connect_signal('button::press', function(_, _, _, button)
@@ -457,7 +458,7 @@ function widgets.create_volume()
 	return volume_icon_container, volume_percent_container
 end
 
---- Creates the calendar button, the date label and the time label, refreshed every second.
+--- Creates the calendar button with its month popup, the date label and the time label.
 -- @return wibox.widget The calendar icon container.
 -- @return wibox.widget The date container.
 -- @return wibox.widget The time container.
@@ -472,14 +473,41 @@ function widgets.create_calendar()
 
 	local calendar_icon_container = wrap_label(calendar_icon, palette.red.hex, 'Calendar')
 
-	-- Left click opens gsimplecal.
-	calendar_icon_container:connect_signal('button::press', function(_, _, _, button)
-		if button == 1 then
-			spawn({ 'gsimplecal' })
-		end
-	end)
-
 	connect_hover_fg(calendar_icon_container, palette.red.hex, palette.maroon.hex)
+
+	local month_calendar = calendar_popup.month({
+		position = 'tr',
+		margin = 10,
+		start_sunday = true,
+		week_numbers = false,
+		bg = palette.base.hex,
+		style_month = {
+			bg_color = palette.base.hex,
+			border_color = palette.surface1.hex,
+			border_width = 2,
+			padding = 10,
+			shape = function(cr, width, height)
+				gears.shape.rounded_rect(cr, width, height, 12)
+			end,
+		},
+		style_header = {
+			fg_color = palette.mauve.hex,
+			markup = '<b>%s</b>',
+		},
+		style_weekday = {
+			fg_color = palette.overlay1.hex,
+			markup = '<b>%s</b>',
+		},
+		style_normal = {
+			fg_color = palette.text.hex,
+		},
+		style_focus = {
+			fg_color = palette.base.hex,
+			bg_color = palette.mauve.hex,
+		},
+	})
+
+	month_calendar:attach(calendar_icon_container, 'tr', { on_hover = false })
 
 	local date_widget_container = create_clock('%Y年%m月%d日', 'Date')
 	local time_widget_container = create_clock('%H:%M:%S %p', 'Time')

@@ -6,7 +6,6 @@ brightnessctl
 bottom
 dash
 fastfetch
-gsimplecal
 ksuperkey
 lua-pam-git
 lxsession
