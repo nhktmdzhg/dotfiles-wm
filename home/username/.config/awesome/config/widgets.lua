@@ -17,6 +17,7 @@ local filesystem = require('gears.filesystem')
 local notifications = require('config.notifications')
 local palette = require('mocha')
 local poller = require('poller')
+local previews = require('previews')
 local scripts = require('scripts')
 local surface = require('gears.surface')
 
@@ -148,38 +149,53 @@ preview_widget.fit = function(_, _, _)
 end
 
 preview_widget.draw = function(_, _, cairo_context, width, height)
-	if current_preview_client and current_preview_client.valid and current_preview_client.content then
-		local client_surface = gears.surface(current_preview_client.content)
-		if client_surface then
-			local cg = current_preview_client:geometry()
-			local scale_x = 260 / cg.width
-			local scale_y = 140 / cg.height
-			local scale = math.min(scale_x, scale_y)
+	if not current_preview_client or not current_preview_client.valid then
+		return
+	end
 
-			local scaled_w = cg.width * scale
-			local scaled_h = cg.height * scale
+	local surface = previews.surface(current_preview_client)
+
+	if surface then
+		local surface_width, surface_height = gears.surface.get_size(surface)
+		local scale = math.min(260 / surface_width, 140 / surface_height)
+
+		local scaled_w = surface_width * scale
+		local scaled_h = surface_height * scale
+		local offset_x = (width - scaled_w) / 2
+		local offset_y = (height - scaled_h) / 2
+
+		cairo_context:translate(offset_x, offset_y)
+		cairo_context:scale(scale, scale)
+		cairo_context:set_source_surface(surface, 0, 0)
+		cairo_context:paint()
+		cairo_context:scale(1 / scale, 1 / scale)
+		cairo_context:translate(-offset_x, -offset_y)
+	else
+		surface = previews.icon(current_preview_client)
+		if surface then
+			local icon_width, icon_height = gears.surface.get_size(surface)
+			local scale = math.min(90 / icon_width, 90 / icon_height)
+			local scaled_w = icon_width * scale
+			local scaled_h = icon_height * scale
 			local offset_x = (width - scaled_w) / 2
 			local offset_y = (height - scaled_h) / 2
 
 			cairo_context:translate(offset_x, offset_y)
 			cairo_context:scale(scale, scale)
-			cairo_context:set_source_surface(client_surface, 0, 0)
+			cairo_context:set_source_surface(surface, 0, 0)
 			cairo_context:paint()
 			cairo_context:scale(1 / scale, 1 / scale)
 			cairo_context:translate(-offset_x, -offset_y)
-
-			cairo_context:set_source_rgb(1, 1, 1)
-			cairo_context:select_font_face('Maple Mono NF CN', cairo.FontSlant.NORMAL, cairo.FontWeight.NORMAL)
-			cairo_context:set_font_size(12)
-			local text = current_preview_client.class or current_preview_client.instance or 'Unknown'
-			local text_extents = cairo_context:text_extents(text)
-			local text_x = (width - text_extents.width) / 2
-			cairo_context:move_to(text_x, height - 15)
-			cairo_context:show_text(text)
-
-			client_surface:finish()
 		end
 	end
+
+	cairo_context:set_source_rgb(1, 1, 1)
+	cairo_context:select_font_face('Maple Mono NF CN', cairo.FontSlant.NORMAL, cairo.FontWeight.NORMAL)
+	cairo_context:set_font_size(12)
+	local text = current_preview_client.class or current_preview_client.instance or 'Unknown'
+	local text_extents = cairo_context:text_extents(text)
+	cairo_context:move_to((width - text_extents.width) / 2, height - 15)
+	cairo_context:show_text(text)
 end
 
 preview_wibox:setup({
@@ -201,12 +217,10 @@ function widgets.create_tasklist(s)
 	local tasklist_buttons = {
 		button({}, 1, function(c)
 			if c == client.focus then
-				c.minimized = true
-			else
-				c:emit_signal('request::activate', 'tasklist', {
-					raise = true,
-				})
+				previews.capture(c)
 			end
+
+			c:activate({ context = 'tasklist', action = 'toggle_minimization' })
 		end),
 	}
 

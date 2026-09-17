@@ -6,6 +6,7 @@ local cairo = require('lgi').cairo
 local awful = require('awful')
 local gears = require('gears')
 local palette = require('mocha')
+local previews = require('previews')
 local wibox = require('wibox')
 
 -- Import keygrabber properly
@@ -102,7 +103,7 @@ function _M.getClients()
 	-- Add clients from focus history
 	while c do
 		clients[#clients + 1] = c -- Faster than table.insert
-		client_set[c] = true -- Mark as added
+		client_set[c] = true    -- Mark as added
 
 		idx = idx + 1
 		c = awful.client.focus.history.get(s, idx)
@@ -143,25 +144,6 @@ end
 -- Optimized function to populate alt-tab table
 function _M.populateAltTabTable(clients)
 	clients = clients or _M.getClients()
-
-	-- If we have existing data, restore minimized states efficiently
-	if #_M.altTabTable > 0 then
-		-- Create hash map for O(1) lookup instead of nested loops
-		local old_client_states = {}
-		for i = 1, #_M.altTabTable do
-			local entry = _M.altTabTable[i]
-			old_client_states[entry.client] = entry.minimized
-		end
-
-		-- Restore states
-		for i = 1, #clients do
-			local c = clients[i]
-			local old_state = old_client_states[c]
-			if old_state ~= nil then
-				c.minimized = old_state
-			end
-		end
-	end
 
 	-- Clear and rebuild table efficiently
 	_M.altTabTable = {}
@@ -239,8 +221,8 @@ function _M.preview()
 	-- Make the wibox the right size, based on the number of clients
 	local n = math.max(7, #_M.altTabTable)
 	local W = screen[mouse.screen].geometry.width -- + 2 * _M.preview_wbox.border_width
-	local w = W / n -- widget width
-	local h = w * 0.75 -- widget height
+	local w = W / n                              -- widget width
+	local h = w * 0.75                           -- widget height
 	local textboxHeight = w * 0.125
 
 	local x = screen[mouse.screen].geometry.x - _M.preview_wbox.border_width
@@ -388,29 +370,37 @@ function _M.preview()
 
 				-- Draw previews
 				local cg = c:geometry()
-				if cg.width > cg.height then
-					sx = a * w / cg.width
-					sy = math.min(sx, a * h / cg.height)
-				else
-					sy = a * h / cg.height
-					sx = math.min(sy, a * h / cg.width)
+				local surface = previews.surface(c) or previews.icon(c)
+				local surface_width, surface_height = cg.width, cg.height
+
+				if surface then
+					surface_width, surface_height = gears.surface.get_size(surface)
 				end
 
-				tx = (w - sx * cg.width) / 2
-				ty = (h - sy * cg.height) / 2
+				if surface_width > surface_height then
+					sx = a * w / surface_width
+					sy = math.min(sx, a * h / surface_height)
+				else
+					sy = a * h / surface_height
+					sx = math.min(sy, a * h / surface_width)
+				end
 
-				local tmp = gears.surface(c.content)
+				tx = (w - sx * surface_width) / 2
+				ty = (h - sy * surface_height) / 2
+
 				cairo_context:translate(tx, ty)
 				cairo_context:scale(sx, sy)
-				cairo_context:set_source_surface(tmp, 0, 0)
-				cairo_context:paint()
-				tmp:finish()
+
+				if surface then
+					cairo_context:set_source_surface(surface, 0, 0)
+					cairo_context:paint()
+				end
 
 				-- Overlays
 				cairo_context:scale(1 / sx, 1 / sy)
 				cairo_context:translate(-tx, -ty)
 				cairo_context:set_source_rgba(0, 0, 0, overlay)
-				cairo_context:rectangle(tx, ty, sx * cg.width, sy * cg.height)
+				cairo_context:rectangle(tx, ty, sx * surface_width, sy * surface_height)
 				cairo_context:fill()
 			end
 		end
@@ -460,12 +450,12 @@ end
 -- @param key_switch string Key that cycles through the clients.
 function _M.switch(dir, mod_key1, release_key, mod_key2, key_switch)
 	_M.populateAltTabTable()
+	_M.cancelled = false
 
 	if #_M.altTabTable == 0 then
 		return
 	elseif #_M.altTabTable == 1 then
-		_M.altTabTable[1].client.minimized = false
-		_M.altTabTable[1].client:raise()
+		_M.altTabTable[1].client:jump_to()
 		return
 	end
 
@@ -505,9 +495,7 @@ function _M.switch(dir, mod_key1, release_key, mod_key2, key_switch)
 		end,
 		keyreleased_callback = function(self, modifiers, key, event)
 			if key == 'Escape' then
-				for i = 1, #_M.altTabTable do
-					_M.altTabTable[i].client.minimized = _M.altTabTable[i].minimized
-				end
+				_M.cancelled = true
 				self:stop()
 			end
 		end,
@@ -517,6 +505,14 @@ function _M.switch(dir, mod_key1, release_key, mod_key2, key_switch)
 				_M.preview_live_timer:stop()
 			else
 				_M.previewDelayTimer:stop()
+			end
+
+			if _M.cancelled then
+				for i = 1, #_M.altTabTable do
+					_M.altTabTable[i].client.minimized = _M.altTabTable[i].minimized
+				end
+				_M.cancelled = false
+				return
 			end
 
 			-- Raise chosen client

@@ -6,6 +6,7 @@ local button = require('awful.button')
 local dashboard = require('config.dashboard')
 local key = require('awful.key')
 local mouse = require('awful.mouse')
+local previews = require('previews')
 local screen = require('awful.screen')
 local screenshot = require('awful.screenshot')
 local scripts = require('scripts')
@@ -15,30 +16,47 @@ local keys = {}
 
 local lockscreen = require('modules.lockscreen')
 
---- Minimizes every visible client of the focused tag, or brings them back when none is visible.
+local hidden_clients = {}
+
+-- A client the user brings back on its own is no longer ours to restore.
+client.connect_signal('property::minimized', function(c)
+	if not c.minimized then
+		hidden_clients[c] = nil
+	end
+end)
+
+--- Hides every visible client of the focused tag, or restores the ones this function hid.
 local function toggle_show_desktop()
-	local current_tag = screen.focused().selected_tag
-	local client_on_tag = current_tag:clients()
-	if #client_on_tag > 0 then
-		local is_show = false
-		for _, c in ipairs(client_on_tag) do
-			if c:isvisible() then
-				is_show = true
-				break
-			end
+	local tag = screen.focused().selected_tag
+	local visible = {}
+
+	for _, c in ipairs(tag:clients()) do
+		if c:isvisible() then
+			visible[#visible + 1] = c
 		end
-		if is_show then
-			for _, c in ipairs(client_on_tag) do
-				if c:isvisible() then
-					c.minimized = true
-				end
-			end
-		else
-			for _, c in ipairs(client_on_tag) do
-				if not c:isvisible() then
-					c.minimized = false
-				end
-			end
+	end
+
+	if #visible > 0 then
+		for _, c in ipairs(visible) do
+			previews.capture(c)
+			hidden_clients[c] = true
+			c.minimized = true
+		end
+
+		return
+	end
+
+	local restore = {}
+
+	for c in pairs(hidden_clients) do
+		restore[#restore + 1] = c
+	end
+
+	hidden_clients = {}
+
+	for _, c in ipairs(restore) do
+		if c.valid then
+			c.minimized = false
 		end
 	end
 end
@@ -200,13 +218,15 @@ function keys.init(vars)
 		end),
 		key({ super }, 'f', function(c)
 			c.fullscreen = not c.fullscreen
+			c:raise()
 		end),
 		key({ super }, 'x', function(c)
 			c.maximized = not c.maximized
+			c:raise()
 		end),
 		key({ super }, 'z', function(c)
+			previews.capture(c)
 			c.minimized = true
-			c:lower()
 		end),
 	}
 
