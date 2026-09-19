@@ -21,7 +21,7 @@ rofi
 shutter
 ttf-nerd-fonts-symbols
 upower
-wezterm-git
+wezterm
 wireless_tools
 wireplumber
 xss-lock
