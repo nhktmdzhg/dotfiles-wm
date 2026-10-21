@@ -19,6 +19,7 @@ playerctl
 qt6ct
 rofi
 shutter
+snixembed
 ttf-nerd-fonts-symbols
 upower
 wezterm

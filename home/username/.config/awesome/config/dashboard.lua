@@ -531,7 +531,7 @@ local function create_power_grid()
 		create_round_button('󰒲', { 'systemctl', '--no-ask-password', 'suspend' }),
 		create_round_button(
 			'󰍃',
-			{ 'loginctl', '--no-ask-password', 'kill-user', os.getenv('USER'), '--signal=SIGKILL' }
+			{ 'awesome-client', 'awesome.quit()' }
 		),
 		create_round_button('󰜉', { 'systemctl', '--no-ask-password', 'reboot' }),
 		create_round_button('', { 'systemctl', '--no-ask-password', 'poweroff' }),

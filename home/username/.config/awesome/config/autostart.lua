@@ -37,16 +37,22 @@ function autostart.init()
 	spawn_once('xss-lock', { 'xss-lock', '-q', '-l', os.getenv('HOME') .. '/.config/awesome/lock.sh' })
 	spawn({ 'xset', 's', 'off' })
 	spawn({ 'xset', '-dpms' })
-	spawn_once('thunderbird', { 'thunderbird' })
-	spawn_once('mcontrolcenter', { 'mcontrolcenter' })
-	spawn_once('Discord', { 'equicord', '--disable-gpu' })
 	-- Wayland version
 	-- spawn_once("Discord", {"env", "OZONE_PLATFORM=wayland", "XDG_SESSION_TYPE=wayland", "DISCORD_DISABLE_GPU_SANDBOX=1", "DISCORD_ENABLE_WAYLAND_PIPEWIRE=1", "ELECTRON_OZONE_PLATFORM_HINT=auto", "equicord", "--no-sandbox", "--enable-zero-copy", "--ignore-gpu-blocklist", "--enable-gpu-rasterization", "--enable-native-gpu-memory-buffers", "--enable-features=WebRTCPipeWireCapturer,UseOzonePlatform,VaapiVideoDecoder", "--disable-features=UseChromeOSDirectVideoDecoder", "--ozone-platform=wayland", "--use-gl=desktop"}, true)
-	spawn_once('fcitx5', { 'fcitx5' })
 	spawn.once({ 'bluetoothctl', 'power', 'off' })
 	spawn_once('xmousepastebloc', { 'xmousepasteblock' })
 	spawn({ 'wmname', 'march7th' })
-	spawn_once('zalo', { 'zalo', '--disable-gpu' }, true)
+	spawn_once('snixembed', { 'snixembed' })
+	spawn.easy_async({
+		'gdbus', 'wait', '--session', '--timeout', '10', 'org.kde.StatusNotifierWatcher'
+	}, function()
+		spawn({ 'xrdb', '-merge', os.getenv('HOME') .. '.Xresources' })
+		spawn_once('Discord', { 'equicord', '--disable-gpu' })
+		spawn_once('thunderbird', { 'thunderbird' })
+		spawn_once('mcontrolcenter', { 'mcontrolcenter' })
+		spawn_once('fcitx5', { 'fcitx5' })
+		spawn_once('zalo', { 'zalo', '--disable-gpu', '--hidden' }, true)
+	end)
 end
 
 return autostart
