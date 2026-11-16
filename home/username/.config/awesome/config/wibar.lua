@@ -13,6 +13,7 @@ local wibar = {}
 
 --- Creates the tag, the wibar and its widgets on every screen, then builds the dashboard.
 function wibar.init()
+	local mysystray = widgets.create_systray()
 	screen.connect_signal('request::desktop_decoration', function(s)
 		-- Each screen has its own tag table.
 		tag({ '1' }, s, layout.layouts[1])
@@ -32,7 +33,6 @@ function wibar.init()
 		local constrained_tasklist = widgets.create_tasklist(s)
 		local simple_separator = widgets.create_simple_separator()
 		local arch_logo = widgets.create_arch_logo()
-		local mysystray = widgets.create_systray()
 		local window_name_container = widgets.create_window_name(s)
 		local battery_icon_container, battery_percent_container = widgets.create_battery()
 		local proton_vpn_status_container = widgets.create_proton_vpn()
@@ -49,7 +49,7 @@ function wibar.init()
 				simple_separator,
 				arch_logo,
 				simple_separator,
-				mysystray,
+				s == screen.primary and mysystray or nil,
 			},
 			{
 				constrained_tasklist,
