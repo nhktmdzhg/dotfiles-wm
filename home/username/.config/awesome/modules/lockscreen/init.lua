@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 -- Lockscreen: per-screen lock UI, PAM authentication and keyboard grab.
 
 ---@diagnostic disable: undefined-field
@@ -8,15 +9,26 @@ local mocha = require('mocha')
 -- liblua_pam lives outside Lua's default search path.
 package.cpath = package.cpath .. ';/usr/lib/lua-pam/?.so'
 local naughty = require('naughty')
+local notifications = require('config.notifications')
 local pam = require('liblua_pam')
 local vars = require('config.vars')
 local wibox = require('wibox')
 
+-- Present while a lock is up; lock.sh polls it and xss-lock treats the locker's
+-- exit as "unlocked". Lives in the per-user runtime dir, like the sleep fd.
+local FLAG_PATH = (os.getenv('XDG_RUNTIME_DIR') or '/tmp') .. '/awesome-lockscreen.lock'
+
+-- A flag left behind by a crash would make the next lock.sh wait forever.
+os.remove(FLAG_PATH)
+
 local lockscreen = {
 	visible = false,
-	screen_lock = nil,
-	password_widget = nil,
+	password = '',
 	keygrabber = nil,
+	-- screen -> { ui = wibox, indicator = widget, status = widget, geometry = table }
+	screens = {},
+	-- Set when a lock UI is dropped so the next timer tick can reclaim it.
+	dropped = false,
 }
 
 local mocha_colors = {
@@ -62,14 +74,18 @@ local function create_lockscreen_ui(s)
 	local wallpaper_widget = nil
 	if gears.filesystem.file_readable(vars.wallpaper) then
 		local key = s.geometry.width .. 'x' .. s.geometry.height
-		scaled_wallpapers[key] = scaled_wallpapers[key]
-				or images.scaled(vars.wallpaper, s.geometry.width, s.geometry.height)
+		local surface = scaled_wallpapers[key]
+			or images.scaled(vars.wallpaper, s.geometry.width, s.geometry.height)
 
-		wallpaper_widget = wibox.widget({
-			image = scaled_wallpapers[key],
-			resize = true,
-			widget = wibox.widget.imagebox,
-		})
+		-- images.scaled returns nil when the file cannot be decoded.
+		if surface then
+			scaled_wallpapers[key] = surface
+			wallpaper_widget = wibox.widget({
+				image = surface,
+				resize = true,
+				widget = wibox.widget.imagebox,
+			})
+		end
 	end
 
 	-- Clock widget
@@ -228,141 +244,293 @@ local function authenticate(password)
 	end
 end
 
---- Covers every screen with the lock UI and starts the keyboard grab.
+--- Applies a message to every lock UI.
+-- @param message string Text to display.
+-- @param is_error boolean Paint it red instead of green.
+local function update_status(message, is_error)
+	local color = is_error and mocha.red.hex or mocha.green.hex
+	local markup = '<span foreground="' .. color .. '">' .. message .. '</span>'
+
+	for _, entry in pairs(lockscreen.screens) do
+		entry.status.markup = markup
+	end
+end
+
+--- Recolors every lock indicator so a key press shows up on all screens.
+local function cycle_indicator()
+	for _, entry in pairs(lockscreen.screens) do
+		local widget = entry.indicator
+		local color = mocha_colors[math.random(#mocha_colors)]
+
+		while color == widget.fg do
+			color = mocha_colors[math.random(#mocha_colors)]
+		end
+
+		widget.fg = color
+	end
+end
+
+--- Covers one screen with a lock UI and registers it.
+-- @param s screen Screen to cover.
+local function cover_screen(s)
+	local geometry = s.geometry
+
+	if lockscreen.screens[s] or not geometry or geometry.width <= 0 or geometry.height <= 0 then
+		return
+	end
+
+	local ui, indicator, status = create_lockscreen_ui(s)
+
+	lockscreen.screens[s] = {
+		ui = ui,
+		indicator = indicator,
+		status = status,
+		geometry = {
+			x = geometry.x,
+			y = geometry.y,
+			width = geometry.width,
+			height = geometry.height,
+		},
+	}
+
+	ui.visible = true
+end
+
+--- Unmaps and forgets the lock UI of one screen.
+-- @param s screen Screen whose lock UI is dropped.
+local function uncover_screen(s)
+	local entry = lockscreen.screens[s]
+
+	if not entry then
+		return
+	end
+
+	lockscreen.screens[s] = nil
+	lockscreen.dropped = true
+	entry.ui.visible = false
+	entry.ui = nil
+end
+
+--- Makes the set of lock UIs match the screens that currently exist.
+local function sync_screens()
+	if not lockscreen.visible then
+		return
+	end
+
+	local present = {}
+
+	for s in screen do
+		present[s] = true
+
+		local entry = lockscreen.screens[s]
+		local geometry = s.geometry
+
+		if entry and geometry
+			and (entry.geometry.x ~= geometry.x
+				or entry.geometry.y ~= geometry.y
+				or entry.geometry.width ~= geometry.width
+				or entry.geometry.height ~= geometry.height) then
+			uncover_screen(s)
+			entry = nil
+		end
+
+		if not entry then
+			cover_screen(s)
+		elseif not entry.ui.visible then
+			entry.ui.visible = true
+		end
+	end
+
+	-- Assigning nil to existing keys is the only mutation done while traversing.
+	for s in pairs(lockscreen.screens) do
+		if not present[s] then
+			uncover_screen(s)
+		end
+	end
+
+	if lockscreen.dropped then
+		lockscreen.dropped = false
+		collectgarbage('collect')
+	end
+end
+
+lockscreen.sync_timer = gears.timer({
+	timeout = 0.5,
+	autostart = false,
+	single_shot = true,
+	callback = sync_screens,
+})
+
+lockscreen.watch_timer = gears.timer({
+	timeout = 2,
+	autostart = false,
+	callback = sync_screens,
+})
+
+--- Covers a screen plugged in while the session is locked.
+-- @param s screen The new screen.
+local function on_screen_added(s)
+	if lockscreen.visible then
+		cover_screen(s)
+	end
+end
+
+--- Drops the lock UI of a screen that disappeared.
+-- @param s screen The removed screen.
+local function on_screen_removed(s)
+	uncover_screen(s)
+	lockscreen.sync_timer:again()
+end
+
+--- Rebuilds lock UIs whose screen changed geometry.
+local function on_screen_geometry()
+	if lockscreen.visible then
+		lockscreen.sync_timer:again()
+	end
+end
+
+--- Tells whether the lockscreen owns the keyboard grab.
+-- @return boolean
+local function holding_grab()
+	return lockscreen.keygrabber ~= nil
+		and awful.keygrabber.current_instance == lockscreen.keygrabber
+end
+
+--- Authenticates the typed password and either unlocks or clears it.
+local function try_unlock()
+	if #lockscreen.password == 0 then
+		return
+	end
+
+	update_status('Unlocking btw...', false)
+
+	if authenticate(lockscreen.password) then
+		lockscreen.hide()
+	else
+		lockscreen.password = ''
+		cycle_indicator()
+		update_status('Failure! You are not btw.', true)
+	end
+end
+
+--- Creates the keygrabber once; it is reused for every lock.
+local function ensure_keygrabber()
+	if lockscreen.keygrabber then
+		return
+	end
+
+	lockscreen.keygrabber = awful.keygrabber({
+		autostart = false,
+		stop_key = nil,
+		stop_event = nil,
+		keypressed_callback = function(self, modifiers, key, event)
+			if key == 'Return' or key == 'KP_Enter' then
+				try_unlock()
+			elseif key == 'BackSpace' then
+				if #lockscreen.password > 0 then
+					lockscreen.password = lockscreen.password:sub(1, -2)
+					cycle_indicator()
+				end
+			elseif #key == 1 then
+				lockscreen.password = lockscreen.password .. key
+				cycle_indicator()
+			end
+		end,
+		stop_callback = function(self)
+			naughty.notification({
+				title = 'Session Manager',
+				message = 'Welcome back ' .. os.getenv('USER'),
+				app_icon = 'im-user-online',
+			})
+			awful.spawn({ 'physlock', '-L' })
+		end,
+		start_callback = function(self)
+			awful.spawn({ 'physlock', '-l' })
+		end,
+	})
+end
+
+--- Restores the notification pause state from the user flag and fullscreen state.
+local function restore_notifications()
+	local focused = client.focus
+
+	if notifications.is_paused() or (focused and focused.fullscreen) then
+		notifications.pause()
+	else
+		notifications.unpause()
+	end
+end
+
+--- Covers every screen, grabs the keyboard and flags the lock for lock.sh.
+-- @return boolean True when the session is locked.
 function lockscreen.show()
 	if lockscreen.visible then
-		return
+		return true
+	end
+
+	lockscreen.password = ''
+	ensure_keygrabber()
+
+	if awful.keygrabber.current_instance then
+		awful.keygrabber.current_instance:stop()
+	end
+	lockscreen.keygrabber:start()
+	if not holding_grab() then
+		return false
 	end
 
 	lockscreen.visible = true
 
-	-- Store current screen
-	local current_screen = awful.screen.focused()
+	screen.connect_signal('added', on_screen_added)
+	screen.connect_signal('removed', on_screen_removed)
+	screen.connect_signal('property::geometry', on_screen_geometry)
 
-	-- Create lockscreen for each screen
-	lockscreen.screens = {}
-	lockscreen.password = ''
+	notifications.pause()
 
-	---@diagnostic disable-next-line: undefined-global
-	for s in screen do
-		local lock_ui, indicator_widget, status_widget = create_lockscreen_ui(s)
-		lock_ui.visible = true
-
-		table.insert(lockscreen.screens, {
-			ui = lock_ui,
-			indicator_widget = indicator_widget,
-			status_widget = status_widget,
-		})
-
-		if s == current_screen then
-			lockscreen.main_screen = #lockscreen.screens
-		end
+	local ok, err = pcall(sync_screens)
+	if not ok then
+		lockscreen.hide()
+		error(err, 0)
 	end
 
-	--- Shows the same status message on every lock screen.
-	-- @param message string Text to display.
-	-- @param is_error boolean Paint it red instead of green.
-	local function update_status(message, is_error)
-		for _, screen_lock in ipairs(lockscreen.screens) do
-			if is_error then
-				screen_lock.status_widget.markup = '<span foreground="' .. mocha.red.hex .. '">' .. message .. '</span>'
-			else
-				screen_lock.status_widget.markup = '<span foreground="'
-						.. mocha.green.hex
-						.. '">'
-						.. message
-						.. '</span>'
-			end
-		end
+	local flag = io.open(FLAG_PATH, 'w')
+	if flag then
+		flag:close()
 	end
 
-	--- Gives every lock screen indicator a new random color.
-	local function update_indicator()
-		for _, screen_lock in ipairs(lockscreen.screens) do
-			if screen_lock.indicator_widget then
-				local random_color = mocha_colors[math.random(#mocha_colors)]
-				while random_color == screen_lock.indicator_widget.fg do
-					random_color = mocha_colors[math.random(#mocha_colors)]
-				end
-				screen_lock.indicator_widget.fg = random_color
-			end
-		end
-	end
+	lockscreen.watch_timer:start()
 
-	--- Authenticates the typed password and either unlocks or clears it.
-	local function try_unlock()
-		update_status('Unlocking btw...', false)
-		if authenticate(lockscreen.password) then
-			lockscreen.hide()
-		else
-			lockscreen.password = ''
-			update_indicator()
-			update_status('Failure! You are not btw.', true)
-		end
-	end
-
-	update_indicator()
-
-	if not lockscreen.keygrabber then
-		lockscreen.keygrabber = awful.keygrabber({
-			autostart = false,
-			stop_key = nil,
-			stop_event = nil,
-			keypressed_callback = function(self, modifiers, key, event)
-				if key == 'BackSpace' then
-					if #lockscreen.password > 0 then
-						lockscreen.password = lockscreen.password:sub(1, -2)
-						update_indicator()
-					end
-				elseif #key == 1 then
-					lockscreen.password = lockscreen.password .. key
-					update_indicator()
-				end
-			end,
-			keyreleased_callback = function(self, modifiers, key, event)
-				if key == 'Return' or key == 'KP_Enter' then
-					try_unlock()
-				end
-			end,
-			stop_callback = function(self)
-				naughty.notification({
-					title = 'Session Manager',
-					message = 'Welcome back ' .. os.getenv('USER'),
-					app_icon = 'im-user-online',
-				})
-				awful.spawn({ 'physlock', '-L' })
-			end,
-			start_callback = function(self)
-				awful.spawn({ 'physlock', '-l' })
-			end,
-		})
-	end
-	lockscreen.keygrabber:start()
+	return true
 end
 
---- Removes the lock UI, stops the keyboard grab and clears the typed password.
+--- Removes every lock UI, stops the keyboard grab and clears the typed password.
 function lockscreen.hide()
 	if not lockscreen.visible then
 		return
 	end
 
 	lockscreen.visible = false
-	if lockscreen.keygrabber then
+
+	lockscreen.watch_timer:stop()
+	lockscreen.sync_timer:stop()
+
+	screen.disconnect_signal('added', on_screen_added)
+	screen.disconnect_signal('removed', on_screen_removed)
+	screen.disconnect_signal('property::geometry', on_screen_geometry)
+
+	restore_notifications()
+
+	if holding_grab() then
 		lockscreen.keygrabber:stop()
 	end
 
-	if lockscreen.screens then
-		for _, screen_lock in ipairs(lockscreen.screens) do
-			screen_lock.ui.visible = false
-			screen_lock.ui:disconnect_signal()
-			screen_lock.ui = nil
-		end
-		lockscreen.screens = {}
-		lockscreen.screens = nil
+	for s in pairs(lockscreen.screens) do
+		uncover_screen(s)
 	end
 
 	lockscreen.password = ''
-	lockscreen.main_screen = nil
+	lockscreen.dropped = false
+	os.remove(FLAG_PATH)
 
 	collectgarbage('collect')
 end
