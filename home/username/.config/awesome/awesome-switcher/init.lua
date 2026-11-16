@@ -21,6 +21,7 @@ local pairs = pairs
 
 -- Pre-compute frequently used values
 local timer = gears.timer
+local ascreen = require('awful.screen')
 awful.client = require('awful.client')
 
 -- Cache surface creation (these don't need to be recreated every time)
@@ -88,22 +89,23 @@ function _M.tableLength(T)
 	return count
 end
 
---- Lists the clients of the focused screen, focus history first.
+--- Lists the clients of one screen, focus history first.
+-- @param[opt] screen s Screen to list, defaults to the screen being switched.
 -- @return table Array of clients.
 -- Optimized function to get clients list
-function _M.getClients()
+function _M.getClients(s)
 	local clients = {}
 	local client_set = {} -- Hash table for O(1) lookup instead of O(n) array search
 
 	-- Get focus history for current tag
-	local s = mouse.screen
+	s = s or _M.screen
 	local idx = 0
 	local c = awful.client.focus.history.get(s, idx)
 
 	-- Add clients from focus history
 	while c do
 		clients[#clients + 1] = c -- Faster than table.insert
-		client_set[c] = true    -- Mark as added
+		client_set[c] = true -- Mark as added
 
 		idx = idx + 1
 		c = awful.client.focus.history.get(s, idx)
@@ -219,14 +221,15 @@ function _M.preview()
 	_M.preview_wbox.border_color = PREVIEW_BOX_BORDER
 
 	-- Make the wibox the right size, based on the number of clients
+	local s = _M.screen
 	local n = math.max(7, #_M.altTabTable)
-	local W = screen[mouse.screen].geometry.width -- + 2 * _M.preview_wbox.border_width
-	local w = W / n                              -- widget width
-	local h = w * 0.75                           -- widget height
+	local W = s.geometry.width -- + 2 * _M.preview_wbox.border_width
+	local w = W / n         -- widget width
+	local h = w * 0.75      -- widget height
 	local textboxHeight = w * 0.125
 
-	local x = screen[mouse.screen].geometry.x - _M.preview_wbox.border_width
-	local y = screen[mouse.screen].geometry.y + (screen[mouse.screen].geometry.height - h - textboxHeight) / 2
+	local x = s.geometry.x - _M.preview_wbox.border_width
+	local y = s.geometry.y + (s.geometry.height - h - textboxHeight) / 2
 	_M.preview_wbox:geometry({
 		x = x,
 		y = y,
@@ -449,6 +452,10 @@ end
 -- @param mod_key2 string Second modifier, reverses the direction while held.
 -- @param key_switch string Key that cycles through the clients.
 function _M.switch(dir, mod_key1, release_key, mod_key2, key_switch)
+	-- The switcher belongs to the screen that owns the keyboard focus, not to the
+	-- screen under the pointer. Freeze it for the session so moving the mouse
+	-- cannot change the list halfway through.
+	_M.screen = ascreen.focused { client = true }
 	_M.populateAltTabTable()
 	_M.cancelled = false
 
